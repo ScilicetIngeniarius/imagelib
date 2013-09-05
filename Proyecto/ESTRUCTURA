@@ -1,0 +1,21 @@
+• src (codigo fuente)
+
+• build (release)
+
+• doc (documentacion, archivo doxigen.cnf, report.tex {sobre lo existente, xq las clases}, install.tex {para instalar, que 		usar, etc}, usage.te{como usario como utilizar la libreria, las funciones, como se llaman, etc, tutorial}, referencias 		{Cosas que encontramos de como 				hacerlo, pdf}, diseño UML, diseño BD, diagramas de flujo... respaldo del 		wiki).
+• include {header files... .hh , .h}
+
+• install {donde crea los archivos, make install} (scripts para instalacion, pueden ser hechos en bash. script de install  "PATH=$PATH:....")
+
+• README
+
+• MAKEFILE (ENTRADAS TIPICAS: test, install, all package)
+
+• cmake
+
+• .gitignore {.auc, .pdf, lista de archivos)
+
+• equipo (integrantes y carnets)
+
+• test {pruebas, documentacion, ejemplos}
+

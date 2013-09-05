@@ -1,0 +1,9 @@
+# SOURCE CODES #
+
+*.o
+
+# DOCUMENTATION #
+
+*.aux
+
+
