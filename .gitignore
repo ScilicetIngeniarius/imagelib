@@ -11,3 +11,10 @@
 *.lai
 *.la
 *.a
+
+# LaTex outputs
+*.aux
+*.pdf
+*.log
+*.pdfsync
+*.tps
