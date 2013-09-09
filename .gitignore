@@ -6,8 +6,18 @@
 # Compiled Dynamic libraries
 *.so
 *.dylib
+*.gch
 
 # Compiled Static libraries
 *.lai
 *.la
 *.a
+
+# LaTeX Output files
+*.synctex.gz
+*.aux
+*.log
+*.pdfsync
+*.out
+*.dvi
+*.lof
