@@ -1,0 +1,230 @@
+\documentclass[letterpaper]{article}
+
+\usepackage[spanish]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{booktabs}
+\usepackage{tabulary}
+\usepackage{graphicx} % graficos
+\usepackage{multirow, array} % para las tablas
+\usepackage{float} % para usar [H]
+
+
+\title{
+\Large{Universidad de Costa Rica} \\ \small{Estructuras Abstractas de Datos y Algoritmos para Ingeniería} \\ \large{Propuesta Librería de Procesamiento Digital de Imágenes}
+}
+\author
+{
+\begin{tabular}{l l}
+Erick Eduarte Rojas & B22305\\ 
+Fabián Meléndez Bolaños & B24056\\
+Luis Felipe Rincón Riveros & B25530
+\end{tabular}
+}
+
+
+\begin{document}
+
+\maketitle
+
+
+\section{Introducción}
+Se propone realizar una librería en el lenguaje de programación C++, con la cual se lleve a cabo funciones básicas de filtrado de imágenes. Especialmente monocromáticas, pero se planea implementar tambien para imágenes RGB. 
+
+Una imagen es el conjunto de elementos de una función bidimensional, donde x,y son coordenadas espaciales, además cada par de coordenadas tiene una amplitud de f, llamada intensidad o nivel de gris de la imagen. Si los valores de (x,y) y la amplitud son todos finitos, se dice que la imagen es una imagen digital. Las imágenes digitales están compuestas por elementos de imagen que comunmente se llaman píxeles.
+
+El procesamiento digital de imágenes se refiere al conjunto de técnicas que se aplican a las imagenes digitales con el fin de mejorar su calidad o bien facilitar la obtención de información. Algunos de los objetivos del procesamiento de imágenes son: suavizar la imagen, eliminar el ruido, realzar los bordes y detectar los bordes, etc. Por lo general para lograr dichos objetivos se utilizan filtros, los cuales pueden ser en el dominio del espacio así como en el dominio de la frecuencia.
+	Entre las principales aplicaciones que tiene el procesamiento digital de imágenes se encuentra la mejora de la información pictórica para facilitar la interpretación humana y el alamcenamiento, transmisión y representación de datos para la percepción de una máquina autónoma.
+    
+El enfoque del presente trabajo es desarrollar una librería que sea capaz de aplicar algunas de las funciones básicas de procesamiento digital, con el fin de aplicar un filtro a una imagen, para facilitar la comprensión y manejo de la información en ellas.
+
+\section{Objetivos}
+
+	\subsection{General}
+
+		\begin{itemize}
+
+		\item Crear una librería capaz de realizar ciertas funciones básicas de procesamiento digital de imágenes en C++.
+
+		\end{itemize}
+
+	\subsection{Específicos}
+
+		\begin{itemize}
+     
+        	\item{Aprender a manejar imágenes en C++.}
+
+			\item{Implementar funciones de filtros de operaciones básicas (promedio, varianza, etc)}
+
+			\item{Implementar filtros en el dominio del espacio.}
+            
+            \item{Implementar filtros en el dominio de la frecuencia.}
+            
+            \item{Implementar filtros de transformacion punto a punto.}
+            
+            \item{Implementar filtros de especificación de histogramas.}
+
+		\end{itemize}
+
+\section{Justificación}
+
+El procesamiento digital de imágenes es de vital importancia en ciertas aplicaciones, ya que permite extraer información y manipularla. Es por ello que crear una librería que sea capaz de implementar algunos métodos para tratar imágenes puede llegar a ser benficiosa.
+
+\section{Funciones}
+
+\begin{table}[H]
+
+	\centering
+    
+	\begin{tabular}[13cm]{ 
+    >{\centering\arraybackslash}m{3cm} 
+    >{}m{5cm} 
+    >{}m{5cm}}
+		
+        \toprule
+        
+		\large{Tipo} & \large{Función} & \large{Descripcion} \\
+        
+		\midrule
+        
+        Operaciones Ariméticas y Lógicas 
+        
+        & Suma & p + q con p y q puntos dados( por ejemplo en el promediado para la eliminación de ruido). \\ \\
+        
+        & División & p /$ \alpha $ para disminuir el nivel de gris.\\ \\
+       
+        
+        \bottomrule
+        
+	\end{tabular}
+    
+\end{table}
+
+\begin{table}[H]
+
+	\centering
+    
+	\begin{tabular}[13cm]{ 
+    >{\centering\arraybackslash}m{3cm} 
+    >{}m{5cm} 
+    >{}m{5cm}}
+        
+        \midrule
+        
+         Suavización en el dominio espacial
+       
+         & -Promedio & Promedia los niveles de gris de los píxeles de una vecindad. \\ \\
+         
+         & -Mediana & Sustituye por el valor de la mediana del nivel gris de los píxeles vecinos. \\ \\
+         
+         & -Moda & Se elige el valor más frecuente de los niveles de gris de los píxeles vecinos.  \\ \\
+         
+         & -Gaussiana & Aproximación de la distribución gaussiana \\
+         
+
+         \midrule
+        
+        Constrastación en el dominio espacial
+        
+         & -Contrastación por diferenciación (Gradiente) &  Las técnicas de contrastación son útiles principalmente para resaltar los bordes
+en una imagen.\\ \\
+        
+         & -Realce de bordes con Laplace & Realza los bordes en todas direcciones. En esta ocasión se trabaja con la segunda derivada, que da mejores resultados, a pesar del aumento del ruido que se produce en la imagen. \\ \\
+
+		 & -Realce de bordes por Desplazamiento y Diferencia & Sustrae de la imagen una copia desplazada. Así, es posible localizar y resaltar los bordes.\\ \\
+        
+         & -Realce de bordes con gradiente direccional & Destaca y resalta con mayor precisión los bordes en una dirección determinada. Trabaja con los cambios de intensidad existentes entre píxeles contiguos. \\ \\
+        
+         & -Detección de bordes y filtros de contorno (Prewitt y Sobel): & Se centra en las diferencias de intensidad de pixel a pixel. Son utilizados para obtener los contornos de objetos y clasificar las formas dentro de una imagen. Requieren un menor coste computacional. \\ 
+         
+         \bottomrule
+        
+	\end{tabular}
+    
+\end{table}
+
+\begin{table}[H]
+
+	\centering
+    
+	\begin{tabular}[10cm]{ 
+    >{\centering\arraybackslash}m{3cm} 
+    >{}m{5cm} 
+    >{}m{5cm}}
+        
+        
+        \midrule
+        
+         Filtros en el dominio de la frecuencia 
+         
+         & -Transformada de Fourier & Los filtros de frecuencia procesan una imagen trabajando sobre el dominio de la frecuencia en la Transformada de Fourier de la imagen. \\ \\
+         & -Promedio & Es un tipo de filtro suavizante, pero para la frecuencia. \\ \\
+         & -LaPlaciano & Amuenta la nitidez al afinar las líneas de transición de niveles de gris. \\ \\
+         & -Prewitt & filtro para bordes con operadores gradiante. \\ \\
+         & -Paso bajo & Eliminan el ruido de alta frecuencia, osea, variaciones bruscas de contraste en la imagen.\\ \\
+         & -Paso alto & Atenúan componentes de baja frecuencia eliminando las variaciones suaves de contrastes.\\ \\
+         & -Filtro butterworth & Pretende que la transición de frecuencias filtradas y activas en los paso-alto y paso-bajo no sean tan bruscas.\\ \\
+        
+        \midrule
+        
+        Métodos de transformacion punto a punto 
+        
+        & Dilatación del rango dinámico  & Se aplica a imágenes pobremente contrastadas debido a una mala iluminación (aparecen muchos puntos en un intervalo pequeño de niveles de gris). Interesa resaltar la zona donde hay una mayor concentración de niveles de gris. \\ \\
+
+
+		& Fraccionamiento del nivel de gris & Es un caso especial de la dilatación del rango dinámico. \\
+       
+       \bottomrule
+        
+	\end{tabular}
+    
+\end{table}
+
+\begin{table}[H]
+
+	\centering
+    
+	\begin{tabular}[10cm]{ 
+    >{\centering\arraybackslash}m{3cm} 
+    >{}m{5cm} 
+    >{}m{5cm}}
+    
+    \toprule
+    
+        & Negativo de una imagen & La inversión de los niveles de intensidad de la imagen de esta forma produce el equivalente de un negativo fotográfico. Este tipo de proceso es particularmente adecuado para mejorar detalles de color blanco o gris incrustado en las regiones oscuras de la imagen, especialmente cuando las zonas negras son dominantes en tamaño \\ \\
+        
+        & Transformación Logarítmicas & Esta transformación mapea un rango estrecho de grises en la imagen de entrada en una gama más amplia de niveles de salida \\ \\
+        
+        & Corte de niveles de gris & La selección de un rango específico de niveles de gris en una imagen se desea a menudo. Hay varias maneras de hacerlo, pero la mayoría de ellas son variaciones de dos temas básicos. Un enfoque consiste en mostrar un alto valor para todos los niveles de gris en el rango de interés y un valor bajo para todos los otros niveles de gris, lo que produce una imagen binaria. Otro enfoque enbrillece el rango deseado y conserva el resto casi intacto. \\
+        
+        \bottomrule
+        
+	\end{tabular}
+    
+\end{table}
+
+\begin{table}[H]
+
+	\centering
+    
+	\begin{tabular}[10cm]{ 
+    >{\centering\arraybackslash}m{3cm} 
+    >{}m{5cm} 
+    >{}m{5cm}}
+        \midrule 
+        
+        Métodos de especificación de histogramas 
+        
+        & Histograma de una imagen &  Para obtener el histograma de una imagen. El histograma de una imagen representa la frecuencia relativa de los niveles de gris de la imagen. Las técnicas de modificación del histograma de una imagen son útiles para aumentar el contraste de imágenes con histogramas muy concentrados.\\ \\
+        
+        & Ecualización del Histograma de una imagen &  es una transformación que pretende obtener para una imagen un histograma con una distribución uniforme. Es decir, que exista el mismo número de pixels para cada nivel de gris del histograma de una imagen monocroma \\
+        
+    	\bottomrule
+        
+	\end{tabular}
+    
+\end{table}
+
+\end{document}
