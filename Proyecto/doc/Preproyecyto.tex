@@ -1,0 +1,104 @@
+
+\documentclass[letterpaper]{article}
+
+\usepackage[spanish]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{booktabs}
+\usepackage{tabulary}
+\usepackage{graphicx} % graficos
+\usepackage{multirow, array} % para las tablas
+\usepackage{float} % para usar [H]
+\title{Universidad de Costa Rica \\ Propuesta Librería de Procesamiento Digital de Imágenes}
+
+\author{Erick Eduarte Rojas B22305\\ Fabián Meléndez Bolaños B24056\\ Luis Felipe Rincón Riveros B25530}
+\begin{document}
+
+\maketitle
+
+\section{Introducción}
+Una imagen es el conjunto de elementos de una función bidimensional, donde x,y son coordenadas espaciales, además cada par de coordenadas tiene una amplitud de f, llamada intensidad o nivel de gris de la imagen. Si los valores de (x,y) y la amplitud son todos finitos, se dice que la imagen es una imagen digital. Las imágenes digitales están compuestas por elementos de imagen que comunmente se llaman píxeles.
+
+El procesamiento digital de imágenes se refiere al conjunto de técnicas que se aplican a las imagenes digitales con el fin de mejorar su calidad o bien facilitar la obtención de información. Algunos de los objetivos del procesamiento de imágenes son: suavizar la imagen, eliminar el ruido, realzar los bordes y detectar los bordes, etc. Por lo general para lograr dichos objetivos se utilizan filtros, los cuales pueden ser en el dominio del espacio así como en el dominio de la frecuencia.
+	Entre las principales aplicaciones que tiene el procesamiento digital de imágenes se encuentra la mejora de la información pictórica para facilitar la interpretación humana y el alamcenamiento, transmisión y representación de datos para la percepción de una máquina autónoma.
+    
+El enfoque del presente trabajo es desarrollar una librería que sea capaz de aplicar algunas de las funciones básicas de procesamiento digital, con el fin de aplicar un filtro a una imagen, para facilitar la comprensión y manejo de la información en ellas.
+
+\section{Objetivos}
+
+	\subsection{General}
+
+		\begin{itemize}
+
+		\item Crear una librería capaz de realizar ciertas funciones básicas de procesamiento digital de imágenes en C++.
+
+		\end{itemize}
+
+	\subsection{Específicos}
+
+		\begin{itemize}
+     
+        	\item{Aprender a manejar imágenes en C++.}
+
+			\item{Implementar funciones de filtros de operaciones morfológicas básicas (promedio, varianza, etc)}
+
+			\item{Implementr filtros en el dominio del espacio.}
+            
+            \item{Implementar filtros en el dominio de la frecuencia.}
+
+		\end{itemize}
+
+\section{Justificación}
+
+El procesamiento digital de imágenes es de vital importancia en ciertas aplicaciones, ya que permite extraer información y manipularla. Es por ello que crear una librería que sea capaz de implementar algunos métodos para tratar imágenes puede llegar a ser benficiosa.
+
+\section{Funciones}
+
+\begin{table}[H]
+
+	\centering
+    
+	\begin{tabular}[10cm]{>{\centering\arraybackslash}m{2cm} 
+    >{\centering\arraybackslash}m{2cm} 
+    >{}m{5cm} 
+    >{\centering\arraybackslash}m{4cm}}
+		
+        \toprule
+        
+		\large{Tipo} & \large{Filtro} & \large{Función} & \large{Descripcion} \\
+        
+		\midrule
+        
+        %TIPO EN EL ESPACIO
+        
+        \large{Filtros en el dominio  del espacio}
+        
+        & Filtro paso bajo 
+       
+          & -Promedio & --Missing Description-- \\
+        & & -Media & --Missing Description--  \\
+        & & -Mediana & --Missing Description-- \\
+        & & -Moda & --Missing Description--  \\
+        & & -Gaussiana & -Description \\
+        
+        & Filtro paso alto 
+        
+           & -Realce de bordes con Laplace & ETC \\
+
+		&  & -Realce de bordes por Desplazamiento y Diferencia & ETC \\
+        
+        &  & -Realce de bordes con gradiente direccional & ETC \\
+        
+        &  & -Detección de bordes y filtros de contorno (Prewitt y Sobel): & ETC \\
+        
+        \cmidrule{r}{2-4}
+        
+        \large{Filtros en el dominio de la frecuencia} & Filtro paso bajo & & \\
+    	\bottomrule
+	\end{tabular}
+    
+\end{table}
+
+\end{document}
