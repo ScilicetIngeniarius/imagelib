@@ -23,4 +23,13 @@
 *.lof
 *.tps
 *.pdf
+*.idx
+*.toc
+
+# Doxygen output files
+*.sty
+Proyecto/doc/refman.tex
+*.xslt
+*.xsd
+*.xml
 
