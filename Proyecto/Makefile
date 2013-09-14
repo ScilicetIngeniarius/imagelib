@@ -3,5 +3,11 @@
 MAKE = make
 CD = cd
 
-doc:
-	$(MAKE) -C doc/
+doc: doc/Makefile
+	make -C ./doc/ all 
+
+.PHONY: all doc clean
+
+clean:
+	make -C ./doc/ clean
+	
