@@ -1,0 +1,62 @@
+\hypertarget{image_8cpp}{\section{image.\-cpp}
+\label{image_8cpp}\index{/home/fabian/\-Documents/\-E.\-A.\-D.\-A.\-I./mylibrary/\-Proyecto/src/image.\-cpp@{/home/fabian/\-Documents/\-E.\-A.\-D.\-A.\-I./mylibrary/\-Proyecto/src/image.\-cpp}}
+}
+
+\begin{DoxyCode}
+00001 \textcolor{preprocessor}{#include "../include/image.hh"}
+00002 
+00003 Image::Image(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *\textcolor{keyword}{const} filename)
+00004 \{
+00005     this->Img = \textcolor{keyword}{new} CImg<unsigned char>(filename);
+00006     this->width = this->Img->width();
+00007     this->height = this->Img->height();
+00008     this->depth = this->Img->depth();
+00009     this->spectrum = this->Img->spectrum();
+00010 \}
+00011 
+00012 Image::Image()
+00013 \{
+00014     this->Img = \textcolor{keyword}{new} CImg<unsigned char>();
+00015     this->width = 0;
+00016     this->height = 0;
+00017     this->depth = 0;
+00018     this->spectrum = 0;
+00019 \}
+00020 
+00021 Image::Image(\textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} width, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} height, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} depth, \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{
+      int} spectrum, \textcolor{keywordtype}{int} value)
+00022 \{
+00023     this->Img = \textcolor{keyword}{new} CImg<unsigned char>(width, height, depth, spectrum, value);
+00024     this->width = width;
+00025     this->height = height;
+00026     this->depth = depth;
+00027     this->spectrum = spectrum;
+00028 \}
+00029 
+00030 Image::~Image(\textcolor{keywordtype}{void})
+00031 \{
+00032 
+00033 \}
+00034 
+00035 \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} Image:: get\_width()
+00036 \{
+00037     \textcolor{keywordflow}{return} this->width;
+00038 \}
+00039 \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} Image:: get\_height()
+00040 \{
+00041     \textcolor{keywordflow}{return} this->height;
+00042 \}
+00043 \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} Image:: get\_depth()
+00044 \{
+00045     \textcolor{keywordflow}{return} this->depth;
+00046 \}
+00047 \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} Image:: get\_spectrum()
+00048 \{
+00049     \textcolor{keywordflow}{return} this->spectrum;
+00050 \}
+00051 
+00052 \textcolor{keywordtype}{void} Image:: save(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *\textcolor{keyword}{const} savefilename)
+00053 \{
+00054     this->Img->save(savefilename);
+00055 \}
+\end{DoxyCode}

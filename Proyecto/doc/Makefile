@@ -1,11 +1,6 @@
-#Variables
-PDFLATEX = pdflatex
-all: doxygen pdf
+all: refman.pdf
 
-doxygen : Imagelib.doxygen
-	doxygen Imagelib.doxygen	
-
-pdf: refman.pdf Propuesta
+pdf: refman.pdf
 
 refman.pdf: clean refman.tex
 	pdflatex refman
@@ -19,8 +14,6 @@ refman.pdf: clean refman.tex
 	      latex_count=`expr $$latex_count - 1` ;\
 	    done
 
-Propuesta : Propuesta.tex
-	$(PDFLATEX) Propuesta.tex 
 
 clean:
-	rm -f *.ps *.dvi *.aux *.toc *.idx *.ind *.ilg *.log *.out *.brf *.blg *.bbl
+	rm -f *.ps *.dvi *.aux *.toc *.idx *.ind *.ilg *.log *.out *.brf *.blg *.bbl refman.pdf

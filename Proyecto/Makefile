@@ -1,6 +1,6 @@
 # Make variable
 
-all: doc src
+all: src doc
 
 MAKE = make
 CD = cd
@@ -11,7 +11,7 @@ doc: doc/Makefile
 src: src/Makefile
 	$(MAKE) -C ./src/ all
 
-.PHONY: all doc clean
+.PHONY: all doc clean src
 
 clean:
 	make -C ./doc/ clean
