@@ -22,6 +22,14 @@ public:
 	Image (const char *const filename);
 	Image (const unsigned int width, const unsigned int height, const unsigned int depth, const unsigned int spectrum, int value);
 	~Image(void);
+	
+	unsigned int get_width();
+	unsigned int get_height();
+	unsigned int get_depth();
+	unsigned int get_spectrum();
+	
+	void save(const char *const savefilename);
+	
 };
 
 #endif

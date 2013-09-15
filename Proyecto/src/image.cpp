@@ -3,10 +3,10 @@
 Image::Image(const char *const filename)
 {
 	this->Img = new CImg<unsigned char>(filename);
-	this->width = this->Img.;
-	this->height = 0;
-	this->depth = 0;
-	this->spectrum = 0;
+	this->width = this->Img->width();
+	this->height = this->Img->height();
+	this->depth = this->Img->depth();
+	this->spectrum = this->Img->spectrum();
 }
 
 Image::Image()
@@ -32,9 +32,24 @@ Image::~Image(void)
 
 }
 
-/*
-Image :: CImgDisplay Display (Image *image, string title)
+unsigned int Image:: get_width()
 {
-	CImgDisplay main_disp (image, title); 
+	return this->width;
 }
-*/
+unsigned int Image:: get_height()
+{
+	return this->height;
+}
+unsigned int Image:: get_depth()
+{
+	return this->depth;
+}
+unsigned int Image:: get_spectrum()
+{
+	return this->spectrum;
+}
+
+void Image:: save(const char *const savefilename)
+{
+	this->Img->save(savefilename);
+}
