@@ -25,6 +25,9 @@
 *.pdf
 *.idx
 *.toc
+*.ilg
+*.ild
+*.ind
 
 # Doxygen output files
 *.sty
@@ -32,4 +35,7 @@ Proyecto/doc/refman.tex
 *.xslt
 *.xsd
 *.xml
+Proyecto/doc/dir_68267d1309a1af8e8297ef4c3efbcdba.tex
+Proyecto/doc/refman*
+Proyecto/doc/image_8cpp*
 
