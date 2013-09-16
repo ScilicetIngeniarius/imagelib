@@ -1,6 +1,6 @@
-all: refman.pdf
+all: doxygen pdf 
 
-pdf: refman.pdf
+pdf: refman.pdf Propuesta.pdf
 
 refman.pdf: clean refman.tex
 	pdflatex refman
@@ -13,6 +13,12 @@ refman.pdf: clean refman.tex
 	      pdflatex refman ;\
 	      latex_count=`expr $$latex_count - 1` ;\
 	    done
+Propuesta.pdf : Propuesta.tex
+	pdflatex Propuesta.tex
+	make clean
+
+doxygen: Imagelib.doxygen
+	doxygen Imagelib.doxygen
 
 
 clean:
