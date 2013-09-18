@@ -57,11 +57,16 @@ void Image:: save(const char *const savefilename)
 
 /*
  * Filter Function
- * Image Filter (int [] matrix)
+ * void Filter (int [] kernel)
  * {
 	 * // K = 2m+1;
 	 * int k = matriz.width();
 	 * int m = (k-1)/2
+	 * 
+	 * //Se define la matriz de números (Para extraer los valores de unsigned char)
+	 * //Se definen las dimensiones de la 
+	 * unsigned char matrix [this->spectrum()] [this->depth()] [this->width()] [this->height()];
+	 * 
 	 * 
 	 * for(int c = 0; c < this->depth(); c++)
 	 * {
