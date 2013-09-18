@@ -53,3 +53,42 @@ void Image:: save(const char *const savefilename)
 {
 	this->Img->save(savefilename);
 }
+
+
+/*
+ * Filter Function
+ * Image Filter (int [] matrix)
+ * {
+	 * // K = 2m+1;
+	 * int k = matriz.width();
+	 * int m = (k-1)/2
+	 * 
+	 * for(int c = 0; c < this->depth(); c++)
+	 * {
+		 * for(int z = 0; z < this->spectrum(); z++)
+		 * {
+			 * for(int x = 0; x < this->width(); x++)
+			 * {
+				 * for(int y = 0; y < this->height(); y++)
+				 * {
+					 * //HASTA AQUI, SOLO RECORRO TODA LA IMAGEN; FALTA EL KERNEL
+					 * 
+					 * int sum = 0;
+					 * 
+					 * //Para el kernel:
+					 * for(int i = x-m; i <= x+1; i++)
+					 * {
+						 * for(int j = y-m; j<= j+1; j++)
+						 * {
+							 * sum += this->Img->getMatrix...;
+						 * }
+					 * }
+					 * 
+					 * this->Img->setpixel(x,y,z,c, sum/(K*k))
+				 * }
+			 * }
+		 * }
+	 * }  
+ * }
+ * 
+*/
