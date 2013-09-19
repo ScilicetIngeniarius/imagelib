@@ -7,12 +7,17 @@
 
 using namespace cimg_library;
 using namespace std;
+/**This namespace is defined to avoid functions and class names collisions 
+ * that could happen with the inclusion of other C++ header files.
+ */
+
 
 #ifndef IMAGE_CLASS
 #define IMAGE_CLASS
 
 class Image
-/**\brief The Image class is the 
+/**\brief The Image class is the abstraction of the image.
+ * 
  */
 {
 private:
