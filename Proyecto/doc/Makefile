@@ -1,6 +1,6 @@
 all: doxygen pdf 
 
-pdf: refman.pdf Propuesta.pdf
+pdf: Propuesta.pdf
 
 Propuesta.pdf : Propuesta.tex
 	pdflatex Propuesta.tex
