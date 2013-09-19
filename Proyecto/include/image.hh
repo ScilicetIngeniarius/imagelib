@@ -1,6 +1,10 @@
 #include "../include/CImg.h"
 #include <string>
-///Se incluye la librería CImg.
+
+/**\brief image.hh implements a wrapper over the library CImg.
+ * For more information go to cimg.sourceforge.net
+ */ 
+
 using namespace cimg_library;
 using namespace std;
 
@@ -8,6 +12,8 @@ using namespace std;
 #define IMAGE_CLASS
 
 class Image
+/**\brief The Image class is the 
+ */
 {
 private:
 	///Primero se declaran las variables de la clase como privadas

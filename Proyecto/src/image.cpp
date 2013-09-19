@@ -1,4 +1,5 @@
 #include "../include/image.hh"
+
 /**\file ../include/image.hh
  * Header for the image class
  */
