@@ -8,7 +8,7 @@ Propuesta.pdf : Propuesta.tex
 
 doxygen: Imagelib.doxygen
 	doxygen Imagelib.doxygen
-	make -C ./doxygen/ all
+	make -C ./doxygen/ all pdf
 
 clean:
 	rm -f *.ps *.dvi *.aux *.toc *.idx *.ind *.ilg *.log *.out *.brf *.blg *.bbl
