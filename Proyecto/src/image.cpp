@@ -1,4 +1,13 @@
 #include "../include/image.hh"
+/**\file ../include/image.hh
+ * Header for the image class
+ */
+
+/*! \fn Image::Image(const char *const filename)
+ * \brief Constructor
+ * 
+ * This constructor is used when the image already exist's and is stored in the \param filename path.
+ */
 
 Image::Image(const char *const filename)
 {
