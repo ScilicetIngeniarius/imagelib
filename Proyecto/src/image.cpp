@@ -3,8 +3,21 @@
 /**\file ../include/image.hh
  * Header for the image class
  */
-
-/*! \fn Image::Image(const char *const filename)
+ 
+ /** \fn Image::Image()
+ * \brief Constructor
+ * This constructor initializes the four dimension params at 0;
+ * The \param Img calls the constructor of CImg to create an empty image.
+ */
+Image::Image()
+{
+	this->Img = new CImg<unsigned char>();
+	this->width = 0;
+	this->height = 0;
+	this->depth = 0;
+	this->spectrum = 0;
+}
+/** \fn Image::Image(const char *const filename)
  * \brief Constructor
  * 
  * This constructor is used when the image already exist's and is stored in the \param filename path.
@@ -20,26 +33,13 @@ Image::Image(const char *const filename)
 	this->height = this->Img->height();
 	///height se refiere al alto de la imagen.
 	this->depth = this->Img->depth();
-	///depth se refiere a la cantidad de capas que tenga la imagen
+	///Depth is the amount of layers of depth the image has, usually is one, except for 3D images.
 	this->spectrum = this->Img->spectrum();
-	///NO SE QUE ES SPECTRUM
+	///Spectrum is the number of channels in the image, RGB has a spectrum of 3, a monocromatic image has a spectrum of 1.
 	
-	this->update_matrix();
 	
 }
 
-Image::Image()
-{
-	///Este es el constructor de la clase que inicializa las variables en 0.
-	///En el caso de Img se llama al constructor de CImg que inicialice la imagen como vacía.
-	this->Img = new CImg<unsigned char>();
-	this->width = 0;
-	this->height = 0;
-	this->depth = 0;
-	this->spectrum = 0;
-	
-	this->update_matrix();
-}
 
 Image::Image(const unsigned int width, const unsigned int height, const unsigned int depth, const unsigned int spectrum, int value)
 {
