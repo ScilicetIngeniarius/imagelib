@@ -95,6 +95,12 @@ unsigned int Image:: get_pixel_value(int x, int y, int z, int c)
 	return this->Img->get_vector_at(x, y, z)[c];
 }
 
+unsigned int Image:: set_pixel_value_at(unsigned char value, int x, int y, int z, int c)
+{
+  
+
+}
+
 /*! \fn Image Image :: filter (int [] *kernel )
  * \brief This function aplies a space domain filter, its a general function, and each filter will
  * depend on the \param kernel matrix, wich provides the respective weights to the surroundings.
