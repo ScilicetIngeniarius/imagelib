@@ -28,6 +28,17 @@ Luis Felipe Rincón Riveros & B25530
 
 \begin{document}
 
+\definecolor{barblue}{RGB}{153,204,254}
+\definecolor{groupblue}{RGB}{51,102,254}
+\definecolor{linkred}{RGB}{165,0,33}
+\renewcommand\sfdefault{phv}
+\renewcommand\mddefault{mc}
+\renewcommand\bfdefault{bc}
+\setganttlinklabel{s-s}{START-TO-START}
+\setganttlinklabel{f-s}{FINISH-TO-START}
+\setganttlinklabel{f-f}{FINISH-TO-FINISH}
+\sffamily
+
 \maketitle
 
 
@@ -227,5 +238,123 @@ en una imagen.\\ \\
 	\end{tabular}
     
 \end{table}
+
+\section{Cronograma}
+\begin{ganttchart}[
+canvas/.append style={fill=none, draw=black!5, line width=.75pt},
+hgrid style/.style={draw=black!5, line width=.75pt},
+vgrid={*1{draw=black!5, line width=.75pt}},
+today=4,
+today rule/.style={
+draw=black!64,
+dash pattern=on 3.5pt off 4.5pt,
+line width=1.5pt
+},
+title/.style={draw=none, fill=none},
+title label font=\bfseries\footnotesize,
+title label node/.append style={below=7pt},
+include title in canvas=false,
+bar label font=\mdseries\small\color{black!70},
+bar label node/.append style={left=2cm},
+bar/.append style={draw=none, fill=black!63},
+bar incomplete/.append style={fill=barblue},
+group incomplete/.append style={fill=groupblue},
+group left shift=0,
+group right shift=0,
+group height=.5,
+group label node/.append style={left=.6cm},
+link/.style={-latex, line width=1.5pt, linkred},
+link label font=\scriptsize\bfseries,
+link label node/.append style={below left=-2pt and 0pt}
+]{1}{13}
+\gantttitle[
+title label node/.append style={below left=7pt and -3pt}
+]{DAY:}{1}
+\gantttitlelist{19,...,31,1,2,3}{1} \\
+\ganttgroup[progress=100]{1. Image Class}{1}{4} \\
+\ganttbar[
+progress=100,
+name=SFun
+]{\textbf{1.1} Cargar, Salvar, Copiar}{1}{3} \\
+\ganttbar[
+progress=100,
+name=SFun1
+]{\textbf{1.2} Get and Set's}{1}{3} \\
+\ganttbar[
+progress=100,
+name=GSF
+]{\textbf{1.3} Función Filtro}{3}{4} \\
+
+\ganttgroup[progress=30]{2. Filtros en el Dominio Espacial}{3}{7} \\
+\ganttbar[progress=50]{\textbf{2.1} Operaciones Arimeticas y Logicas }{3}{6} \\
+\ganttbar[progress=20]{\textbf{2.2} Suavizacion (Filtros paso bajo)}{4}{7} \\
+\ganttbar[progress=20]{\textbf{2.3} Contrastacion (Filtros paso alto)}{4}{7} \\
+
+\ganttgroup[]{3. Filtros en el Dominio de la Frecuencia}{7}{12} \\
+\ganttbar[]{\textbf{3.1} Transformada de Fourier }{7}{9} \\
+\ganttbar[]{\textbf{3.2} Suavizacion (Filtros paso bajo)}{9}{11} \\
+\ganttbar[]{\textbf{3.3} Contrastacion (Filtros paso alto)}{9}{11} \\
+\ganttbar[]{\textbf{2.1} Butterworth, Prewitt }{10}{12} \\
+
+%\ganttlink[link type=s-s]{WBS1A}{WBS1B}
+%\ganttlink[link type=f-s]{WBS1B}{WBS1C}
+%\ganttlink[
+%link type=f-f,
+%link label node/.append style=left
+%]{WBS1C}{WBS1D}
+\end{ganttchart}
+
+
+\begin{ganttchart}[
+canvas/.append style={fill=none, draw=black!5, line width=.75pt},
+hgrid style/.style={draw=black!5, line width=.75pt},
+vgrid={*1{draw=black!5, line width=.75pt}},
+today=4,
+today rule/.style={
+draw=black!64,
+dash pattern=on 3.5pt off 4.5pt,
+line width=1.5pt
+},
+title/.style={draw=none, fill=none},
+title label font=\bfseries\footnotesize,
+title label node/.append style={below=7pt},
+include title in canvas=false,
+bar label font=\mdseries\small\color{black!70},
+bar label node/.append style={left=2cm},
+bar/.append style={draw=none, fill=black!63},
+bar incomplete/.append style={fill=barblue},
+group incomplete/.append style={fill=groupblue},
+group left shift=0,
+group right shift=0,
+group height=.5,
+group label node/.append style={left=.6cm},
+link/.style={-latex, line width=1.5pt, linkred},
+link label font=\scriptsize\bfseries,
+link label node/.append style={below left=-2pt and 0pt}
+]{1}{13}
+\gantttitle[
+title label node/.append style={below left=7pt and -3pt}
+]{DAY:}{1}
+\gantttitlelist{19,...,31,1,2,3}{1} \\
+\ganttgroup[]{4. Metodos de transformacion punto a punto}{10}{14} \\
+\ganttbar[]{\textbf{4.1} Dilatacion Rango Dinamico }{10}{11} \\
+\ganttbar[]{\textbf{4.2} Negativo de la imagen}{10}{11} \\
+\ganttbar[]{\textbf{4.3} Transformaciones Logaritmicas)}{11}{12} \\
+\ganttbar[]{\textbf{4.4} Corte del nivel de gris}{11}{13} \\
+
+\ganttgroup[]{5. Creacion de documentacion y presentacion}{14}{17} \\
+\ganttbar[]{\textbf{5.1} Upgrade del doxygen }{14}{15} \\
+\ganttbar[]{\textbf{5.2} Terminar el wiki}{14}{16} \\
+\ganttbar[]{\textbf{5.3} Tutoriales (Usage, install)}{14}{16} \\
+\ganttbar[]{\textbf{5.4} Presentacion}{15}{17} 
+
+%\ganttlink[link type=s-s]{WBS1A}{WBS1B}
+%\ganttlink[link type=f-s]{WBS1B}{WBS1C}
+%\ganttlink[
+%link type=f-f,
+%link label node/.append style=left
+%]{WBS1C}{WBS1D}
+\end{ganttchart}
+
 
 \end{document}
