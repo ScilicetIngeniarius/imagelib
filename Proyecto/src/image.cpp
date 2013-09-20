@@ -37,12 +37,13 @@ Image::Image(const char *const filename)
 	///< \param <spectrum> is the number of channels in the image, RGB has a spectrum of 3, a monocromatic image has a spectrum of 1.
 		
 }
-
+/** \fn Image::Image(const unsigned int width, const unsigned int height, const unsigned int depth, const unsigned int spectrum, int value)
+ * \brief This constructor is used when we need to create an image, and gives the dimensions of the image, and the value of a color that fills all the pixels.
+ * 
+ */
 Image::Image(const unsigned int width, const unsigned int height, const unsigned int depth, const unsigned int spectrum, int value)
 {
-	///Este es el constructor de la imagen para el caso en el que le pasen los parámetros de la imagen.
 	this->Img = new CImg<unsigned char>(width, height, depth, spectrum, value);
-	///Llama al constrcutor de CImg donde se le dan los valores de width, height, depth, spectrum, y value (NO SE QUE ES VALUE)
 	this->width = width;
 	this->height = height;
 	this->depth = depth;
@@ -50,10 +51,12 @@ Image::Image(const unsigned int width, const unsigned int height, const unsigned
 	
 	this->update_matrix();
 }
-
+/** \fn ~Image(void) 
+ * \brief is the destructor of the class.
+ */ 
 Image::~Image(void)
 {
-	///~Image(void) es el destructor de la clase
+	
 }
 
 /** \fn unsigned int Image:: get_width()
