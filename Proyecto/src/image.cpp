@@ -90,6 +90,10 @@ void Image:: save(const char *const savefilename)
 	this->Img->save(savefilename);
 }
 
+/*! \fn unsigned int Image:: get_pixel_value(int x, int y, int z, int c)
+ * \brief Returns the value of the unsigned char in the x, y, z, and c coordinates.
+ */
+
 unsigned int Image:: get_pixel_value(int x, int y, int z, int c)
 {
 	return this->Img->get_vector_at(x, y, z)[c];
