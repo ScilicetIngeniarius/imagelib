@@ -43,7 +43,6 @@ public:
 	
 
 	unsigned int get_pixel_value(int, int, int, int); ///< \fn get_pixel_value returns the unsigned char value of the pixel in the given coordinates.
-	
 
 	void set_pixel_value(unsigned char, unsigned char, unsigned char, int, int, int); ///< \fn set_pixel_value allows to set the red,green and blue value of pixel in a RGB image.  
 	
