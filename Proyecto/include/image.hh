@@ -40,8 +40,14 @@ public:
 	~Image(void);
 	/// \fn ~Image(void) es el destructor de la clase
 	
+<<<<<<< HEAD
 	unsigned int get_pixel_value(int, int, int, int);
-	unsigned int set_pixel_value_at(unsigned char, int, int, int, int);
+	
+=======
+	unsigned int get_pixel_value(int, int, int, int); ///< \fn get_pixel_value returns the unsigned char value of the pixel in the given coordinates.
+>>>>>>> 59c87512a00de184e4ce3fe09be7468f175454aa
+
+	void set_pixel_value(unsigned char, unsigned char, unsigned char, int, int, int); ///< \fn set_pixel_value allows to set the red,green and blue value of pixel in a RGB image.  
 	
 	unsigned int get_width();///< \fn get_width() allows to obtain the width of the image.
 	unsigned int get_height();///< \fn get_height allows to obtain the height of the image.
@@ -53,7 +59,8 @@ public:
 	void save(const char *const savefilename);
 	///< \fn save(const char *const savefilename) allows to save an image with the name of \param savefilename.
 	
-	Image filter();
+	
+	Image filter(int [] *kernel, int dim, float normalizer);
 };
 
 #endif

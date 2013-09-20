@@ -90,15 +90,24 @@ void Image:: save(const char *const savefilename)
 	this->Img->save(savefilename);
 }
 
+/*! \fn unsigned int Image:: get_pixel_value(int x, int y, int z, int c)
+ * \brief Returns the value of the unsigned char in the x, y, z, and c coordinates.
+ */
+
 unsigned int Image:: get_pixel_value(int x, int y, int z, int c)
 {
 	return this->Img->get_vector_at(x, y, z)[c];
 }
 
-unsigned int Image:: set_pixel_value_at(unsigned char value, int x, int y, int z, int c)
-{
-  
+/*! \fn void Image:: set_pixel_value(unsigned char R, unsigned char G, unsigned char B, int x, int y, int z)
+ * \brief Sets the value of the unsigned chars RGB in the x, y and z coordinates.
+ */
 
+void Image:: set_pixel_value(unsigned char R, unsigned char G, unsigned char B, int x, int y, int z)
+{
+	unsigned char RGB[]={R,G,B};
+	this->Img->set_vector_at(RGB, x, y ,z);
+  
 }
 
 /*! \fn Image Image :: filter (int [] *kernel )
