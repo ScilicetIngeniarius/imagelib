@@ -15,7 +15,10 @@ int main()
 	cout << "\n El valor del spectrum " << imagen.spectrum() << endl; 
 	
 	cout << "\n El valor del depth " << imagen.depth() << endl; 
-	
-	unsigned char a = imagen.get_vector_at(0, 0, 0) [0];
+	for (int i=0; i<100; i++)
+	{
+	unsigned char a = imagen.get_vector_at(i, 0, 0) [0];
 	cout << "\n Vector at  " << static_cast<unsigned>(a);
+	}
 }
+
