@@ -23,6 +23,9 @@ Image::Image(const char *const filename)
 	///depth se refiere a la cantidad de capas que tenga la imagen
 	this->spectrum = this->Img->spectrum();
 	///NO SE QUE ES SPECTRUM
+	
+	this->update_matrix();
+	
 }
 
 Image::Image()
@@ -34,6 +37,8 @@ Image::Image()
 	this->height = 0;
 	this->depth = 0;
 	this->spectrum = 0;
+	
+	this->update_matrix();
 }
 
 Image::Image(const unsigned int width, const unsigned int height, const unsigned int depth, const unsigned int spectrum, int value)
@@ -45,6 +50,8 @@ Image::Image(const unsigned int width, const unsigned int height, const unsigned
 	this->height = height;
 	this->depth = depth;
 	this->spectrum = spectrum;
+	
+	this->update_matrix();
 }
 
 Image::~Image(void)
@@ -52,21 +59,25 @@ Image::~Image(void)
 	///~Image(void) es el destructor de la clase
 }
 
+
 unsigned int Image:: get_width()
 {
 	///get_width retorna un puntero entero con el ancho de la imagen
 	return this->width;
 }
+
 unsigned int Image:: get_height()
 {
 	///get_height retorna un puntero entero con el alto de la imagen
 	return this->height;
 }
+
 unsigned int Image:: get_depth()
 {
 	///get_depth retorna un puntero entero con el número de capas o canales de la imagen
 	return this->depth;
 }
+
 unsigned int Image:: get_spectrum()
 {
 	///get_spectrum retorna un puntero entero con spectrum (NO SE)
@@ -79,48 +90,51 @@ void Image:: save(const char *const savefilename)
 	this->Img->save(savefilename);
 }
 
+unsigned int Image:: get_pixel_value(int x, int y, int z, int c)
+{
+	return this->Img->get_vector_at(x, y, z)[c];
+}
 
-/*
- * Filter Function
- * ///Esta función recorre toda la matriz con un kernel de dimensión desconocida y aplica una función cualquiera a los píxeles de la imagen cuando el kernel esta encima de ellos, el kernel va recorriendo toda la imagen haciendo esto.
- * void Filter (int [] kernel)
- * {
-	 * // K = 2m+1;
-	 * int k = matriz.width();
-	 * int m = (k-1)/2
-	 * 
-	 * ///Se define la matriz de números (Para extraer los valores de unsigned char)
-	 * ///Se definen las dimensiones de la 
-	 * unsigned char matrix [this->spectrum()] [this->depth()] [this->width()] [this->height()];
-	 * 
-	 * 
-	 * for(int c = 0; c < this->depth(); c++)
-	 * {
-		 * for(int z = 0; z < this->spectrum(); z++)
-		 * {
-			 * for(int x = 0; x < this->width(); x++)
-			 * {
-				 * for(int y = 0; y < this->height(); y++)
-				 * {
-				 *  ///Se recorre la matriz en sus 4 dimensiones, con 4 ciclos, luego se debe recorrer el Kernel con otros 2 ciclos.
-					 * //HASTA AQUI, SOLO RECORRO TODA LA IMAGEN; FALTA EL KERNEL
-					 * 
-					 * int sum = 0;
-					 * 
-					 * //Para el kernel:
-					 * for(int i = x-m; i <= x+1; i++)
-					 * {
-						 * for(int j = y-m; j<= j+1; j++)
-						 * {
-							 * sum += this->Img->getMatrix...;
-						 * }
-					 * }
-					 * 
-					 * this->Img->setpixel(x,y,z,c, sum/(K*k))
-				 * }
-			 * }
-		 * }
-	 * }  
- * }
- * 
-*/
+/*! \fn Image Image :: filter (int [] *kernel )
+ * \brief This function aplies a space domain filter, its a general function, and each filter will
+ * depend on the \param kernel matrix, wich provides the respective weights to the surroundings.
+ * \param int [] *kernel: Must ve a square matrix, of anm uneven dimention, because the center value
+ * must be the (x,y) value.
+ * \param int dim: Is the dimention of the square matrix. 
+ * \param float normalizer: Is a value in order to avoid the loss of information and normalize the output of the sum of the values of the pixel in the
+ * neighborhood with the weight values of the kernel. 
+ */
+
+Image Image :: filter (int [] *kernel, int dim, float normalizer)
+{
+	Image filtered (this->get_width() , this->get_height(), this->depth(), this->spectrum(), int value);
+	int m = (dim-1)/2;
+	
+	for(int z = 0; c < this->depth(); c++)
+	{
+		for(int c = 0; z < this->spectrum(); z++)
+		{
+			for(int x = 0; x < this->width(); x++)
+			{
+				for(int y = 0; y < this->height(); y++)
+				{
+					///A variable to sum the values of the kernes with the heights.
+					int sum = 0;
+					
+					///Two loops for the kernel:
+					for(int i = x-m; i <= x+1; i++)
+					{
+						for(int j = y-m; j<= j+1; j++)
+						{
+							sum += this->get_pixel_value(i, j, z, c) * (*kernel[i][j]); 
+						}
+					}
+					 
+					unsigned int pixel_value = sum * normalizer;
+				 }
+			 }
+		 }
+	 }  
+ }
+
+

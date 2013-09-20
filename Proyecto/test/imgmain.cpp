@@ -16,5 +16,5 @@ int main()
 	
 	cout << "\n El valor del depth " << imagen.depth() << endl; 
 	
-	cout << "\n Vector at  " << imagen.get_vector_at(5, 5, 1) << endl;
+	cout << "\n Vector at  " << imagen.get_vector_at(5, 5, 0) << endl;
 }
