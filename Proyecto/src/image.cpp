@@ -25,21 +25,18 @@ Image::Image()
 
 Image::Image(const char *const filename)
 {
-	///Este es el constructor de la clase en donde solamente se conoce la variable filename(NO ESTOY SEGURO DE QUE ES!!)
 	this->Img = new CImg<unsigned char>(filename);
-	///La variable Img es del tipo CImg y se trata como un unsigned char.
+	///< \param <Img> is a var of type Cimg that is treated like an unsigned char.
 	this->width = this->Img->width();
-	///width se refiere al ancho de la imagen.
+	///< \param <width> refers to the number of columns of pixels in the image.
 	this->height = this->Img->height();
-	///height se refiere al alto de la imagen.
+	///< \param <height> refers to the number of rows of pixels in the image.
 	this->depth = this->Img->depth();
-	///Depth is the amount of layers of depth the image has, usually is one, except for 3D images.
+	///< \param <depth> is the amount of layers of depth the image has, usually is one, except for 3D images.
 	this->spectrum = this->Img->spectrum();
-	///Spectrum is the number of channels in the image, RGB has a spectrum of 3, a monocromatic image has a spectrum of 1.
-	
-	
+	///< \param <spectrum> is the number of channels in the image, RGB has a spectrum of 3, a monocromatic image has a spectrum of 1.
+		
 }
-
 
 Image::Image(const unsigned int width, const unsigned int height, const unsigned int depth, const unsigned int spectrum, int value)
 {
@@ -59,34 +56,46 @@ Image::~Image(void)
 	///~Image(void) es el destructor de la clase
 }
 
-
+/** \fn unsigned int Image:: get_width()
+ * \brief returns a pointer of type int, with the width of the image.
+ * 
+ */
 unsigned int Image:: get_width()
 {
-	///get_width retorna un puntero entero con el ancho de la imagen
 	return this->width;
 }
-
+/** \fn unsigned int Image:: get_height()
+ * \brief returns a pointer of type int, with the height of the image.
+ * 
+ */
 unsigned int Image:: get_height()
 {
-	///get_height retorna un puntero entero con el alto de la imagen
 	return this->height;
 }
 
+/** \fn unsigned int Image:: get_depth()
+ * \brief returns a pointer of type int, with the depth of the image.
+ * 
+ */
 unsigned int Image:: get_depth()
 {
-	///get_depth retorna un puntero entero con el número de capas o canales de la imagen
 	return this->depth;
 }
 
+/** \fn unsigned int Image:: get_spectrum()
+ * \brief returns a pointer of type int, with the spectrum of the image.
+ * 
+ */
 unsigned int Image:: get_spectrum()
 {
-	///get_spectrum retorna un puntero entero con spectrum (NO SE)
 	return this->spectrum;
 }
-
+/** \fn void Image:: save(const char *const savefilename)
+ * \brief Allows to save the image in a file with the name in the parameter \param const char *const savefilename
+ * 
+ */
 void Image:: save(const char *const savefilename)
 {
-	///save permite salvar un archivo con la imagen con la que se está trabajando.
 	this->Img->save(savefilename);
 }
 
