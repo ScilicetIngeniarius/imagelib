@@ -7,7 +7,7 @@
  /** \fn Image::Image()
  * \brief Constructor
  * This constructor initializes the four dimension params at 0;
- * The \param Img calls the constructor of CImg to create an empty image.
+ * The Img calls the constructor of CImg to create an empty image.
  */
 Image::Image()
 {
