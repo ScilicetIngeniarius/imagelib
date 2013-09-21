@@ -95,6 +95,7 @@ unsigned int Image:: get_spectrum()
  * \brief Allows to save the image in a file with the name in the parameter \param const char *const savefilename
  * 
  */
+
 void Image:: save(const char *const savefilename)
 {
 	this->Img->save(savefilename);
@@ -123,7 +124,7 @@ void Image:: set_pixel_value(CImg<unsigned char> RGB, int x, int y, int z)
 /*! \fn Image Image :: filter (int [] *kernel )
  * \brief This function aplies a space domain filter, its a general function, and each filter will
  * depend on the \param kernel matrix, wich provides the respective weights to the surroundings.
- * \param int [] *kernel: Must ve a square matrix, of anm uneven dimention, because the center value
+ * \param int [] *kernel: Must be a square matrix, of anm uneven dimention, because the center value
  * must be the (x,y) value.
  * \param int dim: Is the dimention of the square matrix. 
  * \param float normalizer: Is a value in order to avoid the loss of information and normalize the output of the sum of the values of the pixel in the
@@ -131,7 +132,7 @@ void Image:: set_pixel_value(CImg<unsigned char> RGB, int x, int y, int z)
  * divided between 255 (Maximun of intensity). 
  */
 
-Image Image :: filter (int kernel [], int dim, float normalizer)
+Image Image :: filter (int &kernel, int dim, float normalizer)
 {
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
@@ -153,7 +154,7 @@ Image Image :: filter (int kernel [], int dim, float normalizer)
 					{
 						for(int j = y-m; j<= j+m; j++)
 						{
-							sum_values[c] += this->get_pixel_value(i, j, z, c); 
+							sum_values[c] += this->get_pixel_value(i, j, z, c) * (*kernel[i][j]); 
 						}
 					}
 				}
