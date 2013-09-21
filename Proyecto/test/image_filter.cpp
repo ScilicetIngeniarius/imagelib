@@ -1,14 +1,23 @@
-#include "../include/CImg.hh"
+#include "../include/image.hh"
 
 
 int main ()
 {
-	CImg<unsigned char> image ("../../Multimedia/lena.pgm");
+	Image imagen ("../../Multimedia/lena.pgm");
 	
-	cut
+	int kernel [3][3];
 	
-	image.set_vector_at({0, 0 ,0 }, 0 , 0 , 0 );
+	for (int i=0; i<3; i++)
+	{
+		for (int j=0; j<3; j++)
+		{
+			kernel[i][j] = 0;
+		}
+	}
+	 
+	Image filtered ("../../Multimedia/lena.pgm");
+	filtered = imagen.filter(kernel, 1);
 	
-	
+	filtered.save("negro_filtro.pgm");
 
 }

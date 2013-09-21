@@ -1,5 +1,7 @@
 #include "../include/CImg.h"
 #include <string>
+#include <cstddef>
+#include <ostream>
 
 /**\brief image.hh implements a wrapper over the library CImg.
  * For more information go to cimg.sourceforge.net
@@ -56,8 +58,8 @@ public:
 	void save(const char *const savefilename);
 	///< \fn save(const char *const savefilename) allows to save an image with the name of \param savefilename.
 	
-	template<std::size_t N> 
-	Image filter(int (&)[N][N], int, float);
+	template<int N> 
+	Image filter(int (&)[N][N], float);
 };
 
 #endif
