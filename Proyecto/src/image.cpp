@@ -110,11 +110,11 @@ unsigned int Image:: get_pixel_value(int x, int y, int z, int c)
 	return this->Img->get_vector_at(x, y, z)[c];
 }
 
-/*! \fn void Image:: set_pixel_value(unsigned char img_value, int x, int y, int z)
+/*! \fn void Image:: set_pixel_value(unsigned char (&img_value) [], int x, int y, int z)
  * \brief Sets the value of the unsigned chars in the x, y and z coordinates of a pixel.
  */
 
-void Image:: set_pixel_value(unsigned char img_value, int x, int y, int z)
+void Image:: set_pixel_value(unsigned char (&img_value) [], int x, int y, int z)
 {
 	CImg<unsigned char> kern (img_value, x, y, z);
 			
@@ -131,6 +131,7 @@ void Image:: set_pixel_value(unsigned char img_value, int x, int y, int z)
  * neighborhood with the weight values of the kernel. Normally, this value could be the max value of the multiplication of the pixels in the neighborhoog
  * divided between 255 (Maximun of intensity). 
  */
+ 
 template<std::size_t N> 
 Image Image :: filter (int (&kernel)[N][N], int dim, float normalizer)
 {
@@ -159,6 +160,16 @@ Image Image :: filter (int (&kernel)[N][N], int dim, float normalizer)
 						}
 					}
 				}
+				
+				unsigned char pixel [this->get_spectrum()];
+				
+				for(int i = 0; i < this->get_spectrum(); i++ )
+				{
+					pixel[i] = abs( static_cast<int>(sum_values[i]) * normalizer);
+				}
+				
+				filtered.set_pixel_value(pixel, x, y, z);
+				
 				
 			 }
 			 
