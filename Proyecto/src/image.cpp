@@ -133,7 +133,7 @@ void Image:: set_pixel_value(unsigned char img_value [], int x, int y, int z)
  */
  
 template<std::size_t N> 
-Image Image :: filter (int (&kernel)[N][N], int dim, float normalizer)
+Image Image :: filter (int kernel[N][N], int dim, float normalizer)
 {
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
