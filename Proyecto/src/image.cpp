@@ -114,7 +114,7 @@ unsigned int Image:: get_pixel_value(int x, int y, int z, int c)
  * \brief Sets the value of the unsigned chars in the x, y and z coordinates of a pixel.
  */
 
-void Image:: set_pixel_value(unsigned char (&img_value) [], int x, int y, int z)
+void Image:: set_pixel_value(unsigned char img_value [], int x, int y, int z)
 {
 	CImg<unsigned char> kern (img_value, x, y, z);
 			
