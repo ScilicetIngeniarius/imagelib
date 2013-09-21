@@ -131,7 +131,7 @@ void Image:: set_pixel_value(CImg<unsigned char> RGB, int x, int y, int z)
  * neighborhood with the weight values of the kernel. Normally, this value could be the max value of the multiplication of the pixels in the neighborhoog
  * divided between 255 (Maximun of intensity). 
  */
-
+/*
 Image Image :: filter (int &kernel, int dim, float normalizer)
 {
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
@@ -166,7 +166,7 @@ Image Image :: filter (int &kernel, int dim, float normalizer)
 					pixel_value[c] = sum_values[c] / normalizer;
 				}
 				
-				CImg<unsigned char> pixel (pixel_value, 1, 1, 1, 1);
+				CImg<unsigned char> pixel (pixel_value, 1, 1, 1);
 				
 				filtered.set_pixel_value( pixel , x , y , z);
 			 }
@@ -176,4 +176,5 @@ Image Image :: filter (int &kernel, int dim, float normalizer)
 	 return filtered;
  }
 
+*/
 
