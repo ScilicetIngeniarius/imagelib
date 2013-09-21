@@ -110,15 +110,15 @@ unsigned int Image:: get_pixel_value(int x, int y, int z, int c)
 	return this->Img->get_vector_at(x, y, z)[c];
 }
 
-/*! \fn void Image:: set_pixel_value(unsigned char RGB, int x, int y, int z)
- * \brief Sets the value of the unsigned chars RGB in the x, y and z coordinates.
+/*! \fn void Image:: set_pixel_value(unsigned char img_value, int x, int y, int z)
+ * \brief Sets the value of the unsigned chars in the x, y and z coordinates of a pixel.
  */
 
-void Image:: set_pixel_value(CImg<unsigned char> RGB, int x, int y, int z)
+void Image:: set_pixel_value(unsigned char img_value, int x, int y, int z)
 {
-
-	this->Img->set_vector_at(RGB, x, y ,z);
-  
+	CImg<unsigned char> kern (img_value, x, y, z);
+			
+	this->Img->set_vector_at(kern, x, y, z); 
 }
 
 /*! \fn Image Image :: filter (int [] *kernel )
