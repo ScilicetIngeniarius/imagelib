@@ -48,8 +48,6 @@ Image::Image(const unsigned int width, const unsigned int height, const unsigned
 	this->height = height;
 	this->depth = depth;
 	this->spectrum = spectrum;
-	
-	this->update_matrix();
 }
 /** \fn ~Image(void) 
  * \brief is the destructor of the class.
@@ -111,13 +109,13 @@ unsigned int Image:: get_pixel_value(int x, int y, int z, int c)
 	return this->Img->get_vector_at(x, y, z)[c];
 }
 
-/*! \fn void Image:: set_pixel_value(unsigned char R, unsigned char G, unsigned char B, int x, int y, int z)
+/*! \fn void Image:: set_pixel_value(unsigned char RGB, int x, int y, int z)
  * \brief Sets the value of the unsigned chars RGB in the x, y and z coordinates.
  */
 
-void Image:: set_pixel_value(unsigned char R, unsigned char G, unsigned char B, int x, int y, int z)
+void Image:: set_pixel_value(CImg<unsigned char> RGB, int x, int y, int z)
 {
-	unsigned char RGB[]={R,G,B};
+
 	this->Img->set_vector_at(RGB, x, y ,z);
   
 }
@@ -129,39 +127,52 @@ void Image:: set_pixel_value(unsigned char R, unsigned char G, unsigned char B, 
  * must be the (x,y) value.
  * \param int dim: Is the dimention of the square matrix. 
  * \param float normalizer: Is a value in order to avoid the loss of information and normalize the output of the sum of the values of the pixel in the
- * neighborhood with the weight values of the kernel. 
+ * neighborhood with the weight values of the kernel. Normally, this value could be the max value of the multiplication of the pixels in the neighborhoog
+ * divided between 255 (Maximun of intensity). 
  */
 
-Image Image :: filter (int [] *kernel, int dim, float normalizer)
+Image Image :: filter (int kernel [], int dim, float normalizer)
 {
-	Image filtered (this->get_width() , this->get_height(), this->depth(), this->spectrum(), int value);
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
 	int m = (dim-1)/2;
 	
-	for(int z = 0; c < this->depth(); c++)
+	for(int z = 0; z < this->get_depth(); z++)
 	{
-		for(int c = 0; z < this->spectrum(); z++)
+		for(int x = 0; x < this->get_width(); x++)
 		{
-			for(int x = 0; x < this->width(); x++)
+			for(int y = 0; y < this->get_height(); y++)
 			{
-				for(int y = 0; y < this->height(); y++)
+				///A variable to sum the values of the kernes with the heights, as an array for each channel.
+				float sum_values[this->get_spectrum()];
+				
+				///Two loops for the kernel, one for the number of chanels
+				for(int c = 0; c < this->get_spectrum(); c++)
 				{
-					///A variable to sum the values of the kernes with the heights.
-					int sum = 0;
-					
-					///Two loops for the kernel:
-					for(int i = x-m; i <= x+1; i++)
+					for(int i = x-m; i <= x+m; i++)
 					{
-						for(int j = y-m; j<= j+1; j++)
+						for(int j = y-m; j<= j+m; j++)
 						{
-							sum += this->get_pixel_value(i, j, z, c) * (*kernel[i][j]); 
+							sum_values[c] += this->get_pixel_value(i, j, z, c); 
 						}
 					}
-					 
-					unsigned int pixel_value = sum * normalizer;
-				 }
+				}
+				
+				unsigned char pixel_value [this->get_spectrum()];
+				
+				for (int c = 0; c < this->get_spectrum(); c++)
+				{
+					pixel_value[c] = sum_values[c] / normalizer;
+				}
+				
+				CImg<unsigned char> pixel (pixel_value, 1, 1, 1, 1);
+				
+				filtered.set_pixel_value( pixel , x , y , z);
 			 }
+			 
 		 }
 	 }  
+	 return filtered;
  }
 
 
