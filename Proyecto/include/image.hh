@@ -56,8 +56,8 @@ public:
 	void save(const char *const savefilename);
 	///< \fn save(const char *const savefilename) allows to save an image with the name of \param savefilename.
 	
-	
-	Image filter(int kernel [], int dim, float normalizer);
+	template<std::size_t N> 
+	Image filter(int (&)[N][N], int, float);
 };
 
 #endif
