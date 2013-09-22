@@ -6,7 +6,7 @@ using namespace std;
 
 int main()
 {
-	CImg <unsigned char> imagen ("../../Multimedia/lena.pgm");
+	CImg <unsigned char> imagen ("../../Multimedia/parrot_original.ppm");
 	
 	cout << "El valor del width " << imagen.width() << endl; 
 	
@@ -22,19 +22,18 @@ int main()
 	cout << "\n Vector at  " << static_cast<unsigned>(a);
 	}
 	
-	for (int j=0; j<imagen.width(); j++)
-	{ 
-		for (int i=0; i<imagen.height(); i++)
-		{
-			unsigned char a [] = {0, 0, 0};
-			
-			CImg<unsigned char> kern (a, 1, 1, 1);
-			
-			imagen.set_vector_at(kern, j, i, 0);
+	
+	for (int c=0; c<imagen.spectrum(); c++)
+	{
+		for (int j=0; j<imagen.width(); j++)
+		{ 
+			for (int i=0; i<imagen.height(); i++)
+			{
+				imagen(j, i, 0, c) = 225;
+			}
 		}
 	}
-	
-	imagen.save("negro.pgm");
+	imagen.save("negro_parrot.pgm");
 	
 	for (int i=0; i<5; i++)
 	{
