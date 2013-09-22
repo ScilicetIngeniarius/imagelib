@@ -1,5 +1,7 @@
 #include "../include/CImg.h"
 #include <string>
+#include <cstddef>
+#include <ostream>
 
 /**\brief image.hh implements a wrapper over the library CImg.
  * For more information go to cimg.sourceforge.net
@@ -58,6 +60,7 @@ public:
 	
 	template<std::size_t N> 
 	Image filter(int [N][N], int, float);
+>>>>>>> 93cc3979e75785cec27ff480afb18417e5ac8bfe
 };
 
 #endif
