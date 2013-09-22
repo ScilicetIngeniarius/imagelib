@@ -30,9 +30,14 @@
 *.ind
 
 # Doxygen output files
-*.sty
-*.xslt
-*.xsd
-*.xml
+
 Proyecto/doc/doxygen
 
+# Test files (Not needed, compiled)
+Proyecto/test/*.exe
+Proyecto/test/*.pgm
+Proyecto/test/*.ppm
+Proyecto/test/*.jpeg
+Proyecto/test/*.png
+Proyecto/test/*.bmp
+Proyecto/test/*.jpg
