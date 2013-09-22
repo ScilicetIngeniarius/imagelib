@@ -59,7 +59,7 @@ public:
 	///< \fn save(const char *const savefilename) allows to save an image with the name of \param savefilename.
 	
 	template<std::size_t N> 
-	Image filter(int [N][N], int, float);
+	Image filter(int (&kernel) [N][N], float);
 
 };
 

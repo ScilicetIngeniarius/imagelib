@@ -16,12 +16,13 @@ int main()
 	
 	cout << "\n El valor del depth " << imagen.depth() << endl; 
 	
+	int spec = imagen.spectrum();
+	
 	for (int i=0; i<5; i++)
 	{
-	unsigned char a = imagen.get_vector_at(i, 0, 0) [0];
+	unsigned char a = imagen.get_vector_at(i, 0, 0) [1];
 	cout << "\n Vector at  " << static_cast<unsigned>(a);
 	}
-	
 	
 	for (int c=0; c<imagen.spectrum(); c++)
 	{
@@ -30,15 +31,17 @@ int main()
 			for (int i=0; i<imagen.height(); i++)
 			{
 				imagen(j, i, 0, c) = 225;
+
 			}
 		}
 	}
 	imagen.save("negro_parrot.pgm");
 	
+	
 	for (int i=0; i<5; i++)
 	{
-	unsigned char a = imagen.get_vector_at(i, 0, 0) [0];
-	cout << "\n Modified vector  " << static_cast<unsigned>(a); 
+	unsigned char a = imagen.get_vector_at(i, 0, 0) [1];
+	cout << "\n Modified vector  " << static_cast<unsigned>(a)<<endl; 
 	}
 }
 

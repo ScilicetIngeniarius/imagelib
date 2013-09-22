@@ -116,7 +116,7 @@ unsigned int Image:: get_pixel_value(int x, int y, int z, int c)
 
 void Image:: set_pixel_value(int x, int y, int z, int c, unsigned char value)
 {
-	(*(this->Img))(x, y, z, c);
+	(*(this->Img))(x, y, z, c)= value;
 }
 
 /*! \fn Image Image :: filter (int [] *kernel )
@@ -131,8 +131,7 @@ void Image:: set_pixel_value(int x, int y, int z, int c, unsigned char value)
  */
 
 template<std::size_t N> 
-Image Image :: filter (int kernel[N][N], int dim, float normalizer)
-
+Image Image :: filter (int (&kernel) [N][N], float normalizer)
 {
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
@@ -140,35 +139,29 @@ Image Image :: filter (int kernel[N][N], int dim, float normalizer)
 	
 	for(int z = 0; z < this->get_depth(); z++)
 	{
-		for(int x = 0; x < this->get_width(); x++)
+		for(int x = m; x < this->get_width(); x++)
 		{
-			for(int y = 0; y < this->get_height(); y++)
+			for(int y = m; y < this->get_height(); y++)
 			{
 				/// A variable to sum the values of the kernes with the heights, as an array for each channel.
-				double sum_values[this->get_spectrum()];
+				double sum_values;
 				
 				/// Two loops for the kernel, one for the number of chanels.
-				
 				for(int c = 0; c < this->get_spectrum(); c++)
 				{
 					for(int i = x-m; i <= x+m; i++)
 					{
 						for(int j = y-m; j<= j+m; j++)
 						{
-							sum_values[c] += this->get_pixel_value(i, j, z, c) * (kernel[i][j]); 
+							sum_values += this->get_pixel_value(i, j, z, c) * (kernel[i][j]); 
 						}
 					}
+					
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs((sum_values) / normalizer));
+				
+				
+					filtered.set_pixel_value(x, y, z, c, pixel);
 				}
-				
-				unsigned char pixel [this->get_spectrum()];
-				
-				for(int i = 0; i < this->get_spectrum(); i++ )
-				{
-					pixel[i] = abs( static_cast<int>(sum_values[i]) / normalizer);
-				}
-				
-				filtered.set_pixel_value(pixel, x, y, z);
-				
 				
 			 }
 			 
