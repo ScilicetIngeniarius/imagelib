@@ -16,8 +16,8 @@ int main()
 	
 	//Now we apply the filter with the kernel. Note that normalizer = 9
 	
-	imagen.filter(kernel, 5, 25);
+	Image filtered = imagen.filter(kernel, 5, 25);
 	
-	imagen.save("parrot_filtered.ppm");
+	filtered.save("filter.ppm");
 
 }
