@@ -23,7 +23,12 @@ binary: binary.cpp
 bin_blue: bin_blue.cpp
 	$(CC) $(EFLAGS) bin_blue.exe bin_blue.cpp $(LFLAGS) 
 
+<<<<<<< HEAD
 laplacian: Laplacian_mask.cpp
 	$(CC) $(EFLAGS) laplace.exe Laplacian_mask.cpp $(LFLAGS)
 	
 
+=======
+substraction: img_substraction.cpp
+	$(CC) $(EFLAGS) substraction.exe img_substraction.cpp $(LFLAGS)
+>>>>>>> 69acc7d0f8aa7e71bb49df2a1043c9786f0a91e6

@@ -62,7 +62,11 @@ public:
 	/// filter given by the kernel.
 	Image filter(int kernel [], int , float);
 
-	Image Laplacian_filter();
+	Image Laplacian_filter(); /// La placian filter
+	
+	Image substract_img(Image);
+	///< \fn substract_img(Image) allows to substract the pixel values of two images with the same dimensions, and save the result in other image.
+
 };
 
 #endif

@@ -2,7 +2,7 @@
 
 int main()
 {
-	Image imagen ("../../Multimedia/lena.pgm");
+	Image imagen ("../../Multimedia/parrot_original.ppm");
 
 	int kernel[25];
 	
@@ -17,6 +17,6 @@ int main()
 	
 	Image filtered = imagen.filter(kernel, 5, 25);
 	
-	filtered.save("lena_filter.ppm");
+	filtered.save("parrot.ppm");
 
 }

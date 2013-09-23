@@ -188,3 +188,33 @@ Image Image :: filter (int kernel [], int dim, float normalizer)
 }
 
 
+/*! \fn Image Image :: substract_img(Image image2)
+ * \brief This function substracts the pixel values of two images, that can be used to see the differences between them. 
+ * \param Image image2: Is the image that will be substracted to the original image.
+ * \return Image result: Is the result of the substraction of both images.
+ */
+Image Image :: substract_img(Image image2)
+{
+	Image result (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+
+	if(this->get_width() == image2.get_width() && this->get_height() == image2.get_height() && this->get_depth() == image2.get_depth() && this->get_spectrum() == image2.get_spectrum())
+	{
+		for(unsigned int c = 0; c < this->get_spectrum(); c++)
+		{
+			for(unsigned int z = 0; z < this->get_depth(); z++)
+			{
+				for(unsigned int x = 0; x < this->get_width(); x++)
+				{
+					for(unsigned int y = 0; y < this->get_height(); y++)
+					{
+						unsigned char pixel= static_cast<unsigned int>(abs(this->get_pixel_value(x,y,z,c)-image2.get_pixel_value(x,y,z,c)));
+	
+						result.set_pixel_value(x,y,z,c,pixel);
+					}
+				}
+			}
+		}
+	}
+	return result;
+}
+
