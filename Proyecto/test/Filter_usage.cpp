@@ -4,20 +4,20 @@ int main()
 {
 	Image imagen ("../../Multimedia/parrot_original.ppm");
 
-	int kernel[5][5];
+	int kernel[25];
 	
 	for (int j=0; j<5; j++)
 	{ 
 		for (int i=0; i<5; i++)
 		{
-		kernel[i][j] = 1;
+		kernel[5*j+i] = 1;
 		}
 	}
 	
 	//Now we apply the filter with the kernel. Note that normalizer = 9
 	
-	imagen = imagen.filter(kernel, 25);
+	imagen.filter(kernel, 5, 25);
 	
-	imagen.save("parrot_original_filtered.ppm");
+	imagen.save("parrot_filtered.ppm");
 
 }

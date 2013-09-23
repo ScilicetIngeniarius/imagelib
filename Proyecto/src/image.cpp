@@ -129,44 +129,39 @@ void Image:: set_pixel_value(int x, int y, int z, int c, unsigned char value)
  * neighborhood with the weight values of the kernel. Normally, this value could be the max value of the multiplication of the pixels in the neighborhoog
  * divided between 255 (Maximun of intensity). 
  */
-
-template<std::size_t N> 
-Image Image :: filter (int (&kernel) [N][N], float normalizer)
+ 
+Image Image :: filter (int kernel [], int dim, float normalizer)
 {
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
-	int m = (N-1)/2;
+	int m = (dim-1)/2;
 	
-	for(int z = 0; z < this->get_depth(); z++)
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
 	{
-		for(int x = m; x < this->get_width(); x++)
+		for(unsigned int z = 0; z < this->get_depth(); z++)
 		{
-			for(int y = m; y < this->get_height(); y++)
+			for(unsigned int x = m; x < this->get_width(); x++)
 			{
-				/// A variable to sum the values of the kernes with the heights, as an array for each channel.
-				double sum_values;
-				
-				/// Two loops for the kernel, one for the number of chanels.
-				for(int c = 0; c < this->get_spectrum(); c++)
+				for(unsigned int y = m; y < this->get_height(); y++)
 				{
-					for(int i = x-m; i <= x+m; i++)
+					double sum_values =0;
+					
+					for(unsigned int i = x-m; i < x+m; i++)
 					{
-						for(int j = y-m; j<= j+m; j++)
+						for(unsigned int j = y-m; j< y+m; j++)
 						{
-							sum_values += this->get_pixel_value(i, j, z, c) * (kernel[i][j]); 
+							sum_values += this->get_pixel_value(i, j, z, c)* (kernel[(i-x+m)*dim + (j-y+m)]); 
 						}
 					}
 					
 					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs((sum_values) / normalizer));
-				
-				
 					filtered.set_pixel_value(x, y, z, c, pixel);
 				}
 				
 			 }
 			 
 		 }
-	 }  
+	}  
 	 return filtered;
  }
 
