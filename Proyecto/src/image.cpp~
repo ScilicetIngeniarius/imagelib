@@ -164,38 +164,12 @@ Image Image :: filter (int kernel [], int dim, float normalizer)
 	}  
 	 return filtered;
  }
- 
- Image Image::Laplacian_filter()
-{
-	int kernel[9];
-	
-	for (int j=0; j<3; j++)
-	{ 
-		for (int i=0; i<3; i++)
-		{
-			if(j==i && i == 1)
-			{
-				kernel[3*j+i] = 8;
-			}
-			else
-			{
-				kernel[3*j+i] = -1;
-			}
-		}
-	}
-	
-	return (this->filter(kernel, 3, 8)); 
-}
-
-
 
 Image Image :: filter_median (int kernel [], int dim)
 {
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
 	int m = (dim-1)/2;
-	unsigned char pixel_values [dim*dim-1];
-	unsigned char temp;
 	
 	for(unsigned int c = 0; c < this->get_spectrum(); c++)
 	{
@@ -205,29 +179,17 @@ Image Image :: filter_median (int kernel [], int dim)
 			{
 				for(unsigned int y = m; y < this->get_height(); y++)
 				{
+					double sum_values =0;
+					
 					for(unsigned int i = x-m; i < x+m; i++)
 					{
 						for(unsigned int j = y-m; j< y+m; j++)
 						{
-							pixel_values [dim*dim-1]= this->get_pixel_value(i, j, z, c)* (kernel[(i-x+m)*dim + (j-y+m)]);
-							
-							for(int k=0; k<dim*dim-1 ; k++)
-							{
-								for(int p=k+1 ; p<dim*dim-1 ; p++)
-								{
-									if(pixel_values[p] < pixel_values[k])
-									{
-										// Intercambiar los valores
-										temp = pixel_values[k];
-										pixel_values[k] = pixel_values[p];
-										pixel_values[p] = temp;
-									}
-								}
-							}
-						}	
+							sum_values += this->get_pixel_value(i, j, z, c)* (kernel[(i-x+m)*dim + (j-y+m)]); 
+						}
 					}
 					
-					unsigned char pixel = pixel_values[((dim*dim-1)/2)-1];
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs((sum_values) / normalizer));
 					filtered.set_pixel_value(x, y, z, c, pixel);
 				}
 				
@@ -238,36 +200,5 @@ Image Image :: filter_median (int kernel [], int dim)
 	 return filtered;
  }
 
-
-
-/*! \fn Image Image :: substract_img(Image image2)
- * \brief This function substracts the pixel values of two images, that can be used to see the differences between them. 
- * \param Image image2: Is the image that will be substracted to the original image.
- * \return Image result: Is the result of the substraction of both images.
- */
-Image Image :: substract_img(Image image2)
-{
-	Image result (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
-
-	if(this->get_width() == image2.get_width() && this->get_height() == image2.get_height() && this->get_depth() == image2.get_depth() && this->get_spectrum() == image2.get_spectrum())
-	{
-		for(unsigned int c = 0; c < this->get_spectrum(); c++)
-		{
-			for(unsigned int z = 0; z < this->get_depth(); z++)
-			{
-				for(unsigned int x = 0; x < this->get_width(); x++)
-				{
-					for(unsigned int y = 0; y < this->get_height(); y++)
-					{
-						unsigned char pixel= static_cast<unsigned int>(abs(this->get_pixel_value(x,y,z,c)-image2.get_pixel_value(x,y,z,c)));
-	
-						result.set_pixel_value(x,y,z,c,pixel);
-					}
-				}
-			}
-		}
-	}
-	return result;
-}
 
 
