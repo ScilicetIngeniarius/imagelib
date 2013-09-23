@@ -59,7 +59,11 @@ public:
 	///< \fn save(const char *const savefilename) allows to save an image with the name of \param savefilename.
 
 	Image filter(int kernel [], int , float);
-
+	
+	
+	Image substract_img(Image);
+	///< \fn substract_img(Image) allows to substract the pixel values of two images with the same dimensions, and save the result in other image.
+	
 };
 
 #endif

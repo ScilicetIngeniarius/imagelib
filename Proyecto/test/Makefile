@@ -22,3 +22,6 @@ binary: binary.cpp
 
 bin_blue: bin_blue.cpp
 	$(CC) $(EFLAGS) bin_blue.exe bin_blue.cpp $(LFLAGS) 
+
+substraction: img_substraction.cpp
+	$(CC) $(EFLAGS) substraction.exe img_substraction.cpp $(LFLAGS)
