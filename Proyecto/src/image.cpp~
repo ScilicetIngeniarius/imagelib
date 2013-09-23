@@ -170,8 +170,6 @@ Image Image :: filter_median (int kernel [], int dim)
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
 	int m = (dim-1)/2;
-	unsigned char pixel_values [dim*dim-1];
-	unsigned char temp;
 	
 	for(unsigned int c = 0; c < this->get_spectrum(); c++)
 	{
@@ -181,29 +179,17 @@ Image Image :: filter_median (int kernel [], int dim)
 			{
 				for(unsigned int y = m; y < this->get_height(); y++)
 				{
+					double sum_values =0;
+					
 					for(unsigned int i = x-m; i < x+m; i++)
 					{
 						for(unsigned int j = y-m; j< y+m; j++)
 						{
-							pixel_values [dim*dim-1]= this->get_pixel_value(i, j, z, c)* (kernel[(i-x+m)*dim + (j-y+m)]);
-							
-							for(int k=0; k<dim*dim-1 ; k++)
-							{
-								for(int p=k+1 ; p<dim*dim-1 ; p++)
-								{
-									if(pixel_values[p] < pixel_values[k])
-									{
-										// Intercambiar los valores
-										temp = pixel_values[k];
-										pixel_values[k] = pixel_values[p];
-										pixel_values[p] = temp;
-									}
-								}
-							}
-						}	
+							sum_values += this->get_pixel_value(i, j, z, c)* (kernel[(i-x+m)*dim + (j-y+m)]); 
+						}
 					}
 					
-					unsigned char pixel = pixel_values[((dim*dim-1)/2)-1];
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs((sum_values) / normalizer));
 					filtered.set_pixel_value(x, y, z, c, pixel);
 				}
 				
