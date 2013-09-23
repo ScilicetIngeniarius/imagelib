@@ -22,3 +22,8 @@ binary: binary.cpp
 
 bin_blue: bin_blue.cpp
 	$(CC) $(EFLAGS) bin_blue.exe bin_blue.cpp $(LFLAGS) 
+
+laplacian: Laplacian_mask.cpp
+	$(CC) $(EFLAGS) laplace.exe Laplacian_mask.cpp $(LFLAGS)
+	
+

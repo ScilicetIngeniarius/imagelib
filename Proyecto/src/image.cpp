@@ -164,5 +164,27 @@ Image Image :: filter (int kernel [], int dim, float normalizer)
 	}  
 	 return filtered;
  }
+ 
+ Image Image::Laplacian_filter()
+{
+	int kernel[9];
+	
+	for (int j=0; j<3; j++)
+	{ 
+		for (int i=0; i<3; i++)
+		{
+			if(j==i && i == 1)
+			{
+				kernel[3*j+i] = 8;
+			}
+			else
+			{
+				kernel[3*j+i] = -1;
+			}
+		}
+	}
+	
+	return (this->filter(kernel, 3, 8)); 
+}
 
 

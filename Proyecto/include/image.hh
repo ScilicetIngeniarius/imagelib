@@ -46,7 +46,7 @@ public:
 
 	unsigned int get_pixel_value(int, int, int, int); ///< \fn get_pixel_value returns the unsigned char value of the pixel in the given coordinates.
 
-	void set_pixel_value(int x, int y, int z, int c, unsigned char value); ///< \fn set_pixel_value allows to set value of pixel in an image.  
+	void set_pixel_value(int x, int y, int z, int c, unsigned char value); /// \fn set_pixel_value allows to set value of pixel in an image.  
 	
 	unsigned int get_width();///< \fn get_width() allows to obtain the width of the image.
 	unsigned int get_height();///< \fn get_height allows to obtain the height of the image.
@@ -58,8 +58,11 @@ public:
 	void save(const char *const savefilename);
 	///< \fn save(const char *const savefilename) allows to save an image with the name of \param savefilename.
 
+	/// \fn Image filter(int kernel [], int , float) This function returns an Image object after applying the desired
+	/// filter given by the kernel.
 	Image filter(int kernel [], int , float);
 
+	Image Laplacian_filter();
 };
 
 #endif
