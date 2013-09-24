@@ -13,4 +13,8 @@ int main ()
 	
 	cout << "\n El valor del depth " << imagen.get_depth() << endl; 
 	
+	*T=imagen->Img->data()
+	
+	cout<< "\n Vamos a ver que sale" << *T << endl;
+	
 }
