@@ -278,6 +278,11 @@ Image Image :: substract_img(Image image2)
 	return result;
 }
 
+
+/*! \fn  Image Image :: filter_Gradient_horizontal()
+ * \return An image object that contains the original image after receiving a gradient filter in the 
+ * horizontal direction. Could be used to identify horizontal borders.
+ */ 
 Image Image :: filter_Gradient_horizontal()
 {
 	int kernel [9] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
@@ -285,6 +290,10 @@ Image Image :: filter_Gradient_horizontal()
 	return (this->filter(kernel, 3, 4));	
 }
 
+/*! \fn  Image Image :: filter_Gradient_vertical()
+ * \return An image object that contains the original image after receiving a gradient filter in the 
+ * vertical direction. Could be used to identify vertical borders.
+ */ 
 Image Image :: filter_Gradient_vertical()
 {
 	int kernel [9] = {1, 0, -1, 2, 0, -2, 1, 0, -1};
@@ -292,3 +301,134 @@ Image Image :: filter_Gradient_vertical()
 	return (this->filter(kernel, 3, 4));	
 }
 
+Image Image :: filter_Prewitt_N_S()
+{
+	int kernel[9] = {1, 1, 1, 0, 0, 0, -1, -1, -1};
+	
+	return (this->filter(kernel, 3, 3));
+}
+	
+Image Image ::filter_Prewitt_NE_SW()
+{
+	int kernel[9] = {0, 1, 1, -1, 0, 1, -1, -1, 0};
+	
+	return (this->filter(kernel, 3, 3));
+}
+
+Image Image ::filter_Prewitt_E_W()
+{
+	int kernel[9] = {1, 0, -1, 1, 0, -1, 1, 0, -1};
+	
+	return (this->filter(kernel, 3, 3));	
+}
+	
+Image Image ::filter_Prewitt_NW_SE()
+{
+	int kernel[9] = {-1, -1, 0, -1, 0, 1, 0, 1, 1};
+	
+	return (this->filter(kernel, 3, 3));		
+}
+
+Image Image ::filter_edge_enhacement_displacement(unsigned int horizontal_dis, unsigned int vertical_dis)
+{
+	Image result (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); 
+	if((horizontal_dis < this->get_width()) && (vertical_dis < this->get_height()))
+	{
+		for(unsigned int c = 0; c < this->get_spectrum(); c++)
+		{
+			for(unsigned int z = 0; z < this->get_depth(); z++)
+			{
+				for(unsigned int x = horizontal_dis; x < this->get_width(); x++)
+				{
+					for(unsigned int y = vertical_dis; y < this->get_height(); y++)
+					{
+						unsigned char value = static_cast<unsigned char>(abs(this->get_pixel_value(x,y,z,c) - this->get_pixel_value(x-horizontal_dis, y-vertical_dis, z, c)));
+						
+						result.set_pixel_value(x,y,z,c, value);
+					}
+				}
+			}
+		}
+	}
+	return result;
+}
+
+Image Image :: filter_vertical_borders(int intensity)
+{
+	int size;
+	if(intensity > 0 && intensity < 15)
+	{
+		size = (2*intensity +1);
+	}
+	else 
+	{
+		size = 3;
+	}
+	
+	int kernel [size*size];
+	
+	
+	for(int i=0; i< size; i++)
+	{
+		for(int j=0; j< size; j++)
+		{
+			if(i==0)
+			{
+				kernel[size * i + j] = 1;
+			}
+			else
+			{
+				if(i==size-1)
+				{
+					kernel[size * i + j] = -1;
+				}
+				else
+				{
+					kernel[size * i + j] = 0;
+				}
+			}
+		}
+	}
+	
+	return (this->filter(kernel, size, size));
+}
+
+Image Image :: filter_horizontal_borders(int intensity)
+{
+	int size;
+	if(intensity > 0 && intensity < 15)
+	{
+		size = (2*intensity +1);
+	}
+	else 
+	{
+		size = 3;
+	}
+	
+	int kernel [size*size];
+	
+	
+	for(int i=0; i< size; i++)
+	{
+		for(int j=0; j< size; j++)
+		{
+			if(j==0)
+			{
+				kernel[size * i + j] = 1;
+			}
+			else
+			{
+				if(j==size-1)
+				{
+					kernel[size * i + j] = -1;
+				}
+				else
+				{
+					kernel[size * i + j] = 0;
+				}
+			}
+		}
+	}
+	
+	return (this->filter(kernel, size, size));	
+}
