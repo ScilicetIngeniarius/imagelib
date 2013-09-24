@@ -165,7 +165,8 @@ Image Image :: filter (int kernel [], int dim, float normalizer)
 	 return filtered;
  }
  
- Image Image::Laplacian_filter()
+ /// \fn Image Image::filter_Laplacian(): Returns an image after applying the Laplacian filter to the image. Considers the diagonal values
+Image Image::filter_Laplacian()
 {
 	int kernel[9];
 	
@@ -187,6 +188,13 @@ Image Image :: filter (int kernel [], int dim, float normalizer)
 	return (this->filter(kernel, 3, 8)); 
 }
 
+/// \fn Image Image :: filter_Laplacian_no_diagonal(): The same as the \fn filter_Laplacian(), but doesn't include the diagonal values.
+Image Image :: filter_Laplacian_no_diagonal()
+{
+	int kernel[9] = {0, -1, 0, -1, 4, -1, 0, -1, 0};
+	
+	return (this->filter(kernel, 3, 4));
+}
 
 
 Image Image :: filter_median (int kernel [], int dim)

@@ -61,13 +61,14 @@ public:
 	/// \fn Image filter(int kernel [], int , float) This function returns an Image object after applying the desired
 	/// filter given by the kernel.
 	Image filter(int kernel [], int , float);
+	
 	Image filter_median(int kernel [], int);
 
-	Image Laplacian_filter(); /// La placian filter
+	Image filter_Laplacian(); /// \fn La placian filter, used to identify sudden changes in the image. 
 	
-	Image substract_img(Image);
-	///< \fn substract_img(Image) allows to substract the pixel values of two images with the same dimensions, and save the result in other image.
+	Image substract_img(Image); ///< \fn substract_img(Image) allows to substract the pixel values of two images with the same dimensions, and save the result in other image.
 
+	Image filter_Laplacian_no_diagonal(); /// \fn La placian filter no diagonal, calculates de laplacian of an image without including the diagonal directions.
 };
 
 #endif
