@@ -16,9 +16,6 @@ filter : Filter_usage.cpp
 
 blur: Average_filter.cpp
 	$(CC) $(EFLAGS) avg_filter.exe Average_filter.cpp $(LFLAGS)
- 
-binary: binary.cpp
-	$(CC) $(EFLAGS) binary.exe binary.cpp $(LFLAGS)
 
 bin_blue: bin_blue.cpp
 	$(CC) $(EFLAGS) bin_blue.exe bin_blue.cpp $(LFLAGS) 
@@ -35,4 +32,7 @@ substraction: img_substraction.cpp
 
 multiply: img_multiply.cpp
 	$(CC) $(EFLAGS) multiply.exe img_multiply.cpp $(LFLAGS)
+
+binary: img_binary.cpp
+	$(CC) $(EFLAGS) binary.exe img_binary.cpp $(LFLAGS)
 

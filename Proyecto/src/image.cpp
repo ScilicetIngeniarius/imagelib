@@ -279,6 +279,7 @@ Image Image :: substract_img(Image image2)
 }
 
 
+
 /*! \fn  Image Image :: filter_Gradient_horizontal()
  * \return An image object that contains the original image after receiving a gradient filter in the 
  * horizontal direction. Could be used to identify horizontal borders.
@@ -346,6 +347,12 @@ Image Image ::filter_edge_enhacement_displacement(unsigned int horizontal_dis, u
 						
 						result.set_pixel_value(x,y,z,c, value);
 					}
+				}
+			}
+		}
+	}
+	return result;
+}
 
 /*! \fn Image Image :: multiply_img(double)
  * \brief This function multiplies the pixel values by a factor. If the pixel value is higher than 255, adjust the pixel value to 255.
@@ -412,7 +419,7 @@ Image Image :: filter_vertical_borders(int intensity)
 		}
 	}
 	
-	return (this->filter(kernel, size, size));
+	return (this->filter(kernel, size, size));	
 }
 
 Image Image :: filter_horizontal_borders(int intensity)
@@ -454,3 +461,38 @@ Image Image :: filter_horizontal_borders(int intensity)
 	
 	return (this->filter(kernel, size, size));	
 }
+
+/*! \fn Image Image :: bynarize_img(double)
+ * \brief This function set the pixel value to 255 if the original pixel value is higher than a cutoff value, and 0 if the pixel value is less than the cut off value
+ * \param double cutoff_value is the limit of the pixel value, to be changed by 0 or 255.
+ * \return Image result: Is the result of binarize the image.
+ */
+
+Image Image :: binarize_img(double cutoff_value)
+{
+	Image result (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0);
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 0; x < this->get_width(); x++)
+			{
+				for(unsigned int y = 0; y < this->get_height(); y++)
+				{
+					unsigned char pixel= static_cast<unsigned int>(this->get_pixel_value(x,y,z,c));
+					if(pixel >= cutoff_value)
+						pixel=255;
+					else
+						pixel=0;
+					result.set_pixel_value(x,y,z,c,pixel);
+
+				}
+			}
+		}
+	}
+
+	
+	return result;
+}
+
+
