@@ -33,4 +33,6 @@ laplacian: Laplacian_mask.cpp
 substraction: img_substraction.cpp
 	$(CC) $(EFLAGS) substraction.exe img_substraction.cpp $(LFLAGS)
 
+multiply: img_multiply.cpp
+	$(CC) $(EFLAGS) multiply.exe img_multiply.cpp $(LFLAGS)
 

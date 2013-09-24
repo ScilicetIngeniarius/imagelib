@@ -68,6 +68,8 @@ public:
 	
 	Image substract_img(Image); ///< \fn substract_img(Image) allows to substract the pixel values of two images with the same dimensions, and save the result in other image.
 
+	Image multiply_img(double); ///< \fn img_multiplier(double) multiply an image by a factor. If the pixel value is higher to 255, assing the pixel value in 255.
+
 	Image filter_Laplacian_no_diagonal(); /// \fn La placian filter no diagonal, calculates de laplacian of an image without including the diagonal directions.
 };
 
