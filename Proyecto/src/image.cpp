@@ -278,4 +278,17 @@ Image Image :: substract_img(Image image2)
 	return result;
 }
 
+Image Image :: filter_Gradient_horizontal()
+{
+	int kernel [9] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
+	
+	return (this->filter(kernel, 3, 4));	
+}
+
+Image Image :: filter_Gradient_vertical()
+{
+	int kernel [9] = {1, 0, -1, 2, 0, -2, 1, 0, -1};
+	
+	return (this->filter(kernel, 3, 4));	
+}
 
