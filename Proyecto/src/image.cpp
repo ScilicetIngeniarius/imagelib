@@ -4,6 +4,9 @@
  * Header for the image class
  */
  
+ // *************************************************************************
+ // ********************* CONTRUCTORS ***************************************
+ // *************************************************************************
  /** \fn Image::Image()
  * \brief Constructor
  * This constructor initializes the four dimension params at 0;
@@ -56,6 +59,22 @@ Image::~Image(void)
 {
 	
 }
+// *************************************************************************
+// ************************** SAVE & DISPLAY *******************************
+// *************************************************************************
+/** \fn void Image:: save(const char *const savefilename)
+ * \brief Allows to save the image in a file with the name in the parameter \param const char *const savefilename
+ * 
+ */
+
+void Image:: save(const char *const savefilename)
+{
+	this->Img->save(savefilename);
+}
+
+// *************************************************************************
+// *************************** GETs & SETs *********************************
+// *************************************************************************
 
 /** \fn unsigned int Image:: get_width()
  * \brief returns a pointer of type int, with the width of the image.
@@ -91,15 +110,7 @@ unsigned int Image:: get_spectrum()
 {
 	return this->spectrum;
 }
-/** \fn void Image:: save(const char *const savefilename)
- * \brief Allows to save the image in a file with the name in the parameter \param const char *const savefilename
- * 
- */
 
-void Image:: save(const char *const savefilename)
-{
-	this->Img->save(savefilename);
-}
 
 /*! \fn unsigned int Image:: get_pixel_value(int x, int y, int z, int c)
  * \brief Returns the value of the unsigned char in the x, y, z, and c coordinates.
@@ -118,6 +129,12 @@ void Image:: set_pixel_value(int x, int y, int z, int c, unsigned char value)
 {
 	(*(this->Img))(x, y, z, c)= value;
 }
+
+
+// *************************************************************************
+// ************************** FILTER ***************************************
+// *************************************************************************
+
 
 /*! \fn Image Image :: filter (int [] *kernel )
  * \brief This function aplies a space domain filter, its a general function, and each filter will
@@ -165,88 +182,10 @@ Image Image :: filter (int kernel [], int dim, float normalizer)
 	 return filtered;
  }
  
- /// \fn Image Image::filter_Laplacian(): Returns an image after applying the Laplacian filter to the image. Considers the diagonal values
-Image Image::filter_Laplacian()
-{
-	int kernel[9];
-	
-	for (int j=0; j<3; j++)
-	{ 
-		for (int i=0; i<3; i++)
-		{
-			if(j==i && i == 1)
-			{
-				kernel[3*j+i] = 8;
-			}
-			else
-			{
-				kernel[3*j+i] = -1;
-			}
-		}
-	}
-	
-	return (this->filter(kernel, 3, 8)); 
-}
-
-/// \fn Image Image :: filter_Laplacian_no_diagonal(): The same as the \fn filter_Laplacian(), but doesn't include the diagonal values.
-Image Image :: filter_Laplacian_no_diagonal()
-{
-	int kernel[9] = {0, -1, 0, -1, 4, -1, 0, -1, 0};
-	
-	return (this->filter(kernel, 3, 4));
-}
-
-
-Image Image :: filter_median (int kernel [], int dim)
-{
-	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
-	
-	int m = (dim-1)/2;
-	unsigned char pixel_values [dim*dim-1];
-	unsigned char temp;
-	
-	for(unsigned int c = 0; c < this->get_spectrum(); c++)
-	{
-		for(unsigned int z = 0; z < this->get_depth(); z++)
-		{
-			for(unsigned int x = m; x < this->get_width(); x++)
-			{
-				for(unsigned int y = m; y < this->get_height(); y++)
-				{
-					for(unsigned int i = x-m; i < x+m; i++)
-					{
-						for(unsigned int j = y-m; j< y+m; j++)
-						{
-							pixel_values [dim*dim-1]= this->get_pixel_value(i, j, z, c)* (kernel[(i-x+m)*dim + (j-y+m)]);
-							
-							for(int k=0; k<dim*dim-1 ; k++)
-							{
-								for(int p=k+1 ; p<dim*dim-1 ; p++)
-								{
-									if(pixel_values[p] < pixel_values[k])
-									{
-										// Intercambiar los valores
-										temp = pixel_values[k];
-										pixel_values[k] = pixel_values[p];
-										pixel_values[p] = temp;
-									}
-								}
-							}
-						}	
-					}
-					
-					unsigned char pixel = pixel_values[((dim*dim-1)/2)-1];
-					filtered.set_pixel_value(x, y, z, c, pixel);
-				}
-				
-			 }
-			 
-		 }
-	}  
-	 return filtered;
- }
-
-
+ 
+// *************************************************************************
+// **************************Arithmetic and Logic **************************
+// *************************************************************************
 
 /*! \fn Image Image :: substract_img(Image image2)
  * \brief This function substracts the pixel values of two images, that can be used to see the differences between them. 
@@ -278,7 +217,109 @@ Image Image :: substract_img(Image image2)
 	return result;
 }
 
+/*! \fn Image Image :: multiply_img(double)
+ * \brief This function multiplies the pixel values by a factor. If the pixel value is higher than 255, adjust the pixel value to 255.
+ * \param double multiplier is the factor that mutiplies all the pixel values.
+ * \return Image result: Is the result of multiply the image.
+ */
 
+Image Image :: multiply_img(double multiplier)
+{
+	Image result (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0);
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 0; x < this->get_width(); x++)
+			{
+				for(unsigned int y = 0; y < this->get_height(); y++)
+				{
+					unsigned char pixel= static_cast<unsigned int>(abs(this->get_pixel_value(x,y,z,c)*multiplier));
+					if (pixel >255)
+						pixel = 255;
+					result.set_pixel_value(x,y,z,c,pixel);
+				}
+			}
+		}
+	}
+	return result;
+}
+
+/*! \fn Image Image :: bynarize_img(double)
+ * \brief This function set the pixel value to 255 if the original pixel value is higher than a cutoff value, and 0 if the pixel value is less than the cut off value
+ * \param double cutoff_value is the limit of the pixel value, to be changed by 0 or 255.
+ * \return Image result: Is the result of binarize the image.
+ */
+
+Image Image :: binarize_img(double cutoff_value)
+{
+	Image result (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0);
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 0; x < this->get_width(); x++)
+			{
+				for(unsigned int y = 0; y < this->get_height(); y++)
+				{
+					unsigned char pixel= static_cast<unsigned int>(this->get_pixel_value(x,y,z,c));
+					if(pixel >= cutoff_value)
+						pixel=255;
+					else
+						pixel=0;
+					result.set_pixel_value(x,y,z,c,pixel);
+
+				}
+			}
+		}
+	}
+
+	
+	return result;
+}
+
+
+// *************************************************************************
+// ************************** SPACE DOMAIN FILTERS *************************
+// *************************************************************************
+
+
+
+
+// *************************************************************************
+// *********************** Sharpening Spatial Filters **********************
+// *************************************************************************
+
+/// \fn Image Image::filter_Laplacian(): Returns an image after applying the Laplacian filter to the image. Considers the diagonal values
+Image Image::filter_Laplacian()
+{
+	int kernel[9];
+	
+	for (int j=0; j<3; j++)
+	{ 
+		for (int i=0; i<3; i++)
+		{
+			if(j==i && i == 1)
+			{
+				kernel[3*j+i] = 8;
+			}
+			else
+			{
+				kernel[3*j+i] = -1;
+			}
+		}
+	}
+	
+	return (this->filter(kernel, 3, 8)); 
+}
+
+/// \fn Image Image :: filter_Laplacian_no_diagonal(): The same as the \fn filter_Laplacian(), but doesn't include the diagonal values.
+Image Image :: filter_Laplacian_no_diagonal()
+{
+	int kernel[9] = {0, -1, 0, -1, 4, -1, 0, -1, 0};
+	
+	return (this->filter(kernel, 3, 4));
+}
 
 /*! \fn  Image Image :: filter_Gradient_horizontal()
  * \return An image object that contains the original image after receiving a gradient filter in the 
@@ -347,34 +388,6 @@ Image Image ::filter_edge_enhacement_displacement(unsigned int horizontal_dis, u
 						
 						result.set_pixel_value(x,y,z,c, value);
 					}
-				}
-			}
-		}
-	}
-	return result;
-}
-
-/*! \fn Image Image :: multiply_img(double)
- * \brief This function multiplies the pixel values by a factor. If the pixel value is higher than 255, adjust the pixel value to 255.
- * \param double multiplier is the factor that mutiplies all the pixel values.
- * \return Image result: Is the result of multiply the image.
- */
-
-Image Image :: multiply_img(double multiplier)
-{
-	Image result (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0);
-	for(unsigned int c = 0; c < this->get_spectrum(); c++)
-	{
-		for(unsigned int z = 0; z < this->get_depth(); z++)
-		{
-			for(unsigned int x = 0; x < this->get_width(); x++)
-			{
-				for(unsigned int y = 0; y < this->get_height(); y++)
-				{
-					unsigned char pixel= static_cast<unsigned int>(abs(this->get_pixel_value(x,y,z,c)*multiplier));
-					if (pixel >255)
-						pixel = 255;
-					result.set_pixel_value(x,y,z,c,pixel);
 				}
 			}
 		}
@@ -462,37 +475,83 @@ Image Image :: filter_horizontal_borders(int intensity)
 	return (this->filter(kernel, size, size));	
 }
 
-/*! \fn Image Image :: bynarize_img(double)
- * \brief This function set the pixel value to 255 if the original pixel value is higher than a cutoff value, and 0 if the pixel value is less than the cut off value
- * \param double cutoff_value is the limit of the pixel value, to be changed by 0 or 255.
- * \return Image result: Is the result of binarize the image.
- */
+// *************************************************************************
+// *********************** Smoothing Spatial Filters **********************
+// *************************************************************************
 
-Image Image :: binarize_img(double cutoff_value)
+Image Image :: filter_median (int kernel [], int dim)
 {
-	Image result (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0);
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	int m = (dim-1)/2;
+	unsigned char pixel_values [dim*dim-1];
+	unsigned char temp;
+	
 	for(unsigned int c = 0; c < this->get_spectrum(); c++)
 	{
 		for(unsigned int z = 0; z < this->get_depth(); z++)
 		{
-			for(unsigned int x = 0; x < this->get_width(); x++)
+			for(unsigned int x = m; x < this->get_width(); x++)
 			{
-				for(unsigned int y = 0; y < this->get_height(); y++)
+				for(unsigned int y = m; y < this->get_height(); y++)
 				{
-					unsigned char pixel= static_cast<unsigned int>(this->get_pixel_value(x,y,z,c));
-					if(pixel >= cutoff_value)
-						pixel=255;
-					else
-						pixel=0;
-					result.set_pixel_value(x,y,z,c,pixel);
-
+					for(unsigned int i = x-m; i < x+m; i++)
+					{
+						for(unsigned int j = y-m; j< y+m; j++)
+						{
+							pixel_values [dim*dim-1]= this->get_pixel_value(i, j, z, c)* (kernel[(i-x+m)*dim + (j-y+m)]);
+							
+							for(int k=0; k<dim*dim-1 ; k++)
+							{
+								for(int p=k+1 ; p<dim*dim-1 ; p++)
+								{
+									if(pixel_values[p] < pixel_values[k])
+									{
+										// Intercambiar los valores
+										temp = pixel_values[k];
+										pixel_values[k] = pixel_values[p];
+										pixel_values[p] = temp;
+									}
+								}
+							}
+						}	
+					}
+					
+					unsigned char pixel = pixel_values[((dim*dim-1)/2)-1];
+					filtered.set_pixel_value(x, y, z, c, pixel);
 				}
-			}
-		}
-	}
+				
+			 }
+			 
+		 }
+	}  
+	 return filtered;
+ }
 
-	
-	return result;
-}
+
+// *************************************************************************
+// *********************** Frequency Domain Filters ************************
+// *************************************************************************
+
+// *************************************************************************
+// ******************** Sharpening Frecquency Filters **********************
+// *************************************************************************
+
+// *************************************************************************
+// ********************* Smoothing Frecquency Filters **********************
+// *************************************************************************
+
+// *************************************************************************
+// *********************** Dot to Dot Transformations **********************
+// *************************************************************************
+
+// *************************************************************************
+// *********************** HISTOGRAM AND EQUALIZATION **********************
+// *************************************************************************
+
+
+
+
+
 
 

@@ -32,6 +32,10 @@ private:
 	unsigned int spectrum; ///< \param unsigned int spectrum refers to the spectrum of the image.
 	
 public:
+// *************************************************************************
+// *********************** Constructors ************************************
+// *************************************************************************
+
 	Image ();
 	///Image() is the constructor of the image used when the image doesn't been be created.
 	
@@ -44,7 +48,17 @@ public:
 	 */
 	
 	~Image(void); /// \fn ~Image(void) es el destructor de la clase
-	
+
+// *************************************************************************
+// *********************** Save and Display ********************************
+// *************************************************************************
+
+	void save(const char *const savefilename); ///< \fn save(const char *const savefilename) allows to save an image with the name of \param savefilename.
+
+// *************************************************************************
+// *********************** GETs & SEts *************************************
+// *************************************************************************
+
 	unsigned int get_pixel_value(int, int, int, int); ///< \fn get_pixel_value returns the unsigned char value of the pixel in the given coordinates.
 
 	void set_pixel_value(int x, int y, int z, int c, unsigned char value); /// \fn set_pixel_value allows to set value of pixel in an image.  
@@ -57,20 +71,32 @@ public:
 	
 	unsigned int get_spectrum();///< \fn get_spectrum allows to obtain the specrum of the image.
 
-	void save(const char *const savefilename); ///< \fn save(const char *const savefilename) allows to save an image with the name of \param savefilename.
+// *************************************************************************
+// **************************** Filter *************************************
+// *************************************************************************
 	
 	Image filter(int kernel [], int , float); /// \fn Image filter(int kernel [], int , float) This function returns an Image object after applying the desired filter given by the kernel.
-		
-	Image filter_median(int kernel [], int);
 
-	Image filter_Laplacian(); /// \fn La placian filter, used to identify sudden changes in the image. 
-	
+// *************************************************************************
+// *********************** Arithmetic & Logic ******************************
+// *************************************************************************
+
 	Image substract_img(Image); /// \fn substract image allows to substract the pixel values of two images with the same dimensions, and save the result in other image.
 
 	Image multiply_img(double); /// \fn image multiplier multiplies an image by a factor. If the pixel value is higher to 255, assing the pixel value in 255.
 
 	Image binarize_img(double); /// \fn bynary image adjust the pixel values, depends of a specified parameter, if the pixel value is higher than the parameter, adjust to 255, else adjust to 0 the pixel value.
+		
+// *************************************************************************
+// ************************* SPACE DOMAIN FILTERS **************************
+// *************************************************************************
 
+// *************************************************************************
+// ********************** Sharpening Spatial Filters ***********************
+// *************************************************************************
+
+	Image filter_Laplacian(); /// \fn La placian filter, used to identify sudden changes in the image. 
+	
 	Image filter_Laplacian_no_diagonal(); /// \fn La placian filter no diagonal, calculates de laplacian of an image without including the diagonal directions.
 
 	Image filter_Gradient_vertical(); /// \fn Gradient filter in the vertical direction
@@ -90,6 +116,33 @@ public:
 	Image filter_horizontal_borders(int);
 	
 	Image filter_vertical_borders(int);
+	
+// *************************************************************************
+// *********************** Smoothing Spatial Filters ***********************
+// *************************************************************************
+
+	Image filter_median(int kernel [], int);
+	
+// *************************************************************************
+// *********************** Frequency Domain Filters ************************
+// *************************************************************************
+
+// *************************************************************************
+// ******************** Sharpening Frecquency Filters **********************
+// *************************************************************************
+
+// *************************************************************************
+// ********************* Smoothing Frecquency Filters **********************
+// *************************************************************************
+
+// *************************************************************************
+// *********************** Dot to Dot Transformations **********************
+// *************************************************************************
+
+// *************************************************************************
+// *********************** HISTOGRAM AND EQUALIZATION **********************
+// *************************************************************************
+
 };
 
 #endif
