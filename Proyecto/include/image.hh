@@ -71,6 +71,10 @@ public:
 	Image multiply_img(double); ///< \fn img_multiplier(double) multiply an image by a factor. If the pixel value is higher to 255, assing the pixel value in 255.
 
 	Image filter_Laplacian_no_diagonal(); /// \fn La placian filter no diagonal, calculates de laplacian of an image without including the diagonal directions.
+
+	Image filter_Gradient_vertical();
+	
+	Image filter_Gradient_horizontal();
 };
 
 #endif
