@@ -278,20 +278,6 @@ Image Image :: substract_img(Image image2)
 	return result;
 }
 
-Image Image :: filter_Gradient_horizontal()
-{
-	int kernel [9] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
-	
-	return (this->filter(kernel, 3, 4));	
-}
-
-Image Image :: filter_Gradient_vertical()
-{
-	int kernel [9] = {1, 0, -1, 2, 0, -2, 1, 0, -1};
-	
-	return (this->filter(kernel, 3, 4));	
-}
-
 /*! \fn Image Image :: multiply_img(double)
  * \brief This function multiplies the pixel values by a factor. If the pixel value is higher than 255, adjust the pixel value to 255.
  * \param double multiplier is the factor that mutiplies all the pixel values.
@@ -319,4 +305,49 @@ Image Image :: multiply_img(double multiplier)
 	}
 	return result;
 }
+
+/*! \fn Image Image :: bynarize_img(double)
+ * \brief This function set the pixel value to 255 if the original pixel value is higher than a cutoff value, and 0 if the pixel value is less than the cut off value
+ * \param double cutoff_value is the limit of the pixel value, to be changed by 0 or 255.
+ * \return Image result: Is the result of binarize the image.
+ */
+
+Image Image :: binarize_img(double cutoff_value)
+{
+	Image result (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0);
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 0; x < this->get_width(); x++)
+			{
+				for(unsigned int y = 0; y < this->get_height(); y++)
+				{
+					unsigned char pixel= static_cast<unsigned int>(this->get_pixel_value(x,y,z,c));
+					if(pixel >= cutoff_value)
+						pixel=255;
+					else
+						pixel=0;
+					result.set_pixel_value(x,y,z,c,pixel);
+				}
+			}
+		}
+	}
+	return result;
+}
+
+Image Image :: filter_Gradient_horizontal()
+{
+	int kernel [9] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
+	
+	return (this->filter(kernel, 3, 4));	
+}
+
+Image Image :: filter_Gradient_vertical()
+{
+	int kernel [9] = {1, 0, -1, 2, 0, -2, 1, 0, -1};
+	
+	return (this->filter(kernel, 3, 4));	
+}
+
 

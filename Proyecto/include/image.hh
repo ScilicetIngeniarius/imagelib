@@ -66,9 +66,11 @@ public:
 
 	Image filter_Laplacian(); /// \fn La placian filter, used to identify sudden changes in the image. 
 	
-	Image substract_img(Image); ///< \fn substract_img(Image) allows to substract the pixel values of two images with the same dimensions, and save the result in other image.
+	Image substract_img(Image); /// \fn substract image allows to substract the pixel values of two images with the same dimensions, and save the result in other image.
 
-	Image multiply_img(double); ///< \fn img_multiplier(double) multiply an image by a factor. If the pixel value is higher to 255, assing the pixel value in 255.
+	Image multiply_img(double); /// \fn image multiplier multiplies an image by a factor. If the pixel value is higher to 255, assing the pixel value in 255.
+
+	Image binarize_img(double); /// \fn bynary image adjust the pixel values, depends of a specified parameter, if the pixel value is higher than the parameter, adjust to 255, else adjust to 0 the pixel value.
 
 	Image filter_Laplacian_no_diagonal(); /// \fn La placian filter no diagonal, calculates de laplacian of an image without including the diagonal directions.
 
