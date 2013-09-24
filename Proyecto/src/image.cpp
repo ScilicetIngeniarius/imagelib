@@ -346,6 +346,28 @@ Image Image ::filter_edge_enhacement_displacement(unsigned int horizontal_dis, u
 						
 						result.set_pixel_value(x,y,z,c, value);
 					}
+
+/*! \fn Image Image :: multiply_img(double)
+ * \brief This function multiplies the pixel values by a factor. If the pixel value is higher than 255, adjust the pixel value to 255.
+ * \param double multiplier is the factor that mutiplies all the pixel values.
+ * \return Image result: Is the result of multiply the image.
+ */
+
+Image Image :: multiply_img(double multiplier)
+{
+	Image result (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0);
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 0; x < this->get_width(); x++)
+			{
+				for(unsigned int y = 0; y < this->get_height(); y++)
+				{
+					unsigned char pixel= static_cast<unsigned int>(abs(this->get_pixel_value(x,y,z,c)*multiplier));
+					if (pixel >255)
+						pixel = 255;
+					result.set_pixel_value(x,y,z,c,pixel);
 				}
 			}
 		}
