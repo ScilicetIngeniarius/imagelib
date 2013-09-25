@@ -529,6 +529,13 @@ Image Image :: filter_median (int kernel [], int dim)
  }
 
 
+Image Image :: filter_average(int kernel [], int dim)
+{
+	Image image_average = this->filter(kernel,dim,dim);
+	
+	return image_average;
+} 
+
 // *************************************************************************
 // *********************** Frequency Domain Filters ************************
 // *************************************************************************

@@ -36,3 +36,5 @@ multiply: img_multiply.cpp
 binary: img_binary.cpp
 	$(CC) $(EFLAGS) binary.exe img_binary.cpp $(LFLAGS)
 
+average: promedio.cpp
+	$(CC) $(EFLAGS) average.exe promedio.cpp $(LFLAGS)
