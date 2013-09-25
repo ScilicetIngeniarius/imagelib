@@ -1,23 +1,25 @@
 #include "../include/image.hh"
+#include <iostream>
 
 
 int main ()
 {
-	Image imagen ("../../Multimedia/lena.pgm");
+	Image imagen ("../../Multimedia/parrot_original.ppm");
 	
-	int kernel [3][3];
-	
-	for (int i=0; i<3; i++)
+	cout << "DEPTH: "<<imagen.get_depth(); 
+	cout << "\nSPECTRUM " <<imagen.get_spectrum();
+	cout << "\n";
+	for (int i=0; i<imagen.get_width(); i++)
 	{
-		for (int j=0; j<3; j++)
+		for (int j=0; j<imagen.get_height(); j++)
 		{
-			kernel[i][j] = 0;
+			unsigned char a [] = {180, 180 , 180};
+			imagen.set_pixel_value(a, i, j, 0);
 		}
 	}
 	 
-	Image filtered ("../../Multimedia/lena.pgm");
-	filtered = imagen.filter(kernel, 1);
 	
-	filtered.save("negro_filtro.pgm");
+	
+	imagen.save("prueba_4.pgm");
 
 }

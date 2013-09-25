@@ -24,23 +24,18 @@ int main()
 	cout << "\n Vector at  " << static_cast<unsigned>(a);
 	}
 	
-	for (int j=0; j<imagen.width(); j++)
-	{ 
-		for (int i=0; i<imagen.height(); i++)
-		{
-			for (int k=0; k<imagen.spectrum(); k++)
+	for (int c=0; c<imagen.spectrum(); c++)
+	{
+		for (int j=0; j<imagen.width(); j++)
+		{ 
+			for (int i=0; i<imagen.height(); i++)
 			{
-				
-				unsigned char a [] = {0, 0, 0};
-			
-				CImg<unsigned char> kern (a, spec, spec, spec);
-			
-				imagen.set_vector_at(kern, j, i, k);
+				imagen(j, i, 0, c) = 225;
+
 			}
 		}
 	}
-	
-	imagen.save("negro.pgm");
+	imagen.save("negro_parrot.pgm");
 	
 	
 	for (int i=0; i<5; i++)
