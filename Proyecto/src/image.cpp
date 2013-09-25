@@ -499,7 +499,7 @@ Image Image :: filter_median (int kernel [], int dim)
 					{
 						for(unsigned int j = y-m; j< y+m; j++)
 						{
-							pixel_values [dim*dim-1]= this->get_pixel_value(i, j, z, c)* (kernel[(i-x+m)*dim + (j-y+m)]);
+							pixel_values [(i-x+m)*dim + (j-y+m)]= this->get_pixel_value(i, j, z, c)* (kernel[(i-x+m)*dim + (j-y+m)]);
 							
 							for(int k=0; k<dim*dim-1 ; k++)
 							{

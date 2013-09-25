@@ -3,7 +3,7 @@
 
 int main()
 {
-	Image imagen ("../../Multimedia/lena.pgm");
+	Image imagen ("../../Multimedia/parrot_original.ppm");
 
 	int kernel[25];
 	
