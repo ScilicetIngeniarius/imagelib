@@ -608,6 +608,26 @@ Image Image :: filter_gaussian(int o, int dim_kernel)
 // *********************** Dot to Dot Transformations **********************
 // *************************************************************************
 
+Image Image ::inverse()
+{
+	Image inverted (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 0; x < this->get_width(); x++)
+			{
+				for(unsigned int y = 0; y < this->get_height(); y++)
+				{
+					unsigned char pixel= static_cast<unsigned int>(255-this->get_pixel_value(x,y,z,c));
+					inverted.set_pixel_value(x,y,z,c,pixel);
+				}
+			}
+		}
+	}
+	return inverted;
+}
 // *************************************************************************
 // *********************** HISTOGRAM AND EQUALIZATION **********************
 // *************************************************************************

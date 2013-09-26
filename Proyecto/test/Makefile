@@ -31,6 +31,10 @@ multiply: img_multiply.cpp
 
 binary: img_binary.cpp
 	$(CC) $(EFLAGS) binary.exe img_binary.cpp $(LFLAGS)
+	
+inverse: inverse.cpp
+	$(CC) $(EFLAGS) inverse.exe inverse.cpp $(LFLAGS)
+
 
 
 sharpening_spatial: Sharpening_spatial_filters.cpp
