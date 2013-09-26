@@ -45,3 +45,11 @@ average: promedio.cpp
 	
 gaussian: gaussian.cpp
 	$(CC) $(EFLAGS) gaussian.exe gaussian.cpp $(LFLAGS)
+
+butterworth: butterworth.cpp
+		$(CC) $(EFLAGS) butterworth.exe butterworth.cpp $(LFLAGS)
+
+dilatation: dilatacion.cpp
+	$(CC) $(EFLAGS) dilatation.exe dilatation.cpp $(LFLAGS)
+
+
