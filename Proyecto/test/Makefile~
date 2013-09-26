@@ -23,5 +23,15 @@ binary: binary.cpp
 bin_blue: bin_blue.cpp
 	$(CC) $(EFLAGS) bin_blue.exe bin_blue.cpp $(LFLAGS) 
 
+
 median: mediana.cpp
 	$(CC) $(EFLAGS) median.exe mediana.cpp $(LFLAGS) 
+
+
+laplacian: Laplacian_mask.cpp
+	$(CC) $(EFLAGS) laplace.exe Laplacian_mask.cpp $(LFLAGS)
+	
+substraction: img_substraction.cpp
+	$(CC) $(EFLAGS) substraction.exe img_substraction.cpp $(LFLAGS)
+
+
