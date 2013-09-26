@@ -55,6 +55,8 @@ public:
 
 	void save(const char *const savefilename); ///< \fn save(const char *const savefilename) allows to save an image with the name of \param savefilename.
 
+	void display(const char* message); /// \fn void display() displays an image. CImg Display Wrapper
+	
 // *************************************************************************
 // *********************** GETs & SEts *************************************
 // *************************************************************************

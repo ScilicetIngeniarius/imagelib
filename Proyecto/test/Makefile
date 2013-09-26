@@ -17,12 +17,8 @@ filter : Filter_usage.cpp
 blur: Average_filter.cpp
 	$(CC) $(EFLAGS) avg_filter.exe Average_filter.cpp $(LFLAGS)
 
-bin_blue: bin_blue.cpp
-	$(CC) $(EFLAGS) bin_blue.exe bin_blue.cpp $(LFLAGS) 
-
 median: mediana.cpp
 	$(CC) $(EFLAGS) median.exe mediana.cpp $(LFLAGS) 
-
 
 laplacian: Laplacian_mask.cpp
 	$(CC) $(EFLAGS) laplace.exe Laplacian_mask.cpp $(LFLAGS)
@@ -39,6 +35,10 @@ binary: img_binary.cpp
 inverse: inverse.cpp
 	$(CC) $(EFLAGS) inverse.exe inverse.cpp $(LFLAGS)
 
+
+
+sharpening_spatial: Sharpening_spatial_filters.cpp
+	$(CC) $(EFLAGS) sharp_spatial.exe Sharpening_spatial_filters.cpp $(LFLAGS)
 
 average: promedio.cpp
 	$(CC) $(EFLAGS) average.exe promedio.cpp $(LFLAGS)
