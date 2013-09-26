@@ -72,6 +72,15 @@ void Image:: save(const char *const savefilename)
 	this->Img->save(savefilename);
 }
 
+void Image :: display(const char* message)
+{
+	CImgDisplay main (*(this->Img), message);
+	while(!main.is_closed())
+	{
+		main.wait();
+	}
+}
+
 // *************************************************************************
 // *************************** GETs & SETs *********************************
 // *************************************************************************
@@ -163,9 +172,9 @@ Image Image :: filter (int kernel [], int dim, float normalizer)
 				{
 					double sum_values =0;
 					
-					for(unsigned int i = x-m; i < x+m; i++)
+					for(unsigned int i = x-m; i <= x+m; i++)
 					{
-						for(unsigned int j = y-m; j< y+m; j++)
+						for(unsigned int j = y-m; j<= y+m; j++)
 						{
 							sum_values += this->get_pixel_value(i, j, z, c)* (kernel[(i-x+m)*dim + (j-y+m)]); 
 						}
@@ -690,6 +699,26 @@ return filtered;
 // *********************** Dot to Dot Transformations **********************
 // *************************************************************************
 
+Image Image ::inverse()
+{
+	Image inverted (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 0; x < this->get_width(); x++)
+			{
+				for(unsigned int y = 0; y < this->get_height(); y++)
+				{
+					unsigned char pixel= static_cast<unsigned int>(255-this->get_pixel_value(x,y,z,c));
+					inverted.set_pixel_value(x,y,z,c,pixel);
+				}
+			}
+		}
+	}
+	return inverted;
+}
 // *************************************************************************
 // *********************** HISTOGRAM AND EQUALIZATION **********************
 // *************************************************************************
