@@ -85,6 +85,8 @@ public:
 
 	Image substract_img(Image); /// \fn substract image allows to substract the pixel values of two images with the same dimensions, and save the result in other image.
 
+	Image sum_img(Image);
+	
 	Image multiply_img(double); /// \fn image multiplier multiplies an image by a factor. If the pixel value is higher to 255, assing the pixel value in 255.
 
 	Image binarize_img(double); /// \fn bynary image adjust the pixel values, depends of a specified parameter, if the pixel value is higher than the parameter, adjust to 255, else adjust to 0 the pixel value.
@@ -115,9 +117,9 @@ public:
 
 	Image filter_edge_enhacement_displacement(unsigned int, unsigned int); /// \fn This filter displaces the image and by ...
 	
-	Image filter_horizontal_borders(int);
+	Image filter_horizontal_borders();
 	
-	Image filter_vertical_borders(int);
+	Image filter_vertical_borders();
 	
 // *************************************************************************
 // *********************** Smoothing Spatial Filters ***********************
