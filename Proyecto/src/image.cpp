@@ -72,6 +72,15 @@ void Image:: save(const char *const savefilename)
 	this->Img->save(savefilename);
 }
 
+void Image :: display(const char* message)
+{
+	CImgDisplay main (*(this->Img), message);
+	while(!main.is_closed())
+	{
+		main.wait();
+	}
+}
+
 // *************************************************************************
 // *************************** GETs & SETs *********************************
 // *************************************************************************
@@ -163,9 +172,9 @@ Image Image :: filter (int kernel [], int dim, float normalizer)
 				{
 					double sum_values =0;
 					
-					for(unsigned int i = x-m; i < x+m; i++)
+					for(unsigned int i = x-m; i <= x+m; i++)
 					{
-						for(unsigned int j = y-m; j< y+m; j++)
+						for(unsigned int j = y-m; j<= y+m; j++)
 						{
 							sum_values += this->get_pixel_value(i, j, z, c)* (kernel[(i-x+m)*dim + (j-y+m)]); 
 						}
