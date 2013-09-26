@@ -38,3 +38,6 @@ binary: img_binary.cpp
 
 average: promedio.cpp
 	$(CC) $(EFLAGS) average.exe promedio.cpp $(LFLAGS)
+	
+gaussian: gaussian.cpp
+	$(CC) $(EFLAGS) gaussian.exe gaussian.cpp $(LFLAGS)
