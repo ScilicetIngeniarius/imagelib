@@ -40,3 +40,8 @@ inverse: inverse.cpp
 	$(CC) $(EFLAGS) inverse.exe inverse.cpp $(LFLAGS)
 
 
+average: promedio.cpp
+	$(CC) $(EFLAGS) average.exe promedio.cpp $(LFLAGS)
+	
+gaussian: gaussian.cpp
+	$(CC) $(EFLAGS) gaussian.exe gaussian.cpp $(LFLAGS)

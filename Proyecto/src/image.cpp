@@ -529,6 +529,60 @@ Image Image :: filter_median (int kernel [], int dim)
  }
 
 
+Image Image :: filter_average(int kernel [], int dim)
+{
+	Image image_average = this->filter(kernel,dim,dim);
+	
+	return image_average;
+} 
+
+
+Image Image :: filter_gaussian(int o, int dim_kernel)
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0);
+
+	double kernel[dim_kernel*dim_kernel];
+	
+	int m = (dim_kernel-1)/2;
+	
+	double gaussian =1/pow(3.1415*2*o,0.5);
+
+	for(int i =-m; i <=m; i++)
+	{
+		for(int j =-m; j<=+m; j++)
+		{
+			double exp= -(i*i+j*j)*0.5/o;
+			kernel[(i+m)*dim_kernel + (j+m)]=gaussian*pow(2.7,exp); 
+		}
+	}
+	
+	
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width(); x++)
+			{
+				for(unsigned int y = m; y < this->get_height(); y++)
+				{
+					for(unsigned int i = x-m; i < x+m; i++)
+					{
+						for(unsigned int j = y-m; j< y+m; j++)
+						{
+							unsigned char pixel= this->get_pixel_value(i, j, z, c)* (kernel[(i-x+m)*dim_kernel + (j-y+m)]); 
+							filtered.set_pixel_value(x, y, z, c, pixel);
+						}
+					}
+					
+				}
+				
+			 }
+			 
+		 }
+	}  
+	 return filtered;		
+}	
 // *************************************************************************
 // *********************** Frequency Domain Filters ************************
 // *************************************************************************

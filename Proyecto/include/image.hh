@@ -123,6 +123,10 @@ public:
 
 	Image filter_median(int kernel [], int);
 	
+	Image filter_average(int kernel [], int);
+	
+	Image filter_gaussian(int, int);
+	
 // *************************************************************************
 // *********************** Frequency Domain Filters ************************
 // *************************************************************************
