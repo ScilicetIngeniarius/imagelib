@@ -1,0 +1,19 @@
+
+*** These modified files were found in JOE when it aborted on Tue Sep 24 20:50:17 2013
+*** JOE was aborted by UNIX signal 1
+
+*** File '.git/MERGE_MSG'
+Merge branch 'master' of https://github.com/ScilicetIngeniarius/imagelib
+
+# Please enter a commit message to explain why this merge is necessary,
+# especially if it merges an updated upstream into a topic branch.
+# 
+# Lines starting with '#' will be ignored, and an empty message aborts
+# the commit.
+Meging
+*** File '(Unnamed)'
+.git/MERGE_MSG
+.git/MERGE_MSG
+.git/MERGE_MSG
+.git/COMMIT_EDITMSG
+.git/MERGE_MSG

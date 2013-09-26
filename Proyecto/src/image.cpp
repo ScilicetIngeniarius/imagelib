@@ -4,6 +4,9 @@
  * Header for the image class
  */
  
+ // *************************************************************************
+ // ********************* CONTRUCTORS ***************************************
+ // *************************************************************************
  /** \fn Image::Image()
  * \brief Constructor
  * This constructor initializes the four dimension params at 0;
@@ -56,6 +59,22 @@ Image::~Image(void)
 {
 	
 }
+// *************************************************************************
+// ************************** SAVE & DISPLAY *******************************
+// *************************************************************************
+/** \fn void Image:: save(const char *const savefilename)
+ * \brief Allows to save the image in a file with the name in the parameter \param const char *const savefilename
+ * 
+ */
+
+void Image:: save(const char *const savefilename)
+{
+	this->Img->save(savefilename);
+}
+
+// *************************************************************************
+// *************************** GETs & SETs *********************************
+// *************************************************************************
 
 /** \fn unsigned int Image:: get_width()
  * \brief returns a pointer of type int, with the width of the image.
@@ -91,15 +110,7 @@ unsigned int Image:: get_spectrum()
 {
 	return this->spectrum;
 }
-/** \fn void Image:: save(const char *const savefilename)
- * \brief Allows to save the image in a file with the name in the parameter \param const char *const savefilename
- * 
- */
 
-void Image:: save(const char *const savefilename)
-{
-	this->Img->save(savefilename);
-}
 
 /*! \fn unsigned int Image:: get_pixel_value(int x, int y, int z, int c)
  * \brief Returns the value of the unsigned char in the x, y, z, and c coordinates.
@@ -118,6 +129,12 @@ void Image:: set_pixel_value(int x, int y, int z, int c, unsigned char value)
 {
 	(*(this->Img))(x, y, z, c)= value;
 }
+
+
+// *************************************************************************
+// ************************** FILTER ***************************************
+// *************************************************************************
+
 
 /*! \fn Image Image :: filter (int [] *kernel )
  * \brief This function aplies a space domain filter, its a general function, and each filter will
@@ -165,80 +182,10 @@ Image Image :: filter (int kernel [], int dim, float normalizer)
 	 return filtered;
  }
  
- Image Image::Laplacian_filter()
-{
-	int kernel[9];
-	
-	for (int j=0; j<3; j++)
-	{ 
-		for (int i=0; i<3; i++)
-		{
-			if(j==i && i == 1)
-			{
-				kernel[3*j+i] = 8;
-			}
-			else
-			{
-				kernel[3*j+i] = -1;
-			}
-		}
-	}
-	
-	return (this->filter(kernel, 3, 8)); 
-}
-
-
-
-Image Image :: filter_median (int kernel [], int dim)
-{
-	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
-	
-	int m = (dim-1)/2;
-	unsigned char pixel_values [dim*dim-1];
-	unsigned char temp;
-	
-	for(unsigned int c = 0; c < this->get_spectrum(); c++)
-	{
-		for(unsigned int z = 0; z < this->get_depth(); z++)
-		{
-			for(unsigned int x = m; x < this->get_width(); x++)
-			{
-				for(unsigned int y = m; y < this->get_height(); y++)
-				{
-					for(unsigned int i = x-m; i < x+m; i++)
-					{
-						for(unsigned int j = y-m; j< y+m; j++)
-						{
-							pixel_values [dim*dim-1]= this->get_pixel_value(i, j, z, c)* (kernel[(i-x+m)*dim + (j-y+m)]);
-							
-							for(int k=0; k<dim*dim-1 ; k++)
-							{
-								for(int p=k+1 ; p<dim*dim-1 ; p++)
-								{
-									if(pixel_values[p] < pixel_values[k])
-									{
-										// Intercambiar los valores
-										temp = pixel_values[k];
-										pixel_values[k] = pixel_values[p];
-										pixel_values[p] = temp;
-									}
-								}
-							}
-						}	
-					}
-					
-					unsigned char pixel = pixel_values[((dim*dim-1)/2)-1];
-					filtered.set_pixel_value(x, y, z, c, pixel);
-				}
-				
-			 }
-			 
-		 }
-	}  
-	 return filtered;
- }
-
-
+ 
+// *************************************************************************
+// **************************Arithmetic and Logic **************************
+// *************************************************************************
 
 /*! \fn Image Image :: substract_img(Image image2)
  * \brief This function substracts the pixel values of two images, that can be used to see the differences between them. 
@@ -269,5 +216,487 @@ Image Image :: substract_img(Image image2)
 	}
 	return result;
 }
+
+/*! \fn Image Image :: multiply_img(double)
+ * \brief This function multiplies the pixel values by a factor. If the pixel value is higher than 255, adjust the pixel value to 255.
+ * \param double multiplier is the factor that mutiplies all the pixel values.
+ * \return Image result: Is the result of multiply the image.
+ */
+
+Image Image :: multiply_img(double multiplier)
+{
+	Image result (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0);
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 0; x < this->get_width(); x++)
+			{
+				for(unsigned int y = 0; y < this->get_height(); y++)
+				{
+					unsigned char pixel= static_cast<unsigned int>(abs(this->get_pixel_value(x,y,z,c)*multiplier));
+					if (pixel >255)
+						pixel = 255;
+					result.set_pixel_value(x,y,z,c,pixel);
+				}
+			}
+		}
+	}
+	return result;
+}
+
+/*! \fn Image Image :: bynarize_img(double)
+ * \brief This function set the pixel value to 255 if the original pixel value is higher than a cutoff value, and 0 if the pixel value is less than the cut off value
+ * \param double cutoff_value is the limit of the pixel value, to be changed by 0 or 255.
+ * \return Image result: Is the result of binarize the image.
+ */
+
+Image Image :: binarize_img(double cutoff_value)
+{
+	Image result (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0);
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 0; x < this->get_width(); x++)
+			{
+				for(unsigned int y = 0; y < this->get_height(); y++)
+				{
+					unsigned char pixel= static_cast<unsigned int>(this->get_pixel_value(x,y,z,c));
+					if(pixel >= cutoff_value)
+						pixel=255;
+					else
+						pixel=0;
+					result.set_pixel_value(x,y,z,c,pixel);
+
+				}
+			}
+		}
+	}
+
+	
+	return result;
+}
+
+
+// *************************************************************************
+// ************************** SPACE DOMAIN FILTERS *************************
+// *************************************************************************
+
+
+
+
+// *************************************************************************
+// *********************** Sharpening Spatial Filters **********************
+// *************************************************************************
+
+/// \fn Image Image::filter_Laplacian(): Returns an image after applying the Laplacian filter to the image. Considers the diagonal values
+Image Image::filter_Laplacian()
+{
+	int kernel[9];
+	
+	for (int j=0; j<3; j++)
+	{ 
+		for (int i=0; i<3; i++)
+		{
+			if(j==i && i == 1)
+			{
+				kernel[3*j+i] = 8;
+			}
+			else
+			{
+				kernel[3*j+i] = -1;
+			}
+		}
+	}
+	
+	return (this->filter(kernel, 3, 8)); 
+}
+
+/// \fn Image Image :: filter_Laplacian_no_diagonal(): The same as the \fn filter_Laplacian(), but doesn't include the diagonal values.
+Image Image :: filter_Laplacian_no_diagonal()
+{
+	int kernel[9] = {0, -1, 0, -1, 4, -1, 0, -1, 0};
+	
+	return (this->filter(kernel, 3, 4));
+}
+
+/*! \fn  Image Image :: filter_Gradient_horizontal()
+ * \return An image object that contains the original image after receiving a gradient filter in the 
+ * horizontal direction. Could be used to identify horizontal borders.
+ */ 
+Image Image :: filter_Gradient_horizontal()
+{
+	int kernel [9] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
+	
+	return (this->filter(kernel, 3, 4));	
+}
+
+/*! \fn  Image Image :: filter_Gradient_vertical()
+ * \return An image object that contains the original image after receiving a gradient filter in the 
+ * vertical direction. Could be used to identify vertical borders.
+ */ 
+Image Image :: filter_Gradient_vertical()
+{
+	int kernel [9] = {1, 0, -1, 2, 0, -2, 1, 0, -1};
+	
+	return (this->filter(kernel, 3, 4));	
+}
+
+Image Image :: filter_Prewitt_N_S()
+{
+	int kernel[9] = {1, 1, 1, 0, 0, 0, -1, -1, -1};
+	
+	return (this->filter(kernel, 3, 3));
+}
+	
+Image Image ::filter_Prewitt_NE_SW()
+{
+	int kernel[9] = {0, 1, 1, -1, 0, 1, -1, -1, 0};
+	
+	return (this->filter(kernel, 3, 3));
+}
+
+Image Image ::filter_Prewitt_E_W()
+{
+	int kernel[9] = {1, 0, -1, 1, 0, -1, 1, 0, -1};
+	
+	return (this->filter(kernel, 3, 3));	
+}
+	
+Image Image ::filter_Prewitt_NW_SE()
+{
+	int kernel[9] = {-1, -1, 0, -1, 0, 1, 0, 1, 1};
+	
+	return (this->filter(kernel, 3, 3));		
+}
+
+Image Image ::filter_edge_enhacement_displacement(unsigned int horizontal_dis, unsigned int vertical_dis)
+{
+	Image result (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); 
+	if((horizontal_dis < this->get_width()) && (vertical_dis < this->get_height()))
+	{
+		for(unsigned int c = 0; c < this->get_spectrum(); c++)
+		{
+			for(unsigned int z = 0; z < this->get_depth(); z++)
+			{
+				for(unsigned int x = horizontal_dis; x < this->get_width(); x++)
+				{
+					for(unsigned int y = vertical_dis; y < this->get_height(); y++)
+					{
+						unsigned char value = static_cast<unsigned char>(abs(this->get_pixel_value(x,y,z,c) - this->get_pixel_value(x-horizontal_dis, y-vertical_dis, z, c)));
+						
+						result.set_pixel_value(x,y,z,c, value);
+					}
+				}
+			}
+		}
+	}
+	return result;
+}
+
+Image Image :: filter_vertical_borders(int intensity)
+{
+	int size;
+	if(intensity > 0 && intensity < 15)
+	{
+		size = (2*intensity +1);
+	}
+	else 
+	{
+		size = 3;
+	}
+	
+	int kernel [size*size];
+	
+	
+	for(int i=0; i< size; i++)
+	{
+		for(int j=0; j< size; j++)
+		{
+			if(i==0)
+			{
+				kernel[size * i + j] = 1;
+			}
+			else
+			{
+				if(i==size-1)
+				{
+					kernel[size * i + j] = -1;
+				}
+				else
+				{
+					kernel[size * i + j] = 0;
+				}
+			}
+		}
+	}
+	
+	return (this->filter(kernel, size, size));	
+}
+
+Image Image :: filter_horizontal_borders(int intensity)
+{
+	int size;
+	if(intensity > 0 && intensity < 15)
+	{
+		size = (2*intensity +1);
+	}
+	else 
+	{
+		size = 3;
+	}
+	
+	int kernel [size*size];
+	
+	
+	for(int i=0; i< size; i++)
+	{
+		for(int j=0; j< size; j++)
+		{
+			if(j==0)
+			{
+				kernel[size * i + j] = 1;
+			}
+			else
+			{
+				if(j==size-1)
+				{
+					kernel[size * i + j] = -1;
+				}
+				else
+				{
+					kernel[size * i + j] = 0;
+				}
+			}
+		}
+	}
+	
+	return (this->filter(kernel, size, size));	
+}
+
+// *************************************************************************
+// *********************** Smoothing Spatial Filters **********************
+// *************************************************************************
+
+Image Image :: filter_median (int dim)
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	int kernel [dim*dim];
+
+	int m = (dim-1)/2;
+	unsigned char pixel_values [dim*dim-1];
+	unsigned char temp;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width(); x++)
+			{
+				for(unsigned int y = m; y < this->get_height(); y++)
+				{
+					for(unsigned int i = x-m; i < x+m; i++)
+					{
+						for(unsigned int j = y-m; j< y+m; j++)
+						{
+							pixel_values [(i-x+m)*dim + (j-y+m)]= this->get_pixel_value(i, j, z, c)* (kernel[(i-x+m)*dim + (j-y+m)]);
+							
+							for(int k=0; k<dim*dim-1 ; k++)
+							{
+								for(int p=k+1 ; p<dim*dim-1 ; p++)
+								{
+									if(pixel_values[p] < pixel_values[k])
+									{
+										// Intercambiar los valores
+										temp = pixel_values[k];
+										pixel_values[k] = pixel_values[p];
+										pixel_values[p] = temp;
+									}
+								}
+							}
+						}	
+					}
+					
+					unsigned char pixel = pixel_values[((dim*dim-1)/2)-1];
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	 return filtered;
+ }
+
+
+Image Image :: filter_average(int dim)
+{
+	int kernel [dim*dim];
+
+	Image image_average = this->filter(kernel,dim,dim);
+	
+	return image_average;
+} 
+
+
+Image Image :: filter_gaussian(int o, int dim_kernel)
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0);
+
+	double kernel[dim_kernel*dim_kernel];
+	
+	int m = (dim_kernel-1)/2;
+	
+	double gaussian =1/pow(3.1415*2*o,0.5);
+
+	for(int i =-m; i <=m; i++)
+	{
+		for(int j =-m; j<=+m; j++)
+		{
+			double exp= -(i*i+j*j)*0.5/o;
+			kernel[(i+m)*dim_kernel + (j+m)]=gaussian*pow(2.7,exp); 
+		}
+	}
+	
+	
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width(); x++)
+			{
+				for(unsigned int y = m; y < this->get_height(); y++)
+				{
+					for(unsigned int i = x-m; i < x+m; i++)
+					{
+						for(unsigned int j = y-m; j< y+m; j++)
+						{
+							unsigned char pixel= this->get_pixel_value(i, j, z, c)* (kernel[(i-x+m)*dim_kernel + (j-y+m)]); 
+							filtered.set_pixel_value(x, y, z, c, pixel);
+						}
+					}
+					
+				}
+				
+			 }
+			 
+		 }
+	}  
+	 return filtered;		
+}
+
+
+Image Image :: filter_modal(int dim)
+{
+Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0);
+unsigned char pixel_values[dim*dim];
+unsigned char moda;
+unsigned char average=0;
+int m=(dim-1)/2;
+unsigned char copy_pixels[dim*dim];
+
+  	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width(); x++)
+			{
+				for(unsigned int y = m; y < this->get_height(); y++)
+				{
+					for(unsigned int i = x-m; i < x+m; i++)
+					{
+						for(unsigned int j = y-m; j< y+m; j++)
+						{
+							pixel_values [(i-x+m)*dim + (j-y+m)]= this->get_pixel_value(i, j, z, c);
+		
+							int frequency[dim*dim];
+							moda=0;	
+							
+							for(int k=0;k<dim*dim;k++)
+							{
+								copy_pixels[k]=	pixel_values[k];
+								frequency[k]=0;
+							}
+							
+							for(int p=0;p<dim*dim;p++)
+							{
+								for(int q=p+1;q<dim*dim;q++)
+								{
+									if(copy_pixels[p]==pixel_values[q]){
+										frequency[p]++;
+								
+									}
+			
+								}
+	
+							}
+
+
+
+							for(int s=0; s<dim*dim ; s++)
+							{
+								for(int e=s+1 ; e<dim*dim ; e++)
+								{
+									if(frequency[e] < frequency[s])
+									{
+										moda = copy_pixels[s];
+										average=copy_pixels[s];
+									}
+								}
+							}
+							
+
+							if(moda==0)
+							{
+								for(int k=0;k<dim*dim;k++)
+								{
+									moda += pixel_values[k];
+								}
+							average=(moda/dim);
+							}
+
+
+						}	
+					}
+					
+					filtered.set_pixel_value(x, y, z, c, average);
+				}
+				
+			 }
+			 
+		 }
+	}
+
+return filtered;
+
+}
+	
+// *************************************************************************
+// *********************** Frequency Domain Filters ************************
+// *************************************************************************
+
+// *************************************************************************
+// ******************** Sharpening Frecquency Filters **********************
+// *************************************************************************
+
+// *************************************************************************
+// ********************* Smoothing Frecquency Filters **********************
+// *************************************************************************
+
+// *************************************************************************
+// *********************** Dot to Dot Transformations **********************
+// *************************************************************************
+
+// *************************************************************************
+// *********************** HISTOGRAM AND EQUALIZATION **********************
+// *************************************************************************
+
+
+
+
+
 
 

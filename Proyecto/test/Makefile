@@ -16,9 +16,6 @@ filter : Filter_usage.cpp
 
 blur: Average_filter.cpp
 	$(CC) $(EFLAGS) avg_filter.exe Average_filter.cpp $(LFLAGS)
- 
-binary: binary.cpp
-	$(CC) $(EFLAGS) binary.exe binary.cpp $(LFLAGS)
 
 bin_blue: bin_blue.cpp
 	$(CC) $(EFLAGS) bin_blue.exe bin_blue.cpp $(LFLAGS) 
@@ -33,4 +30,18 @@ laplacian: Laplacian_mask.cpp
 substraction: img_substraction.cpp
 	$(CC) $(EFLAGS) substraction.exe img_substraction.cpp $(LFLAGS)
 
+multiply: img_multiply.cpp
+	$(CC) $(EFLAGS) multiply.exe img_multiply.cpp $(LFLAGS)
+
+binary: img_binary.cpp
+	$(CC) $(EFLAGS) binary.exe img_binary.cpp $(LFLAGS)
+
+average: promedio.cpp
+	$(CC) $(EFLAGS) average.exe promedio.cpp $(LFLAGS)
+	
+gaussian: gaussian.cpp
+	$(CC) $(EFLAGS) gaussian.exe gaussian.cpp $(LFLAGS)
+
+modal: moda.cpp
+	$(CC) $(EFLAGS) modal.exe moda.cpp $(LFLAGS)
 
