@@ -32,5 +32,12 @@ multiply: img_multiply.cpp
 binary: img_binary.cpp
 	$(CC) $(EFLAGS) binary.exe img_binary.cpp $(LFLAGS)
 
+
 sharpening_spatial: Sharpening_spatial_filters.cpp
 	$(CC) $(EFLAGS) sharp_spatial.exe Sharpening_spatial_filters.cpp $(LFLAGS)
+
+average: promedio.cpp
+	$(CC) $(EFLAGS) average.exe promedio.cpp $(LFLAGS)
+	
+gaussian: gaussian.cpp
+	$(CC) $(EFLAGS) gaussian.exe gaussian.cpp $(LFLAGS)

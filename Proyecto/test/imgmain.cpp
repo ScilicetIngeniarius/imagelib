@@ -16,7 +16,7 @@ int main()
 	
 	cout << "\n El valor del depth " << imagen.depth() << endl; 
 	
-	int spec = imagen.spectrum();
+	int spec=imagen.spectrum();
 	
 	for (int i=0; i<5; i++)
 	{
