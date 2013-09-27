@@ -242,8 +242,16 @@ Image Image :: sum_img(Image image2)
 				{
 					for(unsigned int y = 0; y < this->get_height(); y++)
 					{
-						unsigned char pixel= static_cast<unsigned int>(abs(this->get_pixel_value(x,y,z,c)+image2.get_pixel_value(x,y,z,c)));
-	
+						unsigned char pixel;
+						int sum = this->get_pixel_value(x,y,z,c)+image2.get_pixel_value(x,y,z,c);
+						if (sum <= 255)
+						{
+							pixel = static_cast<unsigned int>(sum);
+						}
+						else
+						{
+							pixel = 255;
+						}
 						result.set_pixel_value(x,y,z,c,pixel);
 					}
 				}
@@ -443,30 +451,146 @@ Image Image :: filter_Gradient_vertical()
 
 Image Image :: filter_Prewitt_N_S()
 {
-	int kernel[9] = {1, 1, 1, 0, 0, 0, -1, -1, -1};
+	//int kernel[9] = {1, 1, 1, 0, 0, 0, -1, -1, -1};
 	
-	return (this->filter(kernel, 3, 0.5));
+	//return (this->filter(kernel, 3, 0.5));
+	
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = get_pixel_value(x-1, y-1, z, c) + get_pixel_value(x, y-1, z, c) + get_pixel_value(x+1, y-1, z, c) - (get_pixel_value(x-1, y+1, z, c) + get_pixel_value(x, y+1, z, c) + get_pixel_value(x+1, y+1, z, c));
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
 }
 	
 Image Image ::filter_Prewitt_NE_SW()
 {
-	int kernel[9] = {0, 1, 1, -1, 0, 1, -1, -1, 0};
+	//int kernel[9] = {0, 1, 1, -1, 0, 1, -1, -1, 0};
 	
-	return (this->filter(kernel, 3, 1));
+	//return (this->filter(kernel, 3, 1));
+	
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = get_pixel_value(x, y-1, z, c) + get_pixel_value(x+1, y-1, z, c) + get_pixel_value(x+1, y, z, c) - (get_pixel_value(x-1, y, z, c) + get_pixel_value(x-1, y+1, z, c) + get_pixel_value(x, y+1, z, c));
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
 }
 
 Image Image ::filter_Prewitt_E_W()
 {
-	int kernel[9] = {1, 0, -1, 1, 0, -1, 1, 0, -1};
+	//int kernel[9] = {1, 0, -1, 1, 0, -1, 1, 0, -1};
 	
-	return (this->filter(kernel, 3, 1));	
+	//return (this->filter(kernel, 3, 1));	
+	
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = get_pixel_value(x-1, y-1, z, c) + get_pixel_value(x-1, y, z, c) + get_pixel_value(x-1, y+1, z, c) - (get_pixel_value(x+1, y-1, z, c) + get_pixel_value(x+1, y, z, c) + get_pixel_value(x+1, y+1, z, c));
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
 }
 	
 Image Image ::filter_Prewitt_NW_SE()
 {
-	int kernel[9] = {-1, -1, 0, -1, 0, 1, 0, 1, 1};
+	//int kernel[9] = {-1, -1, 0, -1, 0, 1, 0, 1, 1};
 	
-	return (this->filter(kernel, 3, 1));		
+	// (this->filter(kernel, 3, 1));	
+	
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = get_pixel_value(x-1, y-1, z, c) + get_pixel_value(x-1, y, z, c) + get_pixel_value(x, y-1, z, c) - (get_pixel_value(x+1, y, z, c) + get_pixel_value(x+1, y+1, z, c) + get_pixel_value(x, y+1, z, c));
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+		
 }
 
 Image Image ::filter_edge_enhacement_displacement(unsigned int horizontal_dis, unsigned int vertical_dis)
@@ -601,11 +725,34 @@ Image Image :: filter_median (int dim)
 
 Image Image :: filter_average(int dim)
 {
-	int kernel [dim*dim];
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 
-	Image image_average = this->filter(kernel,dim,dim);
-	
-	return image_average;
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = dim; x < this->get_width()-dim; x++)
+			{
+				for(unsigned int y = dim; y < this->get_height()-dim; y++)
+				{
+					int sum = 0;
+					for(unsigned int i = x-dim; i<= x+dim; i++)
+					{
+						for(unsigned int j = y-dim; j<= y+dim; j++)
+						{
+							sum += this->get_pixel_value(i, j, z, c);
+						}
+					}
+			
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (sum/((dim*2+1)*(dim*2+1)));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	 return filtered;	
 } 
 
 
@@ -654,11 +801,8 @@ Image Image :: filter_gaussian(int o, int dim_kernel)
 		 }
 	}  
 	 return filtered;		
-<<<<<<< HEAD
 }	
 
-=======
-}
 
 
 Image Image :: filter_modal(int dim)
@@ -746,7 +890,7 @@ return filtered;
 
 }
 	
->>>>>>> 5e4a8e7d0777d0691aa00e1ab3a2bb956917f668
+
 // *************************************************************************
 // *********************** Frequency Domain Filters ************************
 // *************************************************************************

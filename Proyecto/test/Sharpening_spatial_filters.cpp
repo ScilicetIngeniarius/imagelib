@@ -17,14 +17,31 @@ int main()
 	
 	//Image taj ("../../Multimedia/taj_orig.jpg");
 	
-	Image vert = parrot.filter_Gradient_vertical();
+	//PREWIT
+	//N_S
 	
-	vert.display("VERT GRAD");
+	(parrot.filter_Prewitt_N_S()).display("N_S");
 	
-	Image vert2 = parrot.filter_Prewitt_N_S();
+	//E_W
 	
-	vert2.display("OTHER GRAD");
+	(parrot.filter_Prewitt_E_W()).display("E_W");
 	
-	//sum.save("../../Multimedia/lena_bord.ppm");
+	//NE_SW
+	
+	(parrot.filter_Prewitt_NE_SW()).display("N_S");
+	
+	//NW_SE
+	
+	(parrot.filter_Prewitt_NW_SE()).display("N_S");
+	
+	//FOR THE SUM OF THEM ALL
+	
+	Image sum = ((parrot.filter_Prewitt_N_S()).sum_img(parrot.filter_Prewitt_E_W())).sum_img((parrot.filter_Prewitt_NE_SW()).sum_img(parrot.filter_Prewitt_NW_SE()));
+	
+	sum.display("SUM");
+	
+	sum.save("../../parrot_prewitt_borders.ppm");
+	
+	
 	
 }
