@@ -262,13 +262,6 @@ Image Image :: sum_img(Image image2)
 }
 
 
-
-
-
-
-
-
-
 /*! \fn Image Image :: multiply_img(double)
  * \brief This function multiplies the pixel values by a factor. If the pixel value is higher than 255, adjust the pixel value to 255.
  * \param double multiplier is the factor that mutiplies all the pixel values.
@@ -345,32 +338,80 @@ Image Image :: binarize_img(double cutoff_value)
 /// \fn Image Image::filter_Laplacian(): Returns an image after applying the Laplacian filter to the image. Considers the diagonal values
 Image Image::filter_Laplacian()
 {
-	int kernel[9];
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
-	for (int j=0; j<3; j++)
-	{ 
-		for (int i=0; i<3; i++)
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
 		{
-			if(j==i && i == 1)
+			for(unsigned int x = m; x < this->get_width()-m; x++)
 			{
-				kernel[3*j+i] = 8;
-			}
-			else
-			{
-				kernel[3*j+i] = -1;
-			}
-		}
-	}
-	
-	return (this->filter(kernel, 3, 8)); 
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = 0;
+					
+					for (unsigned int i = 0 ; i < 3; i++)
+					{
+						for(unsigned int j = 0 ; j < 3; j++)
+						{
+						sum += -this->get_pixel_value(x+i-1, y+i-1, z, c);
+						}
+					}
+					
+					sum += 9*(this->get_pixel_value(x,y,z,c));
+					
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	return filtered; 
 }
 
 /// \fn Image Image :: filter_Laplacian_no_diagonal(): The same as the \fn filter_Laplacian(), but doesn't include the diagonal values.
 Image Image :: filter_Laplacian_no_diagonal()
 {
-	int kernel[9] = {0, -1, 0, -1, 4, -1, 0, -1, 0};
+	//int kernel[9] = {0, -1, 0, -1, 4, -1, 0, -1, 0};
 	
-	return (this->filter(kernel, 3, 1));
+	//return (this->filter(kernel, 3, 1));
+	
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = 4*(this->get_pixel_value(x,y,z,c)) - (this->get_pixel_value(x-1,y,z,c) + this->get_pixel_value(x+1,y,z,c) + this->get_pixel_value(x,y-1,z,c) +this->get_pixel_value(x,y+1,z,c));
+					
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	return filtered; 
+	
 }
 
 /*! \fn  Image Image :: filter_Gradient_horizontal()
@@ -395,7 +436,7 @@ Image Image :: filter_Gradient_horizontal()
 			{
 				for(unsigned int y = m; y < this->get_height()-m; y++)
 				{
-					int sum = get_pixel_value(x-1, y-1, z, c) + 2*get_pixel_value(x, y-1, z, c) + get_pixel_value(x+1, y-1, z, c) - (get_pixel_value(x-1, y+1, z, c) + 2*get_pixel_value(x, y+1, z, c) + get_pixel_value(x+1, y+1, z, c));
+					int sum = this->get_pixel_value(x-1, y-1, z, c) + 2*(this->get_pixel_value(x, y-1, z, c)) + this->get_pixel_value(x+1, y-1, z, c) - (this->get_pixel_value(x-1, y+1, z, c) + 2*(this->get_pixel_value(x, y+1, z, c)) + this->get_pixel_value(x+1, y+1, z, c));
 					if (sum > 255 || sum < -255)
 					{
 						sum = 255;

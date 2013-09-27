@@ -4,19 +4,16 @@ int main()
 {
 	Image imagen ("../../Multimedia/parrot_original.ppm");
 
-	int kernel[25];
+	Image filtered = imagen.filter_average(10);
 	
-	for (int j=0; j<5; j++)
-	{ 		for (int i=0; i<5; i++)
-		{
-		kernel[5*j+i] = 1;
-		}
-	}
+	filtered.display("FUNCTION_10");
 	
-	//Now we apply the filter with the kernel. Note that normalizer = 9
+	filtered = imagen.filter_average(20);
 	
-	Image filtered = imagen.filter(kernel, 5, 5);
+	filtered.display("FUNCTION_20");
 	
-	filtered.save("filter_average.ppm");
+	filtered = filtered.filter_average(20);
+	
+	filtered.display("FUNC 20 + 20");
 
 }
