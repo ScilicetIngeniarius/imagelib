@@ -125,11 +125,13 @@ public:
 // *********************** Smoothing Spatial Filters ***********************
 // *************************************************************************
 
-	Image filter_median(int kernel [], int);
+	Image filter_median(int);
 	
-	Image filter_average(int kernel [], int);
+	Image filter_average(int);
 	
 	Image filter_gaussian(int, int);
+	
+	Image filter_modal(int);
 	
 // *************************************************************************
 // *********************** Frequency Domain Filters ************************

@@ -547,10 +547,12 @@ Image Image :: filter_horizontal_borders()
 // *********************** Smoothing Spatial Filters **********************
 // *************************************************************************
 
-Image Image :: filter_median (int kernel [], int dim)
+Image Image :: filter_median (int dim)
 {
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
+	int kernel [dim*dim];
+
 	int m = (dim-1)/2;
 	unsigned char pixel_values [dim*dim-1];
 	unsigned char temp;
@@ -597,8 +599,10 @@ Image Image :: filter_median (int kernel [], int dim)
  }
 
 
-Image Image :: filter_average(int kernel [], int dim)
+Image Image :: filter_average(int dim)
 {
+	int kernel [dim*dim];
+
 	Image image_average = this->filter(kernel,dim,dim);
 	
 	return image_average;
@@ -650,8 +654,99 @@ Image Image :: filter_gaussian(int o, int dim_kernel)
 		 }
 	}  
 	 return filtered;		
+<<<<<<< HEAD
 }	
 
+=======
+}
+
+
+Image Image :: filter_modal(int dim)
+{
+Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0);
+unsigned char pixel_values[dim*dim];
+unsigned char moda;
+unsigned char average=0;
+int m=(dim-1)/2;
+unsigned char copy_pixels[dim*dim];
+
+  	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width(); x++)
+			{
+				for(unsigned int y = m; y < this->get_height(); y++)
+				{
+					for(unsigned int i = x-m; i < x+m; i++)
+					{
+						for(unsigned int j = y-m; j< y+m; j++)
+						{
+							pixel_values [(i-x+m)*dim + (j-y+m)]= this->get_pixel_value(i, j, z, c);
+		
+							int frequency[dim*dim];
+							moda=0;	
+							
+							for(int k=0;k<dim*dim;k++)
+							{
+								copy_pixels[k]=	pixel_values[k];
+								frequency[k]=0;
+							}
+							
+							for(int p=0;p<dim*dim;p++)
+							{
+								for(int q=p+1;q<dim*dim;q++)
+								{
+									if(copy_pixels[p]==pixel_values[q]){
+										frequency[p]++;
+								
+									}
+			
+								}
+	
+							}
+
+
+
+							for(int s=0; s<dim*dim ; s++)
+							{
+								for(int e=s+1 ; e<dim*dim ; e++)
+								{
+									if(frequency[e] < frequency[s])
+									{
+										moda = copy_pixels[s];
+										average=copy_pixels[s];
+									}
+								}
+							}
+							
+
+							if(moda==0)
+							{
+								for(int k=0;k<dim*dim;k++)
+								{
+									moda += pixel_values[k];
+								}
+							average=(moda/dim);
+							}
+
+
+						}	
+					}
+					
+					filtered.set_pixel_value(x, y, z, c, average);
+				}
+				
+			 }
+			 
+		 }
+	}
+
+return filtered;
+
+}
+	
+>>>>>>> 5e4a8e7d0777d0691aa00e1ab3a2bb956917f668
 // *************************************************************************
 // *********************** Frequency Domain Filters ************************
 // *************************************************************************

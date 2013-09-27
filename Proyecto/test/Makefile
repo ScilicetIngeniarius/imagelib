@@ -45,3 +45,7 @@ average: promedio.cpp
 	
 gaussian: gaussian.cpp
 	$(CC) $(EFLAGS) gaussian.exe gaussian.cpp $(LFLAGS)
+
+modal: moda.cpp
+	$(CC) $(EFLAGS) modal.exe moda.cpp $(LFLAGS)
+
