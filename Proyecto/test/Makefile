@@ -50,6 +50,6 @@ butterworth: Butterworth.cpp
 		$(CC) $(EFLAGS) butterworth.exe Butterworth.cpp $(LFLAGS)
 
 dilatation: dilatacion.cpp
-	$(CC) $(EFLAGS) dilatation.exe dilatation.cpp $(LFLAGS)
+	$(CC) $(EFLAGS) dilatation.exe dilatacion.cpp $(LFLAGS)
 
 
