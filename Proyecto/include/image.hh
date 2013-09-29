@@ -86,13 +86,13 @@ public:
 // *********************** Arithmetic & Logic ******************************
 // *************************************************************************
 
-	Image substract_img(Image); /// \fn substract image allows to substract the pixel values of two images with the same dimensions, and save the result in other image.
+	Image substract_img(Image); /// \fn substract image allows to substract the pixel values of two images.
 
 	Image sum_img(Image);
 	
-	Image multiply_img(double); /// \fn image multiplier multiplies an image by a factor. If the pixel value is higher to 255, assing the pixel value in 255.
+	Image multiply_img(double); /// \fn image multiplier multiplies an image by a factor.
 
-	Image binarize_img(unsigned int); /// \fn bynary image adjust the pixel values, depends of a specified parameter, if the pixel value is higher than the parameter, adjust to 255, else adjust to 0 the pixel value.
+	Image binarize_img(unsigned int); /// \fn bynary image adjust the pixel value to 0 or 255 depending on the cutoff values.
 		
 // *************************************************************************
 // ************************* SPACE DOMAIN FILTERS **************************
@@ -161,7 +161,7 @@ void display_FFT();
 // *************************************************************************
 	Image filter_dinamic_range_dilatation(unsigned char, unsigned char, double, double, double);
 
-	Image inverse();
+	Image inverse(); /// \fn inverse of an image substract the original pixel values to 255.
 	
 	Image log_transformation();
 	
