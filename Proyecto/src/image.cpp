@@ -305,11 +305,11 @@ Image Image :: multiply_img(double multiplier)
 
 /*! \fn Image Image :: bynarize_img(double)
  * \brief This function set the pixel value to 255 if the original pixel value is higher than a cutoff value, and 0 if the pixel value is less than the cut off value
- * \param double cutoff_value is the limit of the pixel value, to be changed by 0 or 255.
+ * \param unsigned int cutoff_value is the limit of the pixel value, to be changed by 0 or 255.
  * \return Image result: Is the result of binarize the image.
  */
 
-Image Image :: binarize_img(double cutoff_value)
+Image Image :: binarize_img(unsigned int cutoff_value)
 {
 	Image result (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0);
 	for(unsigned int c = 0; c < this->get_spectrum(); c++)

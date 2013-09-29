@@ -91,7 +91,7 @@ public:
 	
 	Image multiply_img(double); /// \fn image multiplier multiplies an image by a factor. If the pixel value is higher to 255, assing the pixel value in 255.
 
-	Image binarize_img(double); /// \fn bynary image adjust the pixel values, depends of a specified parameter, if the pixel value is higher than the parameter, adjust to 255, else adjust to 0 the pixel value.
+	Image binarize_img(unsigned int); /// \fn bynary image adjust the pixel values, depends of a specified parameter, if the pixel value is higher than the parameter, adjust to 255, else adjust to 0 the pixel value.
 		
 // *************************************************************************
 // ************************* SPACE DOMAIN FILTERS **************************
@@ -149,6 +149,8 @@ void display_FFT();
 // ******************** Sharpening Frecquency Filters **********************
 // *************************************************************************
 
+	Image filter_butterworth_low_pass(Image, unsigned int, unsigned int);
+
 // *************************************************************************
 // ********************* Smoothing Frecquency Filters **********************
 // *************************************************************************
@@ -156,6 +158,7 @@ void display_FFT();
 // *************************************************************************
 // *********************** Dot to Dot Transformations **********************
 // *************************************************************************
+	Image filter_dinamic_range_dilatation(unsigned char, unsigned char, double, double, double);
 
 	Image inverse();
 	

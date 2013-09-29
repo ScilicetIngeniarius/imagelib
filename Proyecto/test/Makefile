@@ -35,8 +35,6 @@ binary: img_binary.cpp
 inverse: inverse.cpp
 	$(CC) $(EFLAGS) inverse.exe inverse.cpp $(LFLAGS)
 
-
-
 sharpening_spatial: Sharpening_spatial_filters.cpp
 	$(CC) $(EFLAGS) sharp_spatial.exe Sharpening_spatial_filters.cpp $(LFLAGS)
 
@@ -46,8 +44,15 @@ average: promedio.cpp
 gaussian: gaussian.cpp
 	$(CC) $(EFLAGS) gaussian.exe gaussian.cpp $(LFLAGS)
 
+butterworth: Butterworth.cpp
+		$(CC) $(EFLAGS) butterworth.exe Butterworth.cpp $(LFLAGS)
+
+dilatation: dilatacion.cpp
+	$(CC) $(EFLAGS) dilatation.exe dilatacion.cpp $(LFLAGS)
+
 modal: moda.cpp
 	$(CC) $(EFLAGS) modal.exe moda.cpp $(LFLAGS)
 
 fourier: fourier.cpp
 	$(CC) $(EFLAGS) fourier.exe fourier.cpp $(LFLAGS)
+
