@@ -1,15 +1,21 @@
-# include "../include/image.hh"
+# include "../include/CImg.h"
+# include <iostream>
+
+using namespace cimg_library;
 
 int main ()
 {
-	Image imagen ("../../Multimedia/lena.pgm");
+	CImg<float> real ("../../Multimedia/lena.pgm");
 	
-	imagen.FFT();
+	CImg<float> imaginary ();
 	
-	imagen.display_FFT();
+	CImgList<float> list (real, imaginary);
 	
-	imagen.FFT_inverse();
+	list = list.get_FFT();
 	
-	imagen.display("NORMAL");
+	list.display();
 	
+	list = list.get_FFT(true);
+	
+	list.display();
 }

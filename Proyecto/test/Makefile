@@ -47,8 +47,8 @@ gaussian: gaussian.cpp
 butterworth: Butterworth.cpp
 		$(CC) $(EFLAGS) butterworth.exe Butterworth.cpp $(LFLAGS)
 
-dilatation: dilatacion.cpp
-	$(CC) $(EFLAGS) dilatation.exe dilatacion.cpp $(LFLAGS)
+dilatation: dilatation.cpp
+	$(CC) $(EFLAGS) dilatation.exe dilatation.cpp $(LFLAGS)
 
 modal: moda.cpp
 	$(CC) $(EFLAGS) modal.exe moda.cpp $(LFLAGS)

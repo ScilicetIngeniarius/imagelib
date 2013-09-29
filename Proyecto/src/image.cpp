@@ -20,10 +20,7 @@ Image::Image()
 	this->height = 0;
 	this->depth = 0;
 	this->spectrum = 0;
-	
-	CImg<unsigned char> imaginary (this->get_width(), this->get_height(), this->get_depth(), this->get_spectrum(), 0);
-	
-	this->Complex = new CImgList (*(this->Img), imaginary);
+
 }
 /** \fn Image::Image(const char *const filename)
  * \brief Constructor
@@ -43,11 +40,6 @@ Image::Image(const char *const filename)
 	///< \param <depth> is the amount of layers of depth the image has, usually is one, except for 3D images.
 	this->spectrum = this->Img->spectrum();
 	///< \param <spectrum> is the number of channels in the image, RGB has a spectrum of 3, a monocromatic image has a spectrum of 1.
-	
-	CImg<unsigned char> imaginary (this->get_width(), this->get_height(), this->get_depth(), this->get_spectrum(), 0);
-	
-	this->Complex = new CImgList (*(this->Img), imaginary);
-	
 }
 /** \fn Image::Image(const unsigned int width, const unsigned int height, const unsigned int depth, const unsigned int spectrum, int value)
  * \brief This constructor is used when we need to create an image, and gives the dimensions of the image, and the value of a color that fills all the pixels.
@@ -60,10 +52,6 @@ Image::Image(const unsigned int width, const unsigned int height, const unsigned
 	this->height = height;
 	this->depth = depth;
 	this->spectrum = spectrum;
-	
-	CImg<unsigned char> imaginary (this->get_width(), this->get_height(), this->get_depth(), this->get_spectrum(), 0);
-	
-	this->Complex = new CImgList (*(this->Img), imaginary);
 }
 /** \fn ~Image(void) 
  * \brief is the destructor of the class.
@@ -882,12 +870,12 @@ Image Image :: filter_gaussian(int o, int dim_kernel)
 
 Image Image :: filter_modal(int dim)
 {
-Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0);
-unsigned char pixel_values[dim*dim];
-unsigned char moda;
-unsigned char average=0;
-int m=(dim-1)/2;
-unsigned char copy_pixels[dim*dim];
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0);
+	unsigned char pixel_values[dim*dim];
+	unsigned char moda;
+	unsigned char average=0;
+	int m=(dim-1)/2;
+	unsigned char copy_pixels[dim*dim];
 
   	for(unsigned int c = 0; c < this->get_spectrum(); c++)
 	{
@@ -972,19 +960,37 @@ return filtered;
 
 void Image :: FFT()
 {
-	this->Complex = this->Complex.get_FFT();
+
+	this->imaginary = new CImg<float> (this->width, this->height, this->depth, this->spectrum, 255);
+	
+	CImgList<float> list (*(this->Img), *(this->imaginary));
+	
+	list = list.get_FFT();
+	
+	*(this->real) = (list[0]);
+	
+	*(this->imaginary) = list[1];
+	
 }
 
 void Image :: display_FFT()
 {
-	this->Complex.display();
+	CImgList<float> list (*(this->real), *(this->imaginary));
+	
+	list.display();
 }
 
 void Image :: FFT_inverse()
 {
-	this->Complex = this->Complex.get_FFT(true);
+	CImgList<float> list (*(this->real), *(this->imaginary));
 	
-	*(this->Img) = this->Complex[0];
+	list = list.get_FFT(true);
+	
+	*this->real = list[0];
+	
+	*this->imaginary = list[1];
+	
+	*(this->Img) = list[0];
 }
 
 // *************************************************************************
@@ -1000,6 +1006,10 @@ void Image :: FFT_inverse()
 // *************************************************************************
 // *********************** Dot to Dot Transformations **********************
 // *************************************************************************
+
+/*! \fn  Image Image :: inverse()
+ * \return An image object that contains the inverse of the original image, this means that every pixel value is substracted to 255.
+ */ 
 
 Image Image ::inverse()
 {
@@ -1038,6 +1048,45 @@ Image Image :: log_transformation()
 					unsigned char pixel = static_cast<unsigned char>((255/log(256)) * log(1+this->get_pixel_value(x, y, z, c)));
 					
 					filtered.set_pixel_value(x,y,z,c, pixel);
+				}
+			}
+		}
+	}
+	return filtered;
+}
+
+/*! \fn  Image Image ::filter_dynamic_range_dilatation(unsigned char a, unsigned char b, double alpha, double beta, double gamma)
+ * \param unsigned char a is the first cutoff pixel value. 
+ * \param unsigned char b is the second cutoff pixel value.
+ * \param double alpha is the first multiplier.
+ * \param double beta is the second multiplier.
+ * \param double gamma is the third multiplier.
+ * \return An image object that contains the dilatated image. All the pixel values are divided in three ranges, and each range suffer a diferent transformation.
+ */ 
+Image Image ::filter_dynamic_range_dilatation(unsigned char a, unsigned char b, double alpha, double beta, double gamma)
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); 
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 0; x < this->get_width(); x++)
+			{
+				for(unsigned int y = 0; y < this->get_height(); y++)
+				{
+					unsigned char pixel=0;
+					
+					if(this->get_pixel_value(x,y,z,c)<a)
+						pixel =abs(alpha*this->get_pixel_value(x,y,z,c));
+						
+					else if(this->get_pixel_value(x,y,z,c)>=a && this->get_pixel_value(x,y,z,c)<b)
+						pixel=abs(beta*(this->get_pixel_value(x,y,z,c)-a)+alpha*a);
+					
+					else if(this->get_pixel_value(x,y,z,c)<=b)
+						
+						pixel=abs(gamma*(this->get_pixel_value(x,y,z,c)-b)+((beta*(b-a))+alpha*a));
+					filtered.set_pixel_value(x,y,z,c,static_cast<unsigned int>(pixel));
 				}
 			}
 		}
