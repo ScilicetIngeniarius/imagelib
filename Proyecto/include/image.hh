@@ -159,7 +159,7 @@ void display_FFT();
 // *************************************************************************
 // *********************** Dot to Dot Transformations **********************
 // *************************************************************************
-	Image filter_dinamic_range_dilatation(unsigned char, unsigned char, double, double, double);
+	Image filter_dynamic_range_dilatation(unsigned char, unsigned char, double, double, double);
 
 	Image inverse(); /// \fn inverse of an image substract the original pixel values to 255.
 	
