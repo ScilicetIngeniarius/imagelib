@@ -30,6 +30,7 @@ private:
 	unsigned int height; ///< \param unsigned int height refers to the height of the image.
 	unsigned int depth; ///< \param unsigned int depth refers to the depth of the image.
 	unsigned int spectrum; ///< \param unsigned int spectrum refers to the spectrum of the image.
+	CImgList<unsigned char> Complex = new CImgList(); 
 	
 public:
 // *************************************************************************
@@ -48,6 +49,7 @@ public:
 	 */
 	
 	~Image(void); /// \fn ~Image(void) es el destructor de la clase
+	
 
 // *************************************************************************
 // *********************** Save and Display ********************************
@@ -136,6 +138,12 @@ public:
 // *************************************************************************
 // *********************** Frequency Domain Filters ************************
 // *************************************************************************
+
+void FFT();
+
+void FFT_inverse();
+
+void display_FFT();
 
 // *************************************************************************
 // ******************** Sharpening Frecquency Filters **********************

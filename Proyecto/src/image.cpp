@@ -20,6 +20,10 @@ Image::Image()
 	this->height = 0;
 	this->depth = 0;
 	this->spectrum = 0;
+	
+	CImg<unsigned char> imaginary (this->get_width(), this->get_height(), this->get_depth(), this->get_spectrum(), 0);
+	
+	this->Complex = new CImgList (*(this->Img), imaginary);
 }
 /** \fn Image::Image(const char *const filename)
  * \brief Constructor
@@ -39,7 +43,11 @@ Image::Image(const char *const filename)
 	///< \param <depth> is the amount of layers of depth the image has, usually is one, except for 3D images.
 	this->spectrum = this->Img->spectrum();
 	///< \param <spectrum> is the number of channels in the image, RGB has a spectrum of 3, a monocromatic image has a spectrum of 1.
-		
+	
+	CImg<unsigned char> imaginary (this->get_width(), this->get_height(), this->get_depth(), this->get_spectrum(), 0);
+	
+	this->Complex = new CImgList (*(this->Img), imaginary);
+	
 }
 /** \fn Image::Image(const unsigned int width, const unsigned int height, const unsigned int depth, const unsigned int spectrum, int value)
  * \brief This constructor is used when we need to create an image, and gives the dimensions of the image, and the value of a color that fills all the pixels.
@@ -52,6 +60,10 @@ Image::Image(const unsigned int width, const unsigned int height, const unsigned
 	this->height = height;
 	this->depth = depth;
 	this->spectrum = spectrum;
+	
+	CImg<unsigned char> imaginary (this->get_width(), this->get_height(), this->get_depth(), this->get_spectrum(), 0);
+	
+	this->Complex = new CImgList (*(this->Img), imaginary);
 }
 /** \fn ~Image(void) 
  * \brief is the destructor of the class.
@@ -937,6 +949,23 @@ return filtered;
 // *********************** Frequency Domain Filters ************************
 // *************************************************************************
 
+void Image :: FFT()
+{
+	this->Complex = this->Complex.get_FFT();
+}
+
+void Image :: display_FFT()
+{
+	this->Complex.display();
+}
+
+void Image :: FFT_inverse()
+{
+	this->Complex = this->Complex.get_FFT(true);
+	
+	*(this->Img) = this->Complex[0];
+}
+
 // *************************************************************************
 // ******************** Sharpening Frecquency Filters **********************
 // *************************************************************************
@@ -944,6 +973,8 @@ return filtered;
 // *************************************************************************
 // ********************* Smoothing Frecquency Filters **********************
 // *************************************************************************
+
+
 
 // *************************************************************************
 // *********************** Dot to Dot Transformations **********************

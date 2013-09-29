@@ -49,3 +49,5 @@ gaussian: gaussian.cpp
 modal: moda.cpp
 	$(CC) $(EFLAGS) modal.exe moda.cpp $(LFLAGS)
 
+fourier: fourier.cpp
+	$(CC) $(EFLAGS) fourier.exe fourier.cpp $(LFLAGS)
