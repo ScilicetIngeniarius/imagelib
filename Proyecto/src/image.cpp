@@ -1028,7 +1028,7 @@ Image Image :: log_transformation()
 	return filtered;
 }
 
-/*! \fn  Image Image ::filter_dinamic_range_dilatation(unsigned char a, unsigned char b, double alpha, double beta, double gamma)
+/*! \fn  Image Image ::filter_dynamic_range_dilatation(unsigned char a, unsigned char b, double alpha, double beta, double gamma)
  * \param unsigned char a is the first cutoff pixel value. 
  * \param unsigned char b is the second cutoff pixel value.
  * \param double alpha is the first multiplier.
@@ -1036,7 +1036,7 @@ Image Image :: log_transformation()
  * \param double gamma is the third multiplier.
  * \return An image object that contains the dilatated image. All the pixel values are divided in three ranges, and each range suffer a diferent transformation.
  */ 
-Image Image ::filter_dinamic_range_dilatation(unsigned char a, unsigned char b, double alpha, double beta, double gamma)
+Image Image ::filter_dynamic_range_dilatation(unsigned char a, unsigned char b, double alpha, double beta, double gamma)
 {
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); 
 	
