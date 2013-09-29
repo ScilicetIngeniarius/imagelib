@@ -861,12 +861,12 @@ Image Image :: filter_gaussian(int o, int dim_kernel)
 
 Image Image :: filter_modal(int dim)
 {
-Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0);
-unsigned char pixel_values[dim*dim];
-unsigned char moda;
-unsigned char average=0;
-int m=(dim-1)/2;
-unsigned char copy_pixels[dim*dim];
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0);
+	unsigned char pixel_values[dim*dim];
+	unsigned char moda;
+	unsigned char average=0;
+	int m=(dim-1)/2;
+	unsigned char copy_pixels[dim*dim];
 
   	for(unsigned int c = 0; c < this->get_spectrum(); c++)
 	{
@@ -980,6 +980,10 @@ void Image :: FFT_inverse()
 // *********************** Dot to Dot Transformations **********************
 // *************************************************************************
 
+/*! \fn  Image Image :: inverse()
+ * \return An image object that contains the inverse of the original image, this means that every pixel value is substracted to 255.
+ */ 
+
 Image Image ::inverse()
 {
 	Image inverted (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
@@ -1017,6 +1021,45 @@ Image Image :: log_transformation()
 					unsigned char pixel = static_cast<unsigned char>((255/log(256)) * log(1+this->get_pixel_value(x, y, z, c)));
 					
 					filtered.set_pixel_value(x,y,z,c, pixel);
+				}
+			}
+		}
+	}
+	return filtered;
+}
+
+/*! \fn  Image Image ::filter_dinamic_range_dilatation(unsigned char a, unsigned char b, double alpha, double beta, double gamma)
+ * \param unsigned char a is the first cutoff pixel value. 
+ * \param unsigned char b is the second cutoff pixel value.
+ * \param double alpha is the first multiplier.
+ * \param double beta is the second multiplier.
+ * \param double gamma is the third multiplier.
+ * \return An image object that contains the dilatated image. All the pixel values are divided in three ranges, and each range suffer a diferent transformation.
+ */ 
+Image Image ::filter_dinamic_range_dilatation(unsigned char a, unsigned char b, double alpha, double beta, double gamma)
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); 
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 0; x < this->get_width(); x++)
+			{
+				for(unsigned int y = 0; y < this->get_height(); y++)
+				{
+					unsigned char pixel=0;
+					
+					if(this->get_pixel_value(x,y,z,c)<a)
+						pixel =abs(alpha*this->get_pixel_value(x,y,z,c));
+						
+					else if(this->get_pixel_value(x,y,z,c)>=a && this->get_pixel_value(x,y,z,c)<b)
+						pixel=abs(beta*(this->get_pixel_value(x,y,z,c)-a)+alpha*a);
+					
+					else if(this->get_pixel_value(x,y,z,c)<=b)
+						
+						pixel=abs(gamma*(this->get_pixel_value(x,y,z,c)-b)+((beta*(b-a))+alpha*a));
+					filtered.set_pixel_value(x,y,z,c,static_cast<unsigned int>(pixel));
 				}
 			}
 		}
