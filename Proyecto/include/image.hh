@@ -30,7 +30,7 @@ private:
 	unsigned int height; ///< \param unsigned int height refers to the height of the image.
 	unsigned int depth; ///< \param unsigned int depth refers to the depth of the image.
 	unsigned int spectrum; ///< \param unsigned int spectrum refers to the spectrum of the image.
-	CImgList<unsigned char> Complex = new CImgList(); 
+	CImgList<unsigned char> complex; 
 	
 public:
 // *************************************************************************
