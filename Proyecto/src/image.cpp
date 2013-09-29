@@ -725,6 +725,13 @@ Image Image :: filter_horizontal_borders()
 // *********************** Smoothing Spatial Filters **********************
 // *************************************************************************
 
+
+/*! \fn Image Image :: filter_median (int dim)
+ * \brief This function calculates the median of the range of pixels into the kernel and sets this value in the central pixel of the kernel.
+ * \param Only receives the dimension of the kernel (dim), wich only can be an impair number.
+ * \return Image filtered which is the image with the median filter applied.
+ */
+
 Image Image :: filter_median (int dim)
 {
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
@@ -776,6 +783,11 @@ Image Image :: filter_median (int dim)
 	 return filtered;
  }
 
+/*! \fn Image Image :: filter_average(int dim)
+ * \brief This function calculates the average of the range of pixels into the kernel and sets this value in the central pixel of the kernel.
+ * \param Only receives the dimension of the kernel (dim), wich only can be an impair number.
+ * \return Image filtered which is the image with the average filter applied.
+ */
 
 Image Image :: filter_average(int dim)
 {
@@ -809,7 +821,12 @@ Image Image :: filter_average(int dim)
 	 return filtered;	
 } 
 
-
+/*! \fn Image Image :: filter_gaussian(int o, int dim_kernel)
+ * \brief This function applies a gaussian kernel trough the hole image. 
+ * \param Receives the dimension of the kernel (dim_kernel) and a paremeter o wich stablish the values on the gaussian kernel.
+ * \return Image filtered which is the image with the gaussian filter applied.
+ */
+ 
 Image Image :: filter_gaussian(int o, int dim_kernel)
 {
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0);
@@ -857,7 +874,11 @@ Image Image :: filter_gaussian(int o, int dim_kernel)
 	 return filtered;		
 }	
 
-
+/*! \fn Image Image :: filter_modal(int dim)
+ * \brief This function calculates the modal of the range of pixels into the kernel and sets this value in the central pixel of the kernel.
+ * \param Only receives the dimension of the kernel (dim), wich only can be an impair number.
+ * \return Image filtered which is the image with the modal filter applied.
+ */
 
 Image Image :: filter_modal(int dim)
 {

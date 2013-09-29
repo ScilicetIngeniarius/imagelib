@@ -127,13 +127,13 @@ public:
 // *********************** Smoothing Spatial Filters ***********************
 // *************************************************************************
 
-	Image filter_median(int);
+	Image filter_median(int); /// \fn Median filter calculates the median of a certain group of pixels values.
 	
-	Image filter_average(int);
+	Image filter_average(int); /// \fn Average filter calculates the average of a certain group of pixels values.
 	
-	Image filter_gaussian(int, int);
+	Image filter_gaussian(int, int); /// \fn Gaussian filter applies a gaussian kernel to the image.
 	
-	Image filter_modal(int);
+	Image filter_modal(int); /// \fn Modal filter calculates the modal of a certain group of pixels, in case there is no especific modal it calculates the average.
 	
 // *************************************************************************
 // *********************** Frequency Domain Filters ************************
