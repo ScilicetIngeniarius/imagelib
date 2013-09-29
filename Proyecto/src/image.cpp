@@ -7,6 +7,7 @@
  // *************************************************************************
  // ********************* CONTRUCTORS ***************************************
  // *************************************************************************
+ 
  /** \fn Image::Image()
  * \brief Constructor
  * This constructor initializes the four dimension params at 0;
@@ -969,13 +970,73 @@ Image Image ::inverse()
 	return inverted;
 }
 
+
+Image Image :: log_transformation()
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 0; x < this->get_width(); x++)
+			{
+				for(unsigned int y = 0; y < this->get_height(); y++)
+				{
+					unsigned char pixel = static_cast<unsigned char>((255/log(256)) * log(1+this->get_pixel_value(x, y, z, c)));
+					
+					filtered.set_pixel_value(x,y,z,c, pixel);
+				}
+			}
+		}
+	}
+	return filtered;
+}
 // *************************************************************************
 // *********************** HISTOGRAM AND EQUALIZATION **********************
 // *************************************************************************
 
+/*! \fn int* Image :: get_histogram(int c, int z)
+ * This function returns an array containing the values of the histogram points, in the 
+ * desired channel and depth. 
+ * An Histogram is measure of the frecquency of a intensity value in an image, and is often 
+ * used as a parameter to improve the constrast and quality of the image. After observing the 
+ * histogram ( see plot_histogram() ) you could 
+ * 
+ * 
+ */
+int* Image :: get_histogram(unsigned int c, unsigned int z)
+{
+	int histogram [256];
+	for(int i = 0; i<256; i++)
+	{
+	histogram[i] = 0;	
+	}
+	
+	if (c < this->get_spectrum() && z < this->get_depth())
+	{
+		for(unsigned int x = 0; x < this->get_width(); x++)
+		{
+			for(unsigned int y = 0; y < this->get_height(); y++)
+			{
+				unsigned char pixel_value = this->get_pixel_value(x,y,z,c);
+				(histogram[pixel_value])++;
+			}
+		}
+	}
+	
+	int* histogram_pointer = histogram;
+	
+	return histogram_pointer;
+}
 
-
-
-
+void Image :: plot_histogram(const char* title)
+{
+	CImg<unsigned char> img = this->Img->histogram(256);
+	
+	CImgDisplay main_display (*(this->Img), title);
+	
+	img.display_graph(main_display, 3, 1, "Pixel Intensity", 0, 0, "Frequency", 0, 0);
+}
 
 

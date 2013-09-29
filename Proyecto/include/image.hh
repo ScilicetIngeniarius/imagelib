@@ -150,10 +150,16 @@ public:
 // *************************************************************************
 
 	Image inverse();
+	
+	Image log_transformation();
+	
 // *************************************************************************
 // *********************** HISTOGRAM AND EQUALIZATION **********************
 // *************************************************************************
 
+	int* get_histogram(unsigned int c, unsigned int z);
+	
+	void plot_histogram(const char* title);
 };
 
 #endif
