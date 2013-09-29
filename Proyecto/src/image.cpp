@@ -7,6 +7,7 @@
  // *************************************************************************
  // ********************* CONTRUCTORS ***************************************
  // *************************************************************************
+ 
  /** \fn Image::Image()
  * \brief Constructor
  * This constructor initializes the four dimension params at 0;
@@ -160,27 +161,28 @@ Image Image :: filter (int kernel [], int dim, float normalizer)
 {
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
-	int m = (dim-1)/2;
+	int m = (int)(dim-1)/2;
 	
 	for(unsigned int c = 0; c < this->get_spectrum(); c++)
 	{
 		for(unsigned int z = 0; z < this->get_depth(); z++)
 		{
-			for(unsigned int x = m; x < this->get_width(); x++)
+			for(unsigned int x = m; x < this->get_width()-m; x++)
 			{
-				for(unsigned int y = m; y < this->get_height(); y++)
+				for(unsigned int y = m; y < this->get_height()-m; y++)
 				{
-					double sum_values =0;
+					double sum_values = 0;
 					
-					for(unsigned int i = x-m; i <= x+m; i++)
+					for(unsigned int i = (x-m); i <= (x+m); i++)
 					{
-						for(unsigned int j = y-m; j<= y+m; j++)
+						for(unsigned int j = (y-m); j<= (y+m); j++)
 						{
-							sum_values += this->get_pixel_value(i, j, z, c)* (kernel[(i-x+m)*dim + (j-y+m)]); 
+							sum_values += (this->get_pixel_value(i, j, z, c)) * (kernel[ (i-x+m)*dim + (j-y+m)]); 
 						}
 					}
 					
-					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs((sum_values) / normalizer));
+					unsigned char pixel = static_cast<unsigned char> (abs(sum_values/ normalizer));
+					
 					filtered.set_pixel_value(x, y, z, c, pixel);
 				}
 				
@@ -225,6 +227,41 @@ Image Image :: substract_img(Image image2)
 	}
 	return result;
 }
+
+
+Image Image :: sum_img(Image image2)
+{
+	Image result (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+
+	if(this->get_width() == image2.get_width() && this->get_height() == image2.get_height() && this->get_depth() == image2.get_depth() && this->get_spectrum() == image2.get_spectrum())
+	{
+		for(unsigned int c = 0; c < this->get_spectrum(); c++)
+		{
+			for(unsigned int z = 0; z < this->get_depth(); z++)
+			{
+				for(unsigned int x = 0; x < this->get_width(); x++)
+				{
+					for(unsigned int y = 0; y < this->get_height(); y++)
+					{
+						unsigned char pixel;
+						int sum = this->get_pixel_value(x,y,z,c)+image2.get_pixel_value(x,y,z,c);
+						if (sum <= 255)
+						{
+							pixel = static_cast<unsigned int>(sum);
+						}
+						else
+						{
+							pixel = 255;
+						}
+						result.set_pixel_value(x,y,z,c,pixel);
+					}
+				}
+			}
+		}
+	}
+	return result;
+}
+
 
 /*! \fn Image Image :: multiply_img(double)
  * \brief This function multiplies the pixel values by a factor. If the pixel value is higher than 255, adjust the pixel value to 255.
@@ -302,32 +339,80 @@ Image Image :: binarize_img(unsigned int cutoff_value)
 /// \fn Image Image::filter_Laplacian(): Returns an image after applying the Laplacian filter to the image. Considers the diagonal values
 Image Image::filter_Laplacian()
 {
-	int kernel[9];
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
-	for (int j=0; j<3; j++)
-	{ 
-		for (int i=0; i<3; i++)
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
 		{
-			if(j==i && i == 1)
+			for(unsigned int x = m; x < this->get_width()-m; x++)
 			{
-				kernel[3*j+i] = 8;
-			}
-			else
-			{
-				kernel[3*j+i] = -1;
-			}
-		}
-	}
-	
-	return (this->filter(kernel, 3, 8)); 
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = 0;
+					
+					for (unsigned int i = 0 ; i < 3; i++)
+					{
+						for(unsigned int j = 0 ; j < 3; j++)
+						{
+						sum += -this->get_pixel_value(x+i-1, y+i-1, z, c);
+						}
+					}
+					
+					sum += 9*(this->get_pixel_value(x,y,z,c));
+					
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	return filtered; 
 }
 
 /// \fn Image Image :: filter_Laplacian_no_diagonal(): The same as the \fn filter_Laplacian(), but doesn't include the diagonal values.
 Image Image :: filter_Laplacian_no_diagonal()
 {
-	int kernel[9] = {0, -1, 0, -1, 4, -1, 0, -1, 0};
+	//int kernel[9] = {0, -1, 0, -1, 4, -1, 0, -1, 0};
 	
-	return (this->filter(kernel, 3, 4));
+	//return (this->filter(kernel, 3, 1));
+	
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = 4*(this->get_pixel_value(x,y,z,c)) - (this->get_pixel_value(x-1,y,z,c) + this->get_pixel_value(x+1,y,z,c) + this->get_pixel_value(x,y-1,z,c) +this->get_pixel_value(x,y+1,z,c));
+					
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	return filtered; 
+	
 }
 
 /*! \fn  Image Image :: filter_Gradient_horizontal()
@@ -336,9 +421,36 @@ Image Image :: filter_Laplacian_no_diagonal()
  */ 
 Image Image :: filter_Gradient_horizontal()
 {
-	int kernel [9] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
+	//int kernel [9] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
 	
-	return (this->filter(kernel, 3, 4));	
+	//return (this->filter(kernel, 3, 0.5));	
+	
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = this->get_pixel_value(x-1, y-1, z, c) + 2*(this->get_pixel_value(x, y-1, z, c)) + this->get_pixel_value(x+1, y-1, z, c) - (this->get_pixel_value(x-1, y+1, z, c) + 2*(this->get_pixel_value(x, y+1, z, c)) + this->get_pixel_value(x+1, y+1, z, c));
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	 return filtered;
 }
 
 /*! \fn  Image Image :: filter_Gradient_vertical()
@@ -347,37 +459,180 @@ Image Image :: filter_Gradient_horizontal()
  */ 
 Image Image :: filter_Gradient_vertical()
 {
-	int kernel [9] = {1, 0, -1, 2, 0, -2, 1, 0, -1};
+	//int kernel [9] = {1, 0, -1, 2, 0, -2, 1, 0, -1};
 	
-	return (this->filter(kernel, 3, 4));	
+	//return (this->filter(kernel, 3, 0.5));	
+
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = get_pixel_value(x-1, y-1, z, c) + 2*get_pixel_value(x-1, y, z, c) + get_pixel_value(x-1, y+1, z, c) - (get_pixel_value(x+1, y-1, z, c) + 2*get_pixel_value(x+1, y, z, c) + get_pixel_value(x+1, y+1, z, c));
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	 return filtered;
 }
 
 Image Image :: filter_Prewitt_N_S()
 {
-	int kernel[9] = {1, 1, 1, 0, 0, 0, -1, -1, -1};
+	//int kernel[9] = {1, 1, 1, 0, 0, 0, -1, -1, -1};
 	
-	return (this->filter(kernel, 3, 3));
+	//return (this->filter(kernel, 3, 0.5));
+	
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = get_pixel_value(x-1, y-1, z, c) + get_pixel_value(x, y-1, z, c) + get_pixel_value(x+1, y-1, z, c) - (get_pixel_value(x-1, y+1, z, c) + get_pixel_value(x, y+1, z, c) + get_pixel_value(x+1, y+1, z, c));
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
 }
 	
 Image Image ::filter_Prewitt_NE_SW()
 {
-	int kernel[9] = {0, 1, 1, -1, 0, 1, -1, -1, 0};
+	//int kernel[9] = {0, 1, 1, -1, 0, 1, -1, -1, 0};
 	
-	return (this->filter(kernel, 3, 3));
+	//return (this->filter(kernel, 3, 1));
+	
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = get_pixel_value(x, y-1, z, c) + get_pixel_value(x+1, y-1, z, c) + get_pixel_value(x+1, y, z, c) - (get_pixel_value(x-1, y, z, c) + get_pixel_value(x-1, y+1, z, c) + get_pixel_value(x, y+1, z, c));
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
 }
 
 Image Image ::filter_Prewitt_E_W()
 {
-	int kernel[9] = {1, 0, -1, 1, 0, -1, 1, 0, -1};
+	//int kernel[9] = {1, 0, -1, 1, 0, -1, 1, 0, -1};
 	
-	return (this->filter(kernel, 3, 3));	
+	//return (this->filter(kernel, 3, 1));	
+	
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = get_pixel_value(x-1, y-1, z, c) + get_pixel_value(x-1, y, z, c) + get_pixel_value(x-1, y+1, z, c) - (get_pixel_value(x+1, y-1, z, c) + get_pixel_value(x+1, y, z, c) + get_pixel_value(x+1, y+1, z, c));
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
 }
 	
 Image Image ::filter_Prewitt_NW_SE()
 {
-	int kernel[9] = {-1, -1, 0, -1, 0, 1, 0, 1, 1};
+	//int kernel[9] = {-1, -1, 0, -1, 0, 1, 0, 1, 1};
 	
-	return (this->filter(kernel, 3, 3));		
+	// (this->filter(kernel, 3, 1));	
+	
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = get_pixel_value(x-1, y-1, z, c) + get_pixel_value(x-1, y, z, c) + get_pixel_value(x, y-1, z, c) - (get_pixel_value(x+1, y, z, c) + get_pixel_value(x+1, y+1, z, c) + get_pixel_value(x, y+1, z, c));
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+		
 }
 
 Image Image ::filter_edge_enhacement_displacement(unsigned int horizontal_dis, unsigned int vertical_dis)
@@ -404,94 +659,66 @@ Image Image ::filter_edge_enhacement_displacement(unsigned int horizontal_dis, u
 	return result;
 }
 
-Image Image :: filter_vertical_borders(int intensity)
+Image Image :: filter_vertical_borders()
 {
-	int size;
-	if(intensity > 0 && intensity < 15)
-	{
-		size = (2*intensity +1);
-	}
-	else 
-	{
-		size = 3;
-	}
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
-	int kernel [size*size];
+	int m = 1;
 	
-	
-	for(int i=0; i< size; i++)
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
 	{
-		for(int j=0; j< size; j++)
+		for(unsigned int z = 0; z < this->get_depth(); z++)
 		{
-			if(i==0)
+			for(unsigned int x = m; x < this->get_width()-m; x++)
 			{
-				kernel[size * i + j] = 1;
-			}
-			else
-			{
-				if(i==size-1)
+				for(unsigned int y = 0; y < this->get_height()-m; y++)
 				{
-					kernel[size * i + j] = -1;
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(this->get_pixel_value(x-1, y, z, c) - get_pixel_value(x+1, y, z, c)));
+					filtered.set_pixel_value(x, y, z, c, pixel);
 				}
-				else
-				{
-					kernel[size * i + j] = 0;
-				}
-			}
-		}
-	}
-	
-	return (this->filter(kernel, size, size));	
+				
+			 }
+			 
+		 }
+	}  
+	 return filtered;
 }
 
-Image Image :: filter_horizontal_borders(int intensity)
+Image Image :: filter_horizontal_borders()
 {
-	int size;
-	if(intensity > 0 && intensity < 15)
-	{
-		size = (2*intensity +1);
-	}
-	else 
-	{
-		size = 3;
-	}
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
-	int kernel [size*size];
+	int m = 1;
 	
-	
-	for(int i=0; i< size; i++)
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
 	{
-		for(int j=0; j< size; j++)
+		for(unsigned int z = 0; z < this->get_depth(); z++)
 		{
-			if(j==0)
+			for(unsigned int x = 0; x < this->get_width()-m; x++)
 			{
-				kernel[size * i + j] = 1;
-			}
-			else
-			{
-				if(j==size-1)
+				for(unsigned int y = m; y < this->get_height()-m; y++)
 				{
-					kernel[size * i + j] = -1;
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(this->get_pixel_value(x, y-1, z, c) - get_pixel_value(x, y+1, z, c)));
+					filtered.set_pixel_value(x, y, z, c, pixel);
 				}
-				else
-				{
-					kernel[size * i + j] = 0;
-				}
-			}
-		}
-	}
-	
-	return (this->filter(kernel, size, size));	
+				
+			 }
+			 
+		 }
+	}  
+	 return filtered;
 }
 
 // *************************************************************************
 // *********************** Smoothing Spatial Filters **********************
 // *************************************************************************
 
-Image Image :: filter_median (int kernel [], int dim)
+Image Image :: filter_median (int dim)
 {
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
+	int kernel [dim*dim];
+
 	int m = (dim-1)/2;
 	unsigned char pixel_values [dim*dim-1];
 	unsigned char temp;
@@ -538,11 +765,36 @@ Image Image :: filter_median (int kernel [], int dim)
  }
 
 
-Image Image :: filter_average(int kernel [], int dim)
+Image Image :: filter_average(int dim)
 {
-	Image image_average = this->filter(kernel,dim,dim);
-	
-	return image_average;
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = dim; x < this->get_width()-dim; x++)
+			{
+				for(unsigned int y = dim; y < this->get_height()-dim; y++)
+				{
+					int sum = 0;
+					for(unsigned int i = x-dim; i<= x+dim; i++)
+					{
+						for(unsigned int j = y-dim; j<= y+dim; j++)
+						{
+							sum += this->get_pixel_value(i, j, z, c);
+						}
+					}
+			
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (sum/((dim*2+1)*(dim*2+1)));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	 return filtered;	
 } 
 
 
@@ -592,6 +844,95 @@ Image Image :: filter_gaussian(int o, int dim_kernel)
 	}  
 	 return filtered;		
 }	
+
+
+
+Image Image :: filter_modal(int dim)
+{
+Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0);
+unsigned char pixel_values[dim*dim];
+unsigned char moda;
+unsigned char average=0;
+int m=(dim-1)/2;
+unsigned char copy_pixels[dim*dim];
+
+  	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width(); x++)
+			{
+				for(unsigned int y = m; y < this->get_height(); y++)
+				{
+					for(unsigned int i = x-m; i < x+m; i++)
+					{
+						for(unsigned int j = y-m; j< y+m; j++)
+						{
+							pixel_values [(i-x+m)*dim + (j-y+m)]= this->get_pixel_value(i, j, z, c);
+		
+							int frequency[dim*dim];
+							moda=0;	
+							
+							for(int k=0;k<dim*dim;k++)
+							{
+								copy_pixels[k]=	pixel_values[k];
+								frequency[k]=0;
+							}
+							
+							for(int p=0;p<dim*dim;p++)
+							{
+								for(int q=p+1;q<dim*dim;q++)
+								{
+									if(copy_pixels[p]==pixel_values[q]){
+										frequency[p]++;
+								
+									}
+			
+								}
+	
+							}
+
+
+
+							for(int s=0; s<dim*dim ; s++)
+							{
+								for(int e=s+1 ; e<dim*dim ; e++)
+								{
+									if(frequency[e] < frequency[s])
+									{
+										moda = copy_pixels[s];
+										average=copy_pixels[s];
+									}
+								}
+							}
+							
+
+							if(moda==0)
+							{
+								for(int k=0;k<dim*dim;k++)
+								{
+									moda += pixel_values[k];
+								}
+							average=(moda/dim);
+							}
+
+
+						}	
+					}
+					
+					filtered.set_pixel_value(x, y, z, c, average);
+				}
+				
+			 }
+			 
+		 }
+	}
+
+return filtered;
+
+}
+	
+
 // *************************************************************************
 // *********************** Frequency Domain Filters ************************
 // *************************************************************************
@@ -628,13 +969,74 @@ Image Image ::inverse()
 	}
 	return inverted;
 }
+
+
+Image Image :: log_transformation()
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 0; x < this->get_width(); x++)
+			{
+				for(unsigned int y = 0; y < this->get_height(); y++)
+				{
+					unsigned char pixel = static_cast<unsigned char>((255/log(256)) * log(1+this->get_pixel_value(x, y, z, c)));
+					
+					filtered.set_pixel_value(x,y,z,c, pixel);
+				}
+			}
+		}
+	}
+	return filtered;
+}
 // *************************************************************************
 // *********************** HISTOGRAM AND EQUALIZATION **********************
 // *************************************************************************
 
+/*! \fn int* Image :: get_histogram(int c, int z)
+ * This function returns an array containing the values of the histogram points, in the 
+ * desired channel and depth. 
+ * An Histogram is measure of the frecquency of a intensity value in an image, and is often 
+ * used as a parameter to improve the constrast and quality of the image. After observing the 
+ * histogram ( see plot_histogram() ) you could 
+ * 
+ * 
+ */
+int* Image :: get_histogram(unsigned int c, unsigned int z)
+{
+	int histogram [256];
+	for(int i = 0; i<256; i++)
+	{
+	histogram[i] = 0;	
+	}
+	
+	if (c < this->get_spectrum() && z < this->get_depth())
+	{
+		for(unsigned int x = 0; x < this->get_width(); x++)
+		{
+			for(unsigned int y = 0; y < this->get_height(); y++)
+			{
+				unsigned char pixel_value = this->get_pixel_value(x,y,z,c);
+				(histogram[pixel_value])++;
+			}
+		}
+	}
+	
+	int* histogram_pointer = histogram;
+	
+	return histogram_pointer;
+}
 
-
-
-
+void Image :: plot_histogram(const char* title)
+{
+	CImg<unsigned char> img = this->Img->histogram(256);
+	
+	CImgDisplay main_display (*(this->Img), title);
+	
+	img.display_graph(main_display, 3, 1, "Pixel Intensity", 0, 0, "Frequency", 0, 0);
+}
 
 
