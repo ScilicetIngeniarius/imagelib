@@ -960,6 +960,10 @@ void Image :: FFT()
 	
 }
 
+// correnogramas
+// fitro de varianza espacial
+// 
+
 void Image :: display_FFT()
 {
 	CImgList<float> list (*(this->real), *(this->imaginary));
