@@ -175,6 +175,8 @@ void display_FFT();
 	void plot_histogram_equalization(int, const char* title);
 	
 	int* histogram_equalization(int*, const char* title);
+
+	unsigned char variance(int);
 };
 
 #endif
