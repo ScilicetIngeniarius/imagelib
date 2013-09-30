@@ -960,6 +960,10 @@ return filtered;
 	
 }
 
+// correnogramas
+// fitro de varianza espacial
+// 
+
 void Image :: display_FFT()
 {
 	CImgList<float> list (*(this->real), *(this->imaginary));
@@ -1135,4 +1139,8 @@ void Image :: plot_histogram_equalization(int levels, const char* title)
 	
 	img.display_graph(main_display, 3, 1, "Pixel Intensity", 0, 0, "Frequency", 0, 0);
 }
+
+// *************************************************************************
+// *********************** OTHER TRANSFORMATIONS ***************************
+// *************************************************************************
 
