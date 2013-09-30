@@ -55,4 +55,6 @@ modal: moda.cpp
 
 fourier: fourier.cpp
 	$(CC) $(EFLAGS) fourier.exe fourier.cpp $(LFLAGS)
-
+	
+equalization: equalization.cpp
+	$(CC) $(EFLAGS) equalization.exe equalization.cpp $(LFLAGS)
