@@ -378,7 +378,11 @@ Image Image::filter_Laplacian()
 	return filtered; 
 }
 
-/// \fn Image Image :: filter_Laplacian_no_diagonal(): The same as the \fn filter_Laplacian(), but doesn't include the diagonal values.
+/*! \fn Image Image :: filter_Laplacian_no_diagonal(): The same as the  \fn filter_Laplacian(), but doesn't include the diagonal values.
+* Works as a derivative function, reacts to high change on the pixels value, especially to noise, and borders.
+* 
+* \return A filtered Image with the laplacian filter.
+*/
 Image Image :: filter_Laplacian_no_diagonal()
 {
 	//int kernel[9] = {0, -1, 0, -1, 4, -1, 0, -1, 0};
@@ -416,6 +420,8 @@ Image Image :: filter_Laplacian_no_diagonal()
 }
 
 /*! \fn  Image Image :: filter_Gradient_horizontal()
+ * This filter is used as as Sharpening Spatial Filter, used to identify borders and noise in the image.
+ * Can be used to identify horizontal borders or discrepation
  * \return An image object that contains the original image after receiving a gradient filter in the 
  * horizontal direction. Could be used to identify horizontal borders.
  */ 
@@ -454,6 +460,8 @@ Image Image :: filter_Gradient_horizontal()
 }
 
 /*! \fn  Image Image :: filter_Gradient_vertical()
+ * This filter is used as as Sharpening Spatial Filter, used to identify borders and noise in the image.
+ * Can be used to identify vertical borders or discrepations.
  * \return An image object that contains the original image after receiving a gradient filter in the 
  * vertical direction. Could be used to identify vertical borders.
  */ 
