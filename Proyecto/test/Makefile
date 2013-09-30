@@ -17,12 +17,8 @@ filter : Filter_usage.cpp
 blur: Average_filter.cpp
 	$(CC) $(EFLAGS) avg_filter.exe Average_filter.cpp $(LFLAGS)
 
-bin_blue: bin_blue.cpp
-	$(CC) $(EFLAGS) bin_blue.exe bin_blue.cpp $(LFLAGS) 
-
 median: mediana.cpp
 	$(CC) $(EFLAGS) median.exe mediana.cpp $(LFLAGS) 
-
 
 laplacian: Laplacian_mask.cpp
 	$(CC) $(EFLAGS) laplace.exe Laplacian_mask.cpp $(LFLAGS)
@@ -35,4 +31,28 @@ multiply: img_multiply.cpp
 
 binary: img_binary.cpp
 	$(CC) $(EFLAGS) binary.exe img_binary.cpp $(LFLAGS)
+	
+inverse: inverse.cpp
+	$(CC) $(EFLAGS) inverse.exe inverse.cpp $(LFLAGS)
+
+sharpening_spatial: Sharpening_spatial_filters.cpp
+	$(CC) $(EFLAGS) sharp_spatial.exe Sharpening_spatial_filters.cpp $(LFLAGS)
+
+average: promedio.cpp
+	$(CC) $(EFLAGS) average.exe promedio.cpp $(LFLAGS)
+	
+gaussian: gaussian.cpp
+	$(CC) $(EFLAGS) gaussian.exe gaussian.cpp $(LFLAGS)
+
+butterworth: Butterworth.cpp
+		$(CC) $(EFLAGS) butterworth.exe Butterworth.cpp $(LFLAGS)
+
+dilatation: dilatation.cpp
+	$(CC) $(EFLAGS) dilatation.exe dilatation.cpp $(LFLAGS)
+
+modal: moda.cpp
+	$(CC) $(EFLAGS) modal.exe moda.cpp $(LFLAGS)
+
+fourier: fourier.cpp
+	$(CC) $(EFLAGS) fourier.exe fourier.cpp $(LFLAGS)
 

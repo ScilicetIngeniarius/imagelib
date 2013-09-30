@@ -30,6 +30,8 @@ private:
 	unsigned int height; ///< \param unsigned int height refers to the height of the image.
 	unsigned int depth; ///< \param unsigned int depth refers to the depth of the image.
 	unsigned int spectrum; ///< \param unsigned int spectrum refers to the spectrum of the image.
+	CImg<float> *imaginary; 
+	CImg<float> *real;
 	
 public:
 // *************************************************************************
@@ -48,6 +50,7 @@ public:
 	 */
 	
 	~Image(void); /// \fn ~Image(void) es el destructor de la clase
+	
 
 // *************************************************************************
 // *********************** Save and Display ********************************
@@ -55,6 +58,8 @@ public:
 
 	void save(const char *const savefilename); ///< \fn save(const char *const savefilename) allows to save an image with the name of \param savefilename.
 
+	void display(const char* message); /// \fn void display() displays an image. CImg Display Wrapper
+	
 // *************************************************************************
 // *********************** GETs & SEts *************************************
 // *************************************************************************
@@ -81,11 +86,13 @@ public:
 // *********************** Arithmetic & Logic ******************************
 // *************************************************************************
 
-	Image substract_img(Image); /// \fn substract image allows to substract the pixel values of two images with the same dimensions, and save the result in other image.
+	Image substract_img(Image); /// \fn substract image allows to substract the pixel values of two images.
 
-	Image multiply_img(double); /// \fn image multiplier multiplies an image by a factor. If the pixel value is higher to 255, assing the pixel value in 255.
+	Image sum_img(Image);
+	
+	Image multiply_img(double); /// \fn image multiplier multiplies an image by a factor.
 
-	Image binarize_img(double); /// \fn bynary image adjust the pixel values, depends of a specified parameter, if the pixel value is higher than the parameter, adjust to 255, else adjust to 0 the pixel value.
+	Image binarize_img(unsigned int); /// \fn bynary image adjust the pixel value to 0 or 255 depending on the cutoff values.
 		
 // *************************************************************************
 // ************************* SPACE DOMAIN FILTERS **************************
@@ -113,23 +120,37 @@ public:
 
 	Image filter_edge_enhacement_displacement(unsigned int, unsigned int); /// \fn This filter displaces the image and by ...
 	
-	Image filter_horizontal_borders(int);
+	Image filter_horizontal_borders();
 	
-	Image filter_vertical_borders(int);
+	Image filter_vertical_borders();
 	
 // *************************************************************************
 // *********************** Smoothing Spatial Filters ***********************
 // *************************************************************************
 
-	Image filter_median(int kernel [], int);
+	Image filter_median(int);
+	
+	Image filter_average(int);
+	
+	Image filter_gaussian(int, int);
+	
+	Image filter_modal(int);
 	
 // *************************************************************************
 // *********************** Frequency Domain Filters ************************
 // *************************************************************************
 
+void FFT();
+
+void FFT_inverse();
+
+void display_FFT();
+
 // *************************************************************************
 // ******************** Sharpening Frecquency Filters **********************
 // *************************************************************************
+
+	Image filter_butterworth_low_pass(Image, unsigned int, unsigned int);
 
 // *************************************************************************
 // ********************* Smoothing Frecquency Filters **********************
@@ -138,11 +159,19 @@ public:
 // *************************************************************************
 // *********************** Dot to Dot Transformations **********************
 // *************************************************************************
+	Image filter_dynamic_range_dilatation(unsigned char, unsigned char, double, double, double);
 
+	Image inverse(); /// \fn inverse of an image substract the original pixel values to 255.
+	
+	Image log_transformation();
+	
 // *************************************************************************
 // *********************** HISTOGRAM AND EQUALIZATION **********************
 // *************************************************************************
 
+	int* get_histogram(unsigned int c, unsigned int z);
+	
+	void plot_histogram(const char* title);
 };
 
 #endif
