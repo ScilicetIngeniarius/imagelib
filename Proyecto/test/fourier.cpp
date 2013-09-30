@@ -5,7 +5,7 @@ using namespace cimg_library;
 
 int main ()
 {
-	CImg<float> real ("../../Multimedia/lena.pgm");
+	CImg<float> real ("../../Multimedia/images.jpg");
 	
 	CImg<float> imaginary ();
 	
