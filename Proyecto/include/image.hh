@@ -30,8 +30,7 @@ private:
 	unsigned int height; ///< \param unsigned int height refers to the height of the image.
 	unsigned int depth; ///< \param unsigned int depth refers to the depth of the image.
 	unsigned int spectrum; ///< \param unsigned int spectrum refers to the spectrum of the image.
-	CImg<float> *imaginary; 
-	CImg<float> *real;
+	CImgList<unsigned char> complex; 
 	
 public:
 // *************************************************************************
@@ -172,6 +171,8 @@ void display_FFT();
 	int* get_histogram(unsigned int c, unsigned int z);
 	
 	void plot_histogram(const char* title);
+	
+	int* histogram_equalization(int*);
 };
 
 #endif
