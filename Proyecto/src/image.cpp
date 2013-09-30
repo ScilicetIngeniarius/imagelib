@@ -945,7 +945,7 @@ return filtered;
 // *********************** Frequency Domain Filters ************************
 // *************************************************************************
 
-void Image :: FFT()
+/*void Image :: FFT()
 {
 
 	this->imaginary = new CImg<float> (this->width, this->height, this->depth, this->spectrum, 255);
@@ -982,7 +982,7 @@ void Image :: FFT_inverse()
 	*this->imaginary = list[1];
 	
 	*(this->Img) = list[0];
-}
+}*/
 
 // *************************************************************************
 // ******************** Sharpening Frecquency Filters **********************
@@ -1122,13 +1122,21 @@ int* Image :: get_histogram(unsigned int c, unsigned int z)
 	return histogram_pointer;
 }
 
-void Image :: plot_histogram(const char* title)
+void Image :: plot_histogram(int levels,const char* title)
 {
-	CImg<unsigned char> img = this->Img->histogram(256);
+	CImg<unsigned char> img = this->Img->histogram(levels);
 	
 	CImgDisplay main_display (*(this->Img), title);
 	
 	img.display_graph(main_display, 3, 1, "Pixel Intensity", 0, 0, "Frequency", 0, 0);
 }
 
+void Image :: plot_histogram_equalization(int levels, const char* title)
+{
+	CImg<unsigned char> img = this->Img->equalize(levels);
+	
+	CImgDisplay main_display (*(this->Img), title);
+	
+	img.display_graph(main_display, 3, 1, "Pixel Intensity", 0, 0, "Frequency", 0, 0);
+}
 
