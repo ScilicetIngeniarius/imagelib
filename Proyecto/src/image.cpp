@@ -340,7 +340,7 @@ Image Image :: binarize_img(unsigned int cutoff_value)
 /*! \fn Image Image::filter_Laplacian(): 
  *	\brief Returns an image after applying the Laplacian filter to the image. Considers the diagonal values
  * This function applies a convolution with this kernel: \f$ ((1, 1, 1), (1, -8, 1), (1, 1, 1)) \f$
- * 
+ * \return A Filtered image with the Laplacian filter applied.
  */
  
 
@@ -387,7 +387,7 @@ Image Image::filter_Laplacian()
 
 /*! \fn Image Image :: filter_Laplacian_no_diagonal(): The same as the  \fn filter_Laplacian(), but doesn't include the diagonal values.
 * Works as a derivative function, reacts to high change on the pixels value, especially to noise, and borders.
-* 
+* Applies the following filter: \f$ ((0, -1, 0) , (-1, 4, -1) , (0, -1, 0)) \f$
 * \return A filtered Image with the laplacian filter.
 */
 Image Image :: filter_Laplacian_no_diagonal()
@@ -429,15 +429,12 @@ Image Image :: filter_Laplacian_no_diagonal()
 /*! \fn  Image Image :: filter_Gradient_horizontal()
  * This filter is used as as Sharpening Spatial Filter, used to identify borders and noise in the image.
  * Can be used to identify horizontal borders or discrepation
+ * Applies the following filter:  \f$ ((1, 2, 1) , (0, 0, 0) , (-1, -2, -1)) \f$
  * \return An image object that contains the original image after receiving a gradient filter in the 
  * horizontal direction. Could be used to identify horizontal borders.
  */ 
 Image Image :: filter_Gradient_horizontal()
-{
-	//int kernel [9] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
-	
-	//return (this->filter(kernel, 3, 0.5));	
-	
+{	
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
 	int m = 1;
@@ -469,15 +466,12 @@ Image Image :: filter_Gradient_horizontal()
 /*! \fn  Image Image :: filter_Gradient_vertical()
  * This filter is used as as Sharpening Spatial Filter, used to identify borders and noise in the image.
  * Can be used to identify vertical borders or discrepations.
+ * Applies the following filter:  \f$ ((1, 0, -1) , (2, 0, -2) , (1, 0, -1)) \f$
  * \return An image object that contains the original image after receiving a gradient filter in the 
  * vertical direction. Could be used to identify vertical borders.
  */ 
 Image Image :: filter_Gradient_vertical()
 {
-	//int kernel [9] = {1, 0, -1, 2, 0, -2, 1, 0, -1};
-	
-	//return (this->filter(kernel, 3, 0.5));	
-
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
 	int m = 1;
@@ -948,54 +942,13 @@ return filtered;
 }
 	
 
-// *************************************************************************
-// *********************** Frequency Domain Filters ************************
-// *************************************************************************
-
-/*void Image :: FFT()
-{
-
-	this->imaginary = new CImg<float> (this->width, this->height, this->depth, this->spectrum, 255);
-	
-	CImgList<float> list (*(this->Img), *(this->imaginary));
-	
-	list = list.get_FFT();
-	
-	*(this->real) = (list[0]);
-	
-	*(this->imaginary) = list[1];
-	
-}
-
-// correnogramas
-// fitro de varianza espacial
-// 
-
-void Image :: display_FFT()
-{
-	CImgList<float> list (*(this->real), *(this->imaginary));
-	
-	list.display();
-}
-
-void Image :: FFT_inverse()
-{
-	CImgList<float> list (*(this->real), *(this->imaginary));
-	
-	list = list.get_FFT(true);
-	
-	*this->real = list[0];
-	
-	*this->imaginary = list[1];
-	
-	*(this->Img) = list[0];
-}*/
 
 // *************************************************************************
 // *********************** Dot to Dot Transformations **********************
 // *************************************************************************
 
 /*! \fn  Image Image :: inverse()
+ * Executes this transformation: \f$ v(x,y,z,c) = 255 - u(x,y,z,c) \f$
  * \return An image object that contains the inverse of the original image, this means that every pixel value is substracted to 255.
  */ 
 
@@ -1020,7 +973,11 @@ Image Image ::inverse()
 	return inverted;
 }
 
-
+/*! \fn  Image Image :: log_transformation()
+ * Executes this transformation: \f$ v(x,y,z,c) = c log(u(x,y,z,c)+1)\f$
+ *  where v(x,y,z,c) is the transformed pixel, and u(x,y,z,c) is the original pixel.
+ * \return An image object that contains the inverse of the original image, this means that every pixel value is substracted to 255.
+ */
 Image Image :: log_transformation()
 {
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
@@ -1094,7 +1051,7 @@ Image Image :: power_law_transformatiom(double exponent)
 {
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
-	double c = 1/(pow(255, 1-exponent);
+	double k = 1/(pow(255, 1-exponent));
 	
 	for(unsigned int c = 0; c < this->get_spectrum(); c++)
 	{
@@ -1104,8 +1061,8 @@ Image Image :: power_law_transformatiom(double exponent)
 			{
 				for(unsigned int y = 0; y < this->get_height(); y++)
 				{
-					double pow = c* pow(this->get_pixel_value(x,y,z,c) , exponent);
-					unsigned char pixel = static_cast<unsigned char>(pow);
+					double power_law = k * pow( (this->get_pixel_value(x,y,z,c)) , exponent);
+					unsigned char pixel = static_cast<unsigned char>(power_law);
 					filtered.set_pixel_value(x, y, z, c, pixel);
 				}
 				
@@ -1116,7 +1073,44 @@ Image Image :: power_law_transformatiom(double exponent)
 	return filtered;
 }
 
- 
+/*! \fn Image Image :: color_slicing(unsigned char color1[], unsigned char color2[], unsigned char neutral)
+ *  \brief Highlights the desired colors, between the two colors given as parameters.
+ * \attention{The colors must be unsigned char, and must be the size of the spectrum of the image (Number of channels), 3 in case o RBG images}
+ * \param unsigned char color1[]: The start color of the color slicing.
+ * \param unsigned char color2[]: The end color of the color slicing.
+ * \param unsigned char neutral: The intensity every other pixels that are not between the given colors will be set to.
+ */
+Image Image :: color_slicing(unsigned char color1[], unsigned char color2[], unsigned char neutral[])
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); 
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 0; x < this->get_width(); x++)
+			{
+				for(unsigned int y = 0; y < this->get_height(); y++)
+				{
+					unsigned char pixel = this->get_pixel_value(x,y,z,c);
+					if(pixel > color1[c] && pixel < color2[c] )
+					{
+						filtered.set_pixel_value(x, y, z, c, pixel);
+					}
+					else
+					{
+						filtered.set_pixel_value(x,y,z,c, neutral[c]);
+					}
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
+}
 
 // *************************************************************************
 // *********************** HISTOGRAM AND EQUALIZATION **********************
@@ -1127,9 +1121,7 @@ Image Image :: power_law_transformatiom(double exponent)
  * desired channel and depth. 
  * An Histogram is measure of the frecquency of a intensity value in an image, and is often 
  * used as a parameter to improve the constrast and quality of the image. After observing the 
- * histogram ( see plot_histogram() ) you could 
- * 
- * 
+ * histogram ( see plot_histogram() ) you could ecualizate the image.
  */
 int* Image :: get_histogram(unsigned int c, unsigned int z)
 {

@@ -165,6 +165,8 @@ void display_FFT();
 	Image log_transformation();
 	
 	Image power_law_transformatiom(double exponent); /// \fn Power-Law transformation
+
+	Image color_slicing (unsigned char [], unsigned char [], unsigned char []); /// \fn Highligths the colors between the given color arrays.
 	
 // *************************************************************************
 // *********************** HISTOGRAM AND EQUALIZATION **********************
