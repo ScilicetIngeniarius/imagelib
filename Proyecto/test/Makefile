@@ -64,3 +64,7 @@ kirsch: kirsch.cpp
 	
 freeman: freeman.cpp
 	$(CC) $(EFLAGS) freeman.exe freeman.cpp $(LFLAGS)
+	
+max_min: maxandmin.cpp
+	$(CC) $(EFLAGS) max_min.exe maxandmin.cpp $(LFLAGS)
+
