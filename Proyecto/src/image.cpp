@@ -1147,6 +1147,7 @@ void Image :: plot_histogram_equalization(int levels, const char* title)
 
 /*! \fn Image Image :: filter_kirsch_0()
  *  \brief Applies the kirsch mask at 0°.
+ * 	\f$(-3,-3,5)(-3,0,5)(-3,-3,5)\f$
  */
 Image Image ::filter_kirsch_0()
 {
@@ -1182,6 +1183,7 @@ Image Image ::filter_kirsch_0()
 
 /*! \fn Image Image :: filter_kirsch_45()
  *  \brief Applies the kirsch mask at 45°.
+ * 	\f$(-3,5,5)(-3,0,5)(-3,-3,-3)\f$
  */
 Image Image ::filter_kirsch_45()
 {
@@ -1217,6 +1219,7 @@ Image Image ::filter_kirsch_45()
 
 /*! \fn Image Image :: filter_kirsch_90()
  *  \brief Applies the kirsch mask at 90°.
+ * 	\f$(5,5,5)(-3,0-3)(-3,-3,-3)\f$
  */
 Image Image ::filter_kirsch_90()
 {
@@ -1251,6 +1254,7 @@ Image Image ::filter_kirsch_90()
 
 /*! \fn Image Image :: filter_kirsch_135()
  *  \brief Applies the kirsch mask at 135°.
+ * 	\f$(5,5,-3)(5,0,-3)(-3,-3,-3)\f$
  */
 Image Image ::filter_kirsch_135()
 {
@@ -1285,6 +1289,7 @@ Image Image ::filter_kirsch_135()
 
 /*! \fn Image Image :: filter_kirsch_180()
  *  \brief Applies the kirsch mask at 180°.
+ * 	\f$(5,-3,-3)(5,0,-3)(5,-3,-3)\f$
  */
 Image Image ::filter_kirsch_180()
 {
@@ -1319,6 +1324,7 @@ Image Image ::filter_kirsch_180()
 
 /*! \fn Image Image :: filter_kirsch_225()
  *  \brief Applies the kirsch mask at 225°.
+ * 	\f$(-3,-3,-3)(5,0,-3)(5,5,-3)\f$
  */
 Image Image ::filter_kirsch_225()
 {
@@ -1353,6 +1359,7 @@ Image Image ::filter_kirsch_225()
 
 /*! \fn Image Image :: filter_kirsch_270()
  *  \brief Applies the kirsch mask at 270°.
+ * 	\f$(-3,-3,-3)(-3,0,-3)(5,5,5)\f$
  */
 Image Image ::filter_kirsch_270()
 {
@@ -1387,6 +1394,7 @@ Image Image ::filter_kirsch_270()
 
 /*! \fn Image Image :: filter_kirsch_315()
  *  \brief Applies the kirsch mask at 315°.
+ * 	\f$(-3,-3,-3)(-3,0,5)(-3,5,5)\f$
  */
 Image Image ::filter_kirsch_315()
 {
@@ -1420,7 +1428,7 @@ Image Image ::filter_kirsch_315()
 }
 
 /*! \fn Image Image :: filter_freeman_0()
- *  \brief Applies the freeman mask [1,1,1][1,-2,1][1,-1,-1].
+ *  \brief Applies the freeman mask \f$(1,1,1)(1,-2,1)(1,-1,-1)\f$.
  */
 
 Image Image ::filter_freeman_0()
@@ -1456,7 +1464,7 @@ Image Image ::filter_freeman_0()
 }
 
 /*! \fn Image Image :: filter_freeman_1()
- *  \brief Applies the freeman mask [1,1,1][-1,-2,1][1,-1,1].
+ *  \brief Applies the freeman mask \f$(1,1,1)(-1,-2,1)(1,-1,1)\f$.
  */
 Image Image ::filter_freeman_1()
 {
@@ -1491,7 +1499,7 @@ Image Image ::filter_freeman_1()
 }
 
 /*! \fn Image Image :: filter_freeman_2()
- *  \brief Applies the freeman mask [-1,1,1][-1,-2,1][1,1,1].
+ *  \brief Applies the freeman mask \f$)-1,1,1)(-1,-2,1)(1,1,1)\f$.
  */
 Image Image ::filter_freeman_2()
 {
@@ -1526,7 +1534,7 @@ Image Image ::filter_freeman_2()
 }
 
 /*! \fn Image Image :: filter_freeman_3()
- *  \brief Applies the freeman mask [-1,-1,1][-1,-2,1][1,1,1].
+ *  \brief Applies the freeman mask \f$(-1,-1,1)(-1,-2,1)(1,1,1)\f$.
  */
 Image Image ::filter_freeman_3()
 {
@@ -1561,7 +1569,7 @@ Image Image ::filter_freeman_3()
 }
 
 /*! \fn Image Image :: filter_freeman_4()
- *  \brief Applies the freeman mask [-1,-1,-1][1,-2,1][1,1,1].
+ *  \brief Applies the freeman mask \f$(-1,-1,-1)(1,-2,1)(1,1,1)\f$.
  */
 Image Image ::filter_freeman_4()
 {
@@ -1597,7 +1605,7 @@ Image Image ::filter_freeman_4()
 
 
 /*! \fn Image Image :: filter_freeman_5()
- *  \brief Applies the freeman mask [1,-1,-1][1,-2,-1][1,1,1].
+ *  \brief Applies the freeman mask \f$(1,-1,-1)(1,-2,-1)(1,1,1)\f$.
  */
 Image Image ::filter_freeman_5()
 {
@@ -1633,7 +1641,7 @@ Image Image ::filter_freeman_5()
 
 
 /*! \fn Image Image :: filter_freeman_6()
- *  \brief Applies the freeman mask [1,1,-1][1,-2,-1][1,1,-1].
+ *  \brief Applies the freeman mask \f$(1,1,-1)(1,-2,-1)(1,1,-1)\f$.
  */
 Image Image ::filter_freeman_6()
 {
@@ -1668,7 +1676,7 @@ Image Image ::filter_freeman_6()
 }
 
 /*! \fn Image Image :: filter_freeman_7()
- *  \brief Applies the freeman mask [1,1,1][1,-2,-1][1,-1,-1].
+ *  \brief Applies the freeman mask \f$(1,1,1)(1,-2,-1)(1,-1,-1)\f$.
  */
 Image Image ::filter_freeman_7()
 {
