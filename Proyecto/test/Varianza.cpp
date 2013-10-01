@@ -1,12 +1,13 @@
 #include "../include/image.hh"
 #include "math.h"
 #include "stdio.h"
-using namespace cimg_library;
+
+
 int main()
 {
-	Image img1 ("../../Multimedia/lena.pgm");
-	
-	
+	Image img ("../../Multimedia/parrot_original.ppm");
+	Image img_variance = img.variance(2);
+	img_variance.display("variance");
 }
 
 Image Image :: variance(int dim)
@@ -23,7 +24,7 @@ Image Image :: variance(int dim)
 				{
 					int sum = 0;
 					double variance=0;
-					int kernel_values[];
+					int kernel_values[(dim*2+1)*(dim*2+1)];
 					int cont=0;
 
 					for(unsigned int i = x-dim; i<= x+dim; i++)
