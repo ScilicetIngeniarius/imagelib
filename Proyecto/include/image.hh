@@ -1,7 +1,7 @@
 #include "../include/CImg.h"
 #include <string>
 #include <cstddef>
-#include <ostream>
+#include <iostream>
 
 /**\brief image.hh implements a wrapper over the library CImg.
  * For more information go to cimg.sourceforge.net
@@ -177,13 +177,51 @@ void display_FFT();
 	int* histogram_equalization(int*, const char* title);
 
 
+
 	Image variance(int);
+
 
 	
 // *************************************************************************
 // *********************** OTHER TRANSFORMATIONS ***************************
 // *************************************************************************
 
+		
+	Image filter_kirsch_0();
+	
+	Image filter_kirsch_45();
+	
+	Image filter_kirsch_90();
+	
+	Image filter_kirsch_135();
+	
+	Image filter_kirsch_180();
+	
+	Image filter_kirsch_225();
+	
+	Image filter_kirsch_270();
+	
+	Image filter_kirsch_315();
+	
+	Image filter_freeman_0();
+	
+	Image filter_freeman_1();
+	
+	Image filter_freeman_2();
+	
+	Image filter_freeman_3();
+	
+	Image filter_freeman_4();
+	
+	Image filter_freeman_5();
+	
+	Image filter_freeman_6();
+	
+	Image filter_freeman_7();
+
+	Image filter_maximum();
+	
+	Image filter_minimum();
 
 
 // *************************************************************************
