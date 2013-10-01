@@ -337,7 +337,13 @@ Image Image :: binarize_img(unsigned int cutoff_value)
 // *********************** Sharpening Spatial Filters **********************
 // *************************************************************************
 
-/// \fn Image Image::filter_Laplacian(): Returns an image after applying the Laplacian filter to the image. Considers the diagonal values
+/*! \fn Image Image::filter_Laplacian(): 
+ *	\brief Returns an image after applying the Laplacian filter to the image. Considers the diagonal values
+ * This function applies a convolution with this kernel: \f$ ((1, 1, 1), (1, -8, 1), (1, 1, 1)) \f$
+ * 
+ */
+ 
+
 Image Image::filter_Laplacian()
 {
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
@@ -986,16 +992,6 @@ void Image :: FFT_inverse()
 }*/
 
 // *************************************************************************
-// ******************** Sharpening Frecquency Filters **********************
-// *************************************************************************
-
-// *************************************************************************
-// ********************* Smoothing Frecquency Filters **********************
-// *************************************************************************
-
-
-
-// *************************************************************************
 // *********************** Dot to Dot Transformations **********************
 // *************************************************************************
 
@@ -1085,6 +1081,43 @@ Image Image ::filter_dynamic_range_dilatation(unsigned char a, unsigned char b, 
 	}
 	return filtered;
 }
+
+
+/*! \fn Image Image :: power_law_transformatiom(double exponent)
+ *  Applies a transformation given by the ecuation \f$ v(x,y) = c {u(x,y)}^{\gamma} \f$
+ * 	where \f$ u(x,y) \f$ is the value of the non filtered image, and \f$ v(xy) \f$ is the 
+ * 	intensity value in the filtered image. \f$ \gamma, c \f$ are constants. In this case
+ *  \f$ \gamma \f$ is a parameter.
+ * 	\return A filtered image with the power law transformation
+ */
+Image Image :: power_law_transformatiom(double exponent)
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	double c = 1/(pow(255, 1-exponent);
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 0; x < this->get_width(); x++)
+			{
+				for(unsigned int y = 0; y < this->get_height(); y++)
+				{
+					double pow = c* pow(this->get_pixel_value(x,y,z,c) , exponent);
+					unsigned char pixel = static_cast<unsigned char>(pow);
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	return filtered;
+}
+
+ 
+
 // *************************************************************************
 // *********************** HISTOGRAM AND EQUALIZATION **********************
 // *************************************************************************
