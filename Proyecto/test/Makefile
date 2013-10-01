@@ -58,3 +58,12 @@ fourier: fourier.cpp
 	
 equalization: equalization.cpp
 	$(CC) $(EFLAGS) equalization.exe equalization.cpp $(LFLAGS)
+	
+Variance: Varianza.cpp
+	$(CC) $(EFLAGS) Variance.exe Varianza.cpp $(LFLAGS)
+	
+Tutorial: Tutorial.cpp
+	$(CC) $(EFLAGS) Tutorial.exe Tutorial.cpp $(LFLAGS)
+	
+Noises: noises.cpp
+	$(CC) $(EFLAGS) Noises.exe noises.cpp $(LFLAGS)
