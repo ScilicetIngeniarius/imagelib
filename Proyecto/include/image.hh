@@ -175,14 +175,20 @@ void display_FFT();
 	void plot_histogram_equalization(int, const char* title);
 	
 	int* histogram_equalization(int*, const char* title);
+
+
+	unsigned char variance(int);
+
 	
 // *************************************************************************
 // *********************** OTHER TRANSFORMATIONS ***************************
 // *************************************************************************
 
+
 	Image filter_maximum();
 	
 	Image filter_minimum();
+
 };
 
 #endif
