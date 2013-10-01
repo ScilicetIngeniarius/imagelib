@@ -1210,7 +1210,7 @@ Image Image :: filter_minimum()
 					
 					for (unsigned int i = x-1; i< x+2; i++)
 					{
-						for (unsigned int j = 0; j< y+2; j++)
+						for (unsigned int j = y-1; j< y+2; j++)
 						{
 							if ((this->get_pixel_value(i, j, z, c)) < minimun)
 							{
