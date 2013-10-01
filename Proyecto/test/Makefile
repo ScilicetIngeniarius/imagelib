@@ -58,3 +58,9 @@ fourier: fourier.cpp
 	
 equalization: equalization.cpp
 	$(CC) $(EFLAGS) equalization.exe equalization.cpp $(LFLAGS)
+
+kirsch: kirsch.cpp
+	$(CC) $(EFLAGS) kirsch.exe kirsch.cpp $(LFLAGS)
+	
+freeman: freeman.cpp
+	$(CC) $(EFLAGS) freeman.exe freeman.cpp $(LFLAGS)
