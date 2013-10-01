@@ -1,7 +1,7 @@
 #include "../include/CImg.h"
 #include <string>
 #include <cstddef>
-#include <ostream>
+#include <iostream>
 
 /**\brief image.hh implements a wrapper over the library CImg.
  * For more information go to cimg.sourceforge.net
@@ -180,7 +180,9 @@ void display_FFT();
 // *********************** OTHER TRANSFORMATIONS ***************************
 // *************************************************************************
 
-
+	Image filter_maximum();
+	
+	Image filter_minimum();
 };
 
 #endif

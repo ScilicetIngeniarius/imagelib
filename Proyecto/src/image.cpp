@@ -1,5 +1,6 @@
 #include "../include/image.hh"
 
+
 /**\file ../include/image.hh
  * Header for the image class
  */
@@ -1144,3 +1145,86 @@ void Image :: plot_histogram_equalization(int levels, const char* title)
 // *********************** OTHER TRANSFORMATIONS ***************************
 // *************************************************************************
 
+/*! \fn Image Image :: filter_maximum()
+ *  \brief Assigns the highest value in the neighborhood.
+ * Assigns the highest value in the neighborhood around the desired pixel.
+ */
+
+
+Image Image :: filter_maximum()
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 1; x < this->get_width()-1; x++)
+			{
+				for(unsigned int y = 1; y < this->get_height()-1; y++)
+				{
+					unsigned char max = 0;
+					
+					for (unsigned int i = x-1; i< x+2; i++)
+					{
+						for (unsigned int j = y-1; j< y+2; j++)
+						{
+							unsigned char pixel = (this->get_pixel_value(i, j, z, c));
+							 
+							if (pixel > max)
+							{
+								max = this->get_pixel_value(i, j, z, c);
+							}
+						} 
+					}
+					
+					filtered.set_pixel_value(x, y, z, c, max);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	return filtered;
+}
+
+
+/*! \fn Image Image :: filter_minimun()
+ *  \brief Assigns the lowest value in the neighborhood.
+ * Assigns the lowest value in the neighborhood around the desired pixel.
+ */
+
+Image Image :: filter_minimum()
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 1; x < this->get_width()-1; x++)
+			{
+				for(unsigned int y = 1; y < this->get_height()-1; y++)
+				{
+					unsigned char minimun = 255;
+					
+					for (unsigned int i = x-1; i< x+2; i++)
+					{
+						for (unsigned int j = 0; j< y+2; j++)
+						{
+							if ((this->get_pixel_value(i, j, z, c)) < minimun)
+							{
+								minimun = this->get_pixel_value(i, j, z, c);
+							}
+						} 
+					}
+					
+					filtered.set_pixel_value(x, y, z, c, minimun);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	 return filtered;
+}
