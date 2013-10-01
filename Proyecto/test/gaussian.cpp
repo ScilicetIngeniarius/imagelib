@@ -25,7 +25,7 @@ int main()
 		}
 	}
 */	
-	Image imagen ("../../Multimedia/lena.pgm");
+	Image imagen ("../../Multimedia/logo.bmp");
 	Image filtered = imagen.filter_gaussian(1,3);
-	filtered.save("gaussian_taj.ppm");
+	filtered.save("logo.ppm");
 }
