@@ -1022,12 +1022,14 @@ Image Image :: log_transformation()
 }
 
 /*! \fn  Image Image ::filter_dynamic_range_dilatation(unsigned char a, unsigned char b, double alpha, double beta, double gamma)
+ * \brief All the pixel values are divided in 3 ranges, and each range suffer a diferent transformation.
+ * This function is used to transform the range of lower pixel values in medium values and the higher too, to smooth the image.
  * \param unsigned char a is the first cutoff pixel value. 
  * \param unsigned char b is the second cutoff pixel value.
  * \param double alpha is the first multiplier.
  * \param double beta is the second multiplier.
  * \param double gamma is the third multiplier.
- * \return An image object that contains the dilatated image. All the pixel values are divided in three ranges, and each range suffer a diferent transformation.
+ * \return An image object that contains the dilatated image.
  */ 
 Image Image ::filter_dynamic_range_dilatation(unsigned char a, unsigned char b, double alpha, double beta, double gamma)
 {
