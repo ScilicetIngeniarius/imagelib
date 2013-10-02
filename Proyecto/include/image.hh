@@ -231,7 +231,8 @@ void display_FFT();
 // ****************************** NOISES ***********************************
 // *************************************************************************
 
-	void gaussian_noise(int);
+	void gaussian_noise(double);
+	void salt_pepper(double);
 
 
 
