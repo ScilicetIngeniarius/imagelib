@@ -1073,7 +1073,7 @@ Image Image :: power_law_transformatiom(double exponent)
 {
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
-	double k = 1/(pow(255, 1-exponent));
+	double k = (pow(255, 1-exponent));
 	
 	for(unsigned int c = 0; c < this->get_spectrum(); c++)
 	{

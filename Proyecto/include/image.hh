@@ -234,8 +234,6 @@ void display_FFT();
 	void gaussian_noise(double);
 	void salt_pepper(double);
 
-
-
 };
 
 #endif

@@ -8,6 +8,8 @@ EFLAGS = -o
 # All the targets
 all: filter set_pixel blur binary bin_blue
 
+Tutorials: Tutorial2 Tutorial Tutorial3
+
 set_pixel : set_pixel_test.cpp ../src/image.o
 	$(CC) $(EFLAGS) pixel_test.exe set_pixel_test.cpp $(LFLAGS)
 
@@ -82,7 +84,7 @@ freeman: freeman.cpp
 max_min: maxandmin.cpp
 	$(CC) $(EFLAGS) max_min.exe maxandmin.cpp $(LFLAGS)
 	
-smoothing_and_sharpening: Smoothing_and_Sharpening_Filters.cpp
-	$(CC) $(EFLAGS) Smoothing_and_Sharpening_Filters.exe Smoothing_and_Sharpening_Filters.cpp $(LFLAGS)
+Tutorial2: Tutorial2.cpp
+	$(CC) $(EFLAGS) Tutorial2.exe Tutorial2.cpp $(LFLAGS)
 
 
