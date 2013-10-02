@@ -733,10 +733,10 @@ Image Image :: filter_median (int dim)
 {
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
-	int kernel [dim*dim];
+	//int kernel [dim*dim];
 
 	int m = (dim-1)/2;
-	unsigned char pixel_values [dim*dim-1];
+	unsigned char pixel_values [dim*dim];
 	unsigned char temp;
 	
 	for(unsigned int c = 0; c < this->get_spectrum(); c++)
@@ -751,24 +751,23 @@ Image Image :: filter_median (int dim)
 					{
 						for(unsigned int j = y-m; j< y+m; j++)
 						{
-							pixel_values [(i-x+m)*dim + (j-y+m)]= this->get_pixel_value(i, j, z, c)* (kernel[(i-x+m)*dim + (j-y+m)]);
+							pixel_values [(i-x+m)*dim + (j-y+m)]= this->get_pixel_value(i, j, z, c);
 							
-							for(int k=0; k<dim*dim-1 ; k++)
-							{
-								for(int p=k+1 ; p<dim*dim-1 ; p++)
-								{
-									if(pixel_values[p] < pixel_values[k])
-									{
-										// Intercambiar los valores
-										temp = pixel_values[k];
-										pixel_values[k] = pixel_values[p];
-										pixel_values[p] = temp;
-									}
-								}
-							}
 						}	
 					}
-					
+					for(int k=0; k<dim*dim ; k++)
+					{
+						for(int p=k+1 ; p<dim*dim ; p++)
+						{
+							if(pixel_values[p] < pixel_values[k])
+							{
+							// Intercambiar los valores
+							temp = pixel_values[k];
+							pixel_values[k] = pixel_values[p];
+							pixel_values[p] = temp;
+							}
+						}
+					}					
 					unsigned char pixel = pixel_values[((dim*dim-1)/2)-1];
 					filtered.set_pixel_value(x, y, z, c, pixel);
 				}
@@ -1838,4 +1837,70 @@ Image Image :: filter_minimum()
 		 }
 	}  
 	 return filtered;
+}
+
+
+// *************************************************************************
+// ****************************** NOISES ***********************************
+// *************************************************************************
+
+void Image :: salt_pepper(double intensity)
+{
+	srand(1);
+	double porcentage = 1-(intensity/100);
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 0; x < this->get_width(); x++)
+			{
+				for(unsigned int y = 0; y < this->get_height(); y++)
+				{
+					double random= 2.0*(rand()-RAND_MAX/2.0)/RAND_MAX;
+					if(random > porcentage)
+					{
+						(*(this->Img))(x, y, z, c)= 255;
+					}	
+
+					else if(random<-1*porcentage)
+					{
+						(*(this->Img))(x, y, z, c)= 0;					
+					}
+				}
+				
+				
+			 }
+			 
+		 }
+	}  
+	 
+}
+
+void Image :: gaussian_noise(double variance)
+{
+	srand(1);
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 0; x < this->get_width(); x++)
+			{
+				for(unsigned int y = 0; y < this->get_height(); y++)
+				{
+					double random= variance*(rand()-RAND_MAX/variance)/RAND_MAX;
+					unsigned char pixel= this->get_pixel_value(x,y,z,c) + random;
+					
+					if((pixel<255) & (pixel>0))
+					{
+						(*(this->Img))(x, y, z, c)= pixel;
+					}	
+
+				}
+				
+				
+			 }
+			 
+		 }
+	}  
+	 
 }
