@@ -1,0 +1,18 @@
+This is the README for the image processing library, imagelib.
+
+You can find the source code of this library in our repository in
+github.com/ScilicetIngeniarius/imagelib/
+
+You need a few dependencies in order to use imagelib.
+
+First you need a c++ compiler g++. In case that you don't have it:
+	$ sudo apt-get install g++
+
+Also you'll need make to comile automatically this library and our documentation
+	$ sudo apt-get install make
+
+For our documentation, you'll need doxygen and some latex-dependecies
+	$ sudo apt-get install doxygen texlive texlive-pictures pdflatex
+
+Now you're ready to compile our library and generate our documentation. Just enter 
+the Project directory and execute make all or make.
