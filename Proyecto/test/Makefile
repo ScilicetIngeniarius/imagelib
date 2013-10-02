@@ -66,6 +66,9 @@ Variance: Varianza.cpp
 Tutorial: Tutorial.cpp
 	$(CC) $(EFLAGS) Tutorial.exe Tutorial.cpp $(LFLAGS)
 	
+Tutorial3: Tutorial3.cpp
+	$(CC) $(EFLAGS) Tutorial3.exe Tutorial3.cpp $(LFLAGS)
+	
 Noises: noises.cpp
 	$(CC) $(EFLAGS) Noises.exe noises.cpp $(LFLAGS)
 
