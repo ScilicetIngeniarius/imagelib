@@ -9,15 +9,13 @@ int main ()
 	
 	parrot.display("Parrot Original");
 	
-	parrot.save("../../Multimedia/parrot_original.jpg");
-	
 	//We can apply several filters to an image. A filter returns a Image object with the
 	//corresponding filter applied to the image.
 
 	//For example, applying an average filter to the parrot image (it receives a int that
-	//corresponds to the intensity of the average filter. In this case its a 4):
+	//corresponds to the intensity of the average filter. In this case its a 3):
 	
-	Image smoothed_parrot = parrot.filter_average(4);
+	Image smoothed_parrot = parrot.filter_average(3);
 	
 	//We display it:
 	smoothed_parrot.display("Smoothed Parrot");
@@ -30,7 +28,7 @@ int main ()
 	(parrot.filter_gaussian(3,3)).display("Gaussian");
 	
 	//We can also just save the image, without storing it in an Image object like this:
-	(parrot.filter_median(0)).save("../../Multimedia/Parrot_median.jpg");
+	(parrot.filter_median(0)).save("../../Multimedia/tutorials/Parrot_median.jpg");
 	
 	/*The filters that we have applied are smoothing filters, that as you can see dont modify 
 	 * the images alot, just, as the name says, smooth it.  Now we will apply some sharpening

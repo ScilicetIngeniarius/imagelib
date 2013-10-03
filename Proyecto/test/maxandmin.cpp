@@ -22,7 +22,7 @@ int main ()
 	
 	Image Slicing = parrot.color_slicing(red1, red2, black);
 	
-	Slicing.display("RED?");
+	Slicing.display("RED");
 
 
 }
