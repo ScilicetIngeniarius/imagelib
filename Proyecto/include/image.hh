@@ -1,7 +1,7 @@
 #include "../include/CImg.h"
 #include <string>
 #include <cstddef>
-#include <ostream>
+#include <iostream>
 
 /**\brief image.hh implements a wrapper over the library CImg.
  * For more information go to cimg.sourceforge.net
@@ -127,13 +127,13 @@ public:
 // *********************** Smoothing Spatial Filters ***********************
 // *************************************************************************
 
-	Image filter_median(int);
+	Image filter_median(int); /// \fn Median filter calculates the median of a certain group of pixels values.
 	
-	Image filter_average(int);
+	Image filter_average(int); /// \fn Average filter calculates the average of a certain group of pixels values.
 	
-	Image filter_gaussian(int, int);
+	Image filter_gaussian(int, int); /// \fn Gaussian filter applies a gaussian kernel to the image.
 	
-	Image filter_modal(int);
+	Image filter_modal(int); /// \fn Modal filter calculates the modal of a certain group of pixels, in case there is no especific modal it calculates the average.
 	
 // *************************************************************************
 // *********************** Frequency Domain Filters ************************
@@ -164,15 +164,76 @@ void display_FFT();
 	
 	Image log_transformation();
 	
+	Image power_law_transformatiom(double exponent); /// \fn Power-Law transformation
+
+	Image color_slicing (unsigned char [], unsigned char [], unsigned char []); /// \fn Highligths the colors between the given color arrays.
+	
 // *************************************************************************
 // *********************** HISTOGRAM AND EQUALIZATION **********************
 // *************************************************************************
 
 	int* get_histogram(unsigned int c, unsigned int z);
 	
-	void plot_histogram(const char* title);
+	void plot_histogram(int, const char* title);
 	
-	int* histogram_equalization(int*);
+	void plot_histogram_equalization(int, const char* title);
+	
+	int* histogram_equalization(int*, const char* title);
+
+
+
+	Image variance(int);
+
+
+// *************************************************************************
+// *********************** OTHER TRANSFORMATIONS ***************************
+// *************************************************************************
+
+		
+	Image filter_kirsch_0();
+	
+	Image filter_kirsch_45();
+	
+	Image filter_kirsch_90();
+	
+	Image filter_kirsch_135();
+	
+	Image filter_kirsch_180();
+	
+	Image filter_kirsch_225();
+	
+	Image filter_kirsch_270();
+	
+	Image filter_kirsch_315();
+	
+	Image filter_freeman_0();
+	
+	Image filter_freeman_1();
+	
+	Image filter_freeman_2();
+	
+	Image filter_freeman_3();
+	
+	Image filter_freeman_4();
+	
+	Image filter_freeman_5();
+	
+	Image filter_freeman_6();
+	
+	Image filter_freeman_7();
+
+	Image filter_maximum();
+	
+	Image filter_minimum();
+
+
+// *************************************************************************
+// ****************************** NOISES ***********************************
+// *************************************************************************
+
+	void gaussian_noise(double);
+	void salt_pepper(double);
+
 };
 
 #endif

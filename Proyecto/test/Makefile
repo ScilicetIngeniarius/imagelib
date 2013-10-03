@@ -8,6 +8,8 @@ EFLAGS = -o
 # All the targets
 all: filter set_pixel blur binary bin_blue
 
+Tutorials: Tutorial2 Tutorial Tutorial3
+
 set_pixel : set_pixel_test.cpp ../src/image.o
 	$(CC) $(EFLAGS) pixel_test.exe set_pixel_test.cpp $(LFLAGS)
 
@@ -58,3 +60,31 @@ fourier: fourier.cpp
 	
 equalization: equalization.cpp
 	$(CC) $(EFLAGS) equalization.exe equalization.cpp $(LFLAGS)
+
+	
+Variance: Varianza.cpp
+	$(CC) $(EFLAGS) Variance.exe Varianza.cpp $(LFLAGS)
+	
+Tutorial: Tutorial.cpp
+	$(CC) $(EFLAGS) Tutorial.exe Tutorial.cpp $(LFLAGS)
+	
+Tutorial3: Tutorial3.cpp
+	$(CC) $(EFLAGS) Tutorial3.exe Tutorial3.cpp $(LFLAGS)
+	
+Noises: noises.cpp
+	$(CC) $(EFLAGS) Noises.exe noises.cpp $(LFLAGS)
+
+
+kirsch: kirsch.cpp
+	$(CC) $(EFLAGS) kirsch.exe kirsch.cpp $(LFLAGS)
+	
+freeman: freeman.cpp
+	$(CC) $(EFLAGS) freeman.exe freeman.cpp $(LFLAGS)
+	
+max_min: maxandmin.cpp
+	$(CC) $(EFLAGS) max_min.exe maxandmin.cpp $(LFLAGS)
+	
+Tutorial2: Tutorial2.cpp
+	$(CC) $(EFLAGS) Tutorial2.exe Tutorial2.cpp $(LFLAGS)
+
+

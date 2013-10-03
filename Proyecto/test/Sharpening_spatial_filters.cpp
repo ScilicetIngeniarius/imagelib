@@ -13,35 +13,21 @@ int main()
 	
 	//Image woods ("../../Multimedia/woods.jpg");
 	
-	//Image milla ("../../Multimedia/milla.bmp");
+	Image logo ("../../Multimedia/logo.png");
 	
 	//Image taj ("../../Multimedia/taj_orig.jpg");
 	
-	//PREWIT
-	//N_S
+	Image filtered = parrot.log_transformation();
 	
-	(parrot.filter_Prewitt_N_S()).display("N_S");
+	(logo.filter_Laplacian()).display("Logo");
 	
-	//E_W
+	(logo.filter_Laplacian_no_diagonal()).display("Logo ND");
 	
-	(parrot.filter_Prewitt_E_W()).display("E_W");
+	filtered.display("Log Transformation");
 	
-	//NE_SW
+	filtered.plot_histogram("LOG PARROT");
 	
-	(parrot.filter_Prewitt_NE_SW()).display("N_S");
+	parrot.plot_histogram("PARROT");
 	
-	//NW_SE
-	
-	(parrot.filter_Prewitt_NW_SE()).display("N_S");
-	
-	//FOR THE SUM OF THEM ALL
-	
-	Image sum = ((parrot.filter_Prewitt_N_S()).sum_img(parrot.filter_Prewitt_E_W())).sum_img((parrot.filter_Prewitt_NE_SW()).sum_img(parrot.filter_Prewitt_NW_SE()));
-	
-	sum.display("SUM");
-	
-	sum.save("../../parrot_prewitt_borders.ppm");
-	
-	
-	
+	(parrot.filter_average(5)).plot_histogram("AVERAGE");
 }

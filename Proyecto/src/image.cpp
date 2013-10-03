@@ -1,5 +1,6 @@
 #include "../include/image.hh"
 
+
 /**\file ../include/image.hh
  * Header for the image class
  */
@@ -336,7 +337,13 @@ Image Image :: binarize_img(unsigned int cutoff_value)
 // *********************** Sharpening Spatial Filters **********************
 // *************************************************************************
 
-/// \fn Image Image::filter_Laplacian(): Returns an image after applying the Laplacian filter to the image. Considers the diagonal values
+/*! \fn Image Image::filter_Laplacian(): 
+ *	\brief Returns an image after applying the Laplacian filter to the image. Considers the diagonal values
+ * This function applies a convolution with this kernel: \f$ ((1, 1, 1), (1, -8, 1), (1, 1, 1)) \f$
+ * \return A Filtered image with the Laplacian filter applied.
+ */
+ 
+
 Image Image::filter_Laplacian()
 {
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
@@ -380,7 +387,7 @@ Image Image::filter_Laplacian()
 
 /*! \fn Image Image :: filter_Laplacian_no_diagonal(): The same as the  \fn filter_Laplacian(), but doesn't include the diagonal values.
 * Works as a derivative function, reacts to high change on the pixels value, especially to noise, and borders.
-* 
+* Applies the following filter: \f$ ((0, -1, 0) , (-1, 4, -1) , (0, -1, 0)) \f$
 * \return A filtered Image with the laplacian filter.
 */
 Image Image :: filter_Laplacian_no_diagonal()
@@ -422,15 +429,12 @@ Image Image :: filter_Laplacian_no_diagonal()
 /*! \fn  Image Image :: filter_Gradient_horizontal()
  * This filter is used as as Sharpening Spatial Filter, used to identify borders and noise in the image.
  * Can be used to identify horizontal borders or discrepation
+ * Applies the following filter:  \f$ ((1, 2, 1) , (0, 0, 0) , (-1, -2, -1)) \f$
  * \return An image object that contains the original image after receiving a gradient filter in the 
  * horizontal direction. Could be used to identify horizontal borders.
  */ 
 Image Image :: filter_Gradient_horizontal()
-{
-	//int kernel [9] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
-	
-	//return (this->filter(kernel, 3, 0.5));	
-	
+{	
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
 	int m = 1;
@@ -462,15 +466,12 @@ Image Image :: filter_Gradient_horizontal()
 /*! \fn  Image Image :: filter_Gradient_vertical()
  * This filter is used as as Sharpening Spatial Filter, used to identify borders and noise in the image.
  * Can be used to identify vertical borders or discrepations.
+ * Applies the following filter:  \f$ ((1, 0, -1) , (2, 0, -2) , (1, 0, -1)) \f$
  * \return An image object that contains the original image after receiving a gradient filter in the 
  * vertical direction. Could be used to identify vertical borders.
  */ 
 Image Image :: filter_Gradient_vertical()
 {
-	//int kernel [9] = {1, 0, -1, 2, 0, -2, 1, 0, -1};
-	
-	//return (this->filter(kernel, 3, 0.5));	
-
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
 	int m = 1;
@@ -721,14 +722,21 @@ Image Image :: filter_horizontal_borders()
 // *********************** Smoothing Spatial Filters **********************
 // *************************************************************************
 
+
+/*! \fn Image Image :: filter_median (int dim)
+ * \brief This function calculates the median of the range of pixels into the kernel and sets this value in the central pixel of the kernel.
+ * \param Only receives the dimension of the kernel (dim), wich only can be an impair number.
+ * \return Image filtered which is the image with the median filter applied.
+ */
+
 Image Image :: filter_median (int dim)
 {
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
-	int kernel [dim*dim];
+	//int kernel [dim*dim];
 
 	int m = (dim-1)/2;
-	unsigned char pixel_values [dim*dim-1];
+	unsigned char pixel_values [dim*dim];
 	unsigned char temp;
 	
 	for(unsigned int c = 0; c < this->get_spectrum(); c++)
@@ -743,24 +751,23 @@ Image Image :: filter_median (int dim)
 					{
 						for(unsigned int j = y-m; j< y+m; j++)
 						{
-							pixel_values [(i-x+m)*dim + (j-y+m)]= this->get_pixel_value(i, j, z, c)* (kernel[(i-x+m)*dim + (j-y+m)]);
+							pixel_values [(i-x+m)*dim + (j-y+m)]= this->get_pixel_value(i, j, z, c);
 							
-							for(int k=0; k<dim*dim-1 ; k++)
-							{
-								for(int p=k+1 ; p<dim*dim-1 ; p++)
-								{
-									if(pixel_values[p] < pixel_values[k])
-									{
-										// Intercambiar los valores
-										temp = pixel_values[k];
-										pixel_values[k] = pixel_values[p];
-										pixel_values[p] = temp;
-									}
-								}
-							}
 						}	
 					}
-					
+					for(int k=0; k<dim*dim ; k++)
+					{
+						for(int p=k+1 ; p<dim*dim ; p++)
+						{
+							if(pixel_values[p] < pixel_values[k])
+							{
+							// Intercambiar los valores
+							temp = pixel_values[k];
+							pixel_values[k] = pixel_values[p];
+							pixel_values[p] = temp;
+							}
+						}
+					}					
 					unsigned char pixel = pixel_values[((dim*dim-1)/2)-1];
 					filtered.set_pixel_value(x, y, z, c, pixel);
 				}
@@ -772,6 +779,11 @@ Image Image :: filter_median (int dim)
 	 return filtered;
  }
 
+/*! \fn Image Image :: filter_average(int dim)
+ * \brief This function calculates the average of the range of pixels into the kernel and sets this value in the central pixel of the kernel.
+ * \param Only receives the dimension of the kernel (dim), wich only can be an impair number.
+ * \return Image filtered which is the image with the average filter applied.
+ */
 
 Image Image :: filter_average(int dim)
 {
@@ -805,7 +817,12 @@ Image Image :: filter_average(int dim)
 	 return filtered;	
 } 
 
-
+/*! \fn Image Image :: filter_gaussian(int o, int dim_kernel)
+ * \brief This function applies a gaussian kernel trough the hole image. 
+ * \param Receives the dimension of the kernel (dim_kernel) and a paremeter o wich stablish the values on the gaussian kernel.
+ * \return Image filtered which is the image with the gaussian filter applied.
+ */
+ 
 Image Image :: filter_gaussian(int o, int dim_kernel)
 {
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0);
@@ -853,7 +870,11 @@ Image Image :: filter_gaussian(int o, int dim_kernel)
 	 return filtered;		
 }	
 
-
+/*! \fn Image Image :: filter_modal(int dim)
+ * \brief This function calculates the modal of the range of pixels into the kernel and sets this value in the central pixel of the kernel.
+ * \param Only receives the dimension of the kernel (dim), wich only can be an impair number.
+ * \return Image filtered which is the image with the modal filter applied.
+ */
 
 Image Image :: filter_modal(int dim)
 {
@@ -941,60 +962,13 @@ return filtered;
 }
 	
 
-// *************************************************************************
-// *********************** Frequency Domain Filters ************************
-// *************************************************************************
-
-void Image :: FFT()
-{
-
-	this->imaginary = new CImg<float> (this->width, this->height, this->depth, this->spectrum, 255);
-	
-	CImgList<float> list (*(this->Img), *(this->imaginary));
-	
-	list = list.get_FFT();
-	
-	*(this->real) = (list[0]);
-	
-	*(this->imaginary) = list[1];
-	
-}
-
-void Image :: display_FFT()
-{
-	CImgList<float> list (*(this->real), *(this->imaginary));
-	
-	list.display();
-}
-
-void Image :: FFT_inverse()
-{
-	CImgList<float> list (*(this->real), *(this->imaginary));
-	
-	list = list.get_FFT(true);
-	
-	*this->real = list[0];
-	
-	*this->imaginary = list[1];
-	
-	*(this->Img) = list[0];
-}
-
-// *************************************************************************
-// ******************** Sharpening Frecquency Filters **********************
-// *************************************************************************
-
-// *************************************************************************
-// ********************* Smoothing Frecquency Filters **********************
-// *************************************************************************
-
-
 
 // *************************************************************************
 // *********************** Dot to Dot Transformations **********************
 // *************************************************************************
 
 /*! \fn  Image Image :: inverse()
+ * Executes this transformation: \f$ v(x,y,z,c) = 255 - u(x,y,z,c) \f$
  * \return An image object that contains the inverse of the original image, this means that every pixel value is substracted to 255.
  */ 
 
@@ -1019,7 +993,11 @@ Image Image ::inverse()
 	return inverted;
 }
 
-
+/*! \fn  Image Image :: log_transformation()
+ * Executes this transformation: \f$ v(x,y,z,c) = c log(u(x,y,z,c)+1)\f$
+ *  where v(x,y,z,c) is the transformed pixel, and u(x,y,z,c) is the original pixel.
+ * \return An image object that contains the inverse of the original image, this means that every pixel value is substracted to 255.
+ */
 Image Image :: log_transformation()
 {
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
@@ -1043,12 +1021,14 @@ Image Image :: log_transformation()
 }
 
 /*! \fn  Image Image ::filter_dynamic_range_dilatation(unsigned char a, unsigned char b, double alpha, double beta, double gamma)
+ * \brief All the pixel values are divided in 3 ranges, and each range suffer a diferent transformation.
+ * This function is used to transform the range of lower pixel values in medium values and the higher too, to smooth the image.
  * \param unsigned char a is the first cutoff pixel value. 
  * \param unsigned char b is the second cutoff pixel value.
  * \param double alpha is the first multiplier.
  * \param double beta is the second multiplier.
  * \param double gamma is the third multiplier.
- * \return An image object that contains the dilatated image. All the pixel values are divided in three ranges, and each range suffer a diferent transformation.
+ * \return An image object that contains the dilatated image.
  */ 
 Image Image ::filter_dynamic_range_dilatation(unsigned char a, unsigned char b, double alpha, double beta, double gamma)
 {
@@ -1080,6 +1060,80 @@ Image Image ::filter_dynamic_range_dilatation(unsigned char a, unsigned char b, 
 	}
 	return filtered;
 }
+
+
+/*! \fn Image Image :: power_law_transformatiom(double exponent)
+ *  Applies a transformation given by the ecuation \f$ v(x,y) = c {u(x,y)}^{\gamma} \f$
+ * 	where \f$ u(x,y) \f$ is the value of the non filtered image, and \f$ v(xy) \f$ is the 
+ * 	intensity value in the filtered image. \f$ \gamma, c \f$ are constants. In this case
+ *  \f$ \gamma \f$ is a parameter.
+ * 	\return A filtered image with the power law transformation
+ */
+Image Image :: power_law_transformatiom(double exponent)
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	double k = (pow(255, 1-exponent));
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 0; x < this->get_width(); x++)
+			{
+				for(unsigned int y = 0; y < this->get_height(); y++)
+				{
+					double power_law = k * pow( (this->get_pixel_value(x,y,z,c)) , exponent);
+					unsigned char pixel = static_cast<unsigned char>(power_law);
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	return filtered;
+}
+
+/*! \fn Image Image :: color_slicing(unsigned char color1[], unsigned char color2[], unsigned char neutral)
+ *  \brief Highlights the desired colors, between the two colors given as parameters.
+ * \attention{The colors must be unsigned char, and must be the size of the spectrum of the image (Number of channels), 3 in case o RBG images}
+ * \param unsigned char color1[]: The start color of the color slicing.
+ * \param unsigned char color2[]: The end color of the color slicing.
+ * \param unsigned char neutral: The intensity every other pixels that are not between the given colors will be set to.
+ */
+Image Image :: color_slicing(unsigned char color1[], unsigned char color2[], unsigned char neutral[])
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); 
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 0; x < this->get_width(); x++)
+			{
+				for(unsigned int y = 0; y < this->get_height(); y++)
+				{
+					unsigned char pixel = this->get_pixel_value(x,y,z,c);
+					if(pixel > color1[c] && pixel < color2[c] )
+					{
+						filtered.set_pixel_value(x, y, z, c, pixel);
+					}
+					else
+					{
+						filtered.set_pixel_value(x,y,z,c, neutral[c]);
+					}
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
+}
+
 // *************************************************************************
 // *********************** HISTOGRAM AND EQUALIZATION **********************
 // *************************************************************************
@@ -1089,9 +1143,7 @@ Image Image ::filter_dynamic_range_dilatation(unsigned char a, unsigned char b, 
  * desired channel and depth. 
  * An Histogram is measure of the frecquency of a intensity value in an image, and is often 
  * used as a parameter to improve the constrast and quality of the image. After observing the 
- * histogram ( see plot_histogram() ) you could 
- * 
- * 
+ * histogram ( see plot_histogram() ) you could ecualizate the image.
  */
 int* Image :: get_histogram(unsigned int c, unsigned int z)
 {
@@ -1118,13 +1170,739 @@ int* Image :: get_histogram(unsigned int c, unsigned int z)
 	return histogram_pointer;
 }
 
-void Image :: plot_histogram(const char* title)
+void Image :: plot_histogram(int levels,const char* title)
 {
-	CImg<unsigned char> img = this->Img->histogram(256);
+	CImg<unsigned char> img = this->Img->histogram(levels);
 	
 	CImgDisplay main_display (*(this->Img), title);
 	
 	img.display_graph(main_display, 3, 1, "Pixel Intensity", 0, 0, "Frequency", 0, 0);
 }
 
+void Image :: plot_histogram_equalization(int levels, const char* title)
+{
+	CImg<unsigned char> img = this->Img->equalize(levels);
+	
+	CImgDisplay main_display (*(this->Img), title);
+	
+	img.display_graph(main_display, 3, 1, "Pixel Intensity", 0, 0, "Frequency", 0, 0);
+}
 
+// *************************************************************************
+// *********************** OTHER TRANSFORMATIONS ***************************
+// *************************************************************************
+
+/*! \fn Image Image :: filter_kirsch_0()
+ *  \brief Applies the kirsch mask at 0°.
+ * 	\f$(-3,-3,5)(-3,0,5)(-3,-3,5)\f$
+ */
+Image Image ::filter_kirsch_0()
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = -3*(get_pixel_value(x-1, y-1, z, c)+get_pixel_value(x-1, y, z, c)+get_pixel_value(x-1, y+1, z, c)+get_pixel_value(x, y-1, z, c)+get_pixel_value(x, y+1, z, c))+5*(get_pixel_value(x+1, y-1, z, c)+get_pixel_value(x+1, y, z, c)+get_pixel_value(x+1, y+1, z, c));
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
+}
+
+/*! \fn Image Image :: filter_kirsch_45()
+ *  \brief Applies the kirsch mask at 45°.
+ * 	\f$(-3,5,5)(-3,0,5)(-3,-3,-3)\f$
+ */
+Image Image ::filter_kirsch_45()
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = -3*(get_pixel_value(x-1, y-1, z, c)+get_pixel_value(x-1, y, z, c)+get_pixel_value(x-1, y+1, z, c)+get_pixel_value(x+1, y+1, z, c)+get_pixel_value(x, y+1, z, c))+5*(get_pixel_value(x+1, y-1, z, c)+get_pixel_value(x+1, y, z, c)+get_pixel_value(x, y-1, z, c));
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
+	
+}
+
+/*! \fn Image Image :: filter_kirsch_90()
+ *  \brief Applies the kirsch mask at 90°.
+ * 	\f$(5,5,5)(-3,0-3)(-3,-3,-3)\f$
+ */
+Image Image ::filter_kirsch_90()
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = -3*(get_pixel_value(x-1, y, z, c)+get_pixel_value(x-1, y+1, z, c)+get_pixel_value(x, y+1, z, c)+get_pixel_value(x+1, y+1, z, c)+get_pixel_value(x+1, y, z, c))+5*(get_pixel_value(x+1, y-1, z, c)+get_pixel_value(x, y-1, z, c)+get_pixel_value(x-1, y-1, z, c));
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
+}
+
+/*! \fn Image Image :: filter_kirsch_135()
+ *  \brief Applies the kirsch mask at 135°.
+ * 	\f$(5,5,-3)(5,0,-3)(-3,-3,-3)\f$
+ */
+Image Image ::filter_kirsch_135()
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = -3*(get_pixel_value(x-1, y-1, z, c)+get_pixel_value(x+1, y, z, c)+get_pixel_value(x+1, y+1, z, c)+get_pixel_value(x, y+1, z, c)+get_pixel_value(x-1, y+1, z, c))+5*(get_pixel_value(x-1, y, z, c)+get_pixel_value(x-1, y-1, z, c)+get_pixel_value(x, y-1, z, c));
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
+}
+
+/*! \fn Image Image :: filter_kirsch_180()
+ *  \brief Applies the kirsch mask at 180°.
+ * 	\f$(5,-3,-3)(5,0,-3)(5,-3,-3)\f$
+ */
+Image Image ::filter_kirsch_180()
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = -3*(get_pixel_value(x, y-1, z, c)+get_pixel_value(x+1, y-1, z, c)+get_pixel_value(x+1, y, z, c)+get_pixel_value(x+1, y+1, z, c)+get_pixel_value(x, y+1, z, c))+5*(get_pixel_value(x-1, y, z, c)+get_pixel_value(x-1, y+1, z, c)+get_pixel_value(x-1, y-1, z, c));
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
+}
+
+/*! \fn Image Image :: filter_kirsch_225()
+ *  \brief Applies the kirsch mask at 225°.
+ * 	\f$(-3,-3,-3)(5,0,-3)(5,5,-3)\f$
+ */
+Image Image ::filter_kirsch_225()
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = -3*(get_pixel_value(x-1, y-1, z, c)+get_pixel_value(x, y-1, z, c)+get_pixel_value(x+1, y-1, z, c)+get_pixel_value(x+1, y, z, c)+get_pixel_value(x+1, y+1, z, c))+5*(get_pixel_value(x-1, y, z, c)+get_pixel_value(x-1, y+1, z, c)+get_pixel_value(x, y+1, z, c));
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
+}
+
+/*! \fn Image Image :: filter_kirsch_270()
+ *  \brief Applies the kirsch mask at 270°.
+ * 	\f$(-3,-3,-3)(-3,0,-3)(5,5,5)\f$
+ */
+Image Image ::filter_kirsch_270()
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = -3*(get_pixel_value(x-1, y-1, z, c)+get_pixel_value(x-1, y, z, c)+get_pixel_value(x, y-1, z, c)+get_pixel_value(x+1, y-1, z, c)+get_pixel_value(x+1, y, z, c))+5*(get_pixel_value(x, y+1, z, c)+get_pixel_value(x+1, y+1, z, c)+get_pixel_value(x-1, y+1, z, c));
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
+}
+
+/*! \fn Image Image :: filter_kirsch_315()
+ *  \brief Applies the kirsch mask at 315°.
+ * 	\f$(-3,-3,-3)(-3,0,5)(-3,5,5)\f$
+ */
+Image Image ::filter_kirsch_315()
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = -3*(get_pixel_value(x-1, y+1, z, c)+get_pixel_value(x-1, y, z, c)+get_pixel_value(x-1, y-1, z, c)+get_pixel_value(x, y-1, z, c)+get_pixel_value(x+1, y-1, z, c))+5*(get_pixel_value(x, y+1, z, c)+get_pixel_value(x+1, y+1, z, c)+get_pixel_value(x+1, y, z, c));
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
+}
+
+/*! \fn Image Image :: filter_freeman_0()
+ *  \brief Applies the freeman mask \f$(1,1,1)(1,-2,1)(1,-1,-1)\f$.
+ */
+
+Image Image ::filter_freeman_0()
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = (get_pixel_value(x-1, y-1, z, c)+get_pixel_value(x-1, y, z, c)+get_pixel_value(x-1, y+1, z, c)+get_pixel_value(x, y-1, z, c)+get_pixel_value(x+1, y-1, z, c)+get_pixel_value(x+1,y,z,c))-1*(get_pixel_value(x+1, y+1, z, c)+get_pixel_value(x, y+1, z, c))+-2*get_pixel_value(x, y, z, c);
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
+}
+
+/*! \fn Image Image :: filter_freeman_1()
+ *  \brief Applies the freeman mask \f$(1,1,1)(-1,-2,1)(1,-1,1)\f$.
+ */
+Image Image ::filter_freeman_1()
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = (get_pixel_value(x-1, y-1, z, c)+get_pixel_value(x+1, y+1, z, c)+get_pixel_value(x-1, y+1, z, c)+get_pixel_value(x, y-1, z, c)+get_pixel_value(x+1, y-1, z, c)+get_pixel_value(x+1,y,z,c))-1*(get_pixel_value(x-1, y, z, c)+get_pixel_value(x, y+1, z, c))+-2*get_pixel_value(x, y, z, c);
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
+}
+
+/*! \fn Image Image :: filter_freeman_2()
+ *  \brief Applies the freeman mask \f$)-1,1,1)(-1,-2,1)(1,1,1)\f$.
+ */
+Image Image ::filter_freeman_2()
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = (get_pixel_value(x, y-1, z, c)+get_pixel_value(x+1, y-1, z, c)+get_pixel_value(x+1, y, z, c)+get_pixel_value(x+1, y+1, z, c)+get_pixel_value(x, y+1, z, c)+get_pixel_value(x-1,y+1,z,c))-1*(get_pixel_value(x-1, y, z, c)+get_pixel_value(x-1, y-1, z, c))+-2*get_pixel_value(x, y, z, c);
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
+}
+
+/*! \fn Image Image :: filter_freeman_3()
+ *  \brief Applies the freeman mask \f$(-1,-1,1)(-1,-2,1)(1,1,1)\f$.
+ */
+Image Image ::filter_freeman_3()
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = (get_pixel_value(x+1, y-1, z, c)+get_pixel_value(x+1, y, z, c)+get_pixel_value(x+1, y+1, z, c)+get_pixel_value(x, y+1, z, c)+get_pixel_value(x-1,y+1,z,c))-1*(get_pixel_value(x-1, y, z, c)+get_pixel_value(x, y-1, z, c)+get_pixel_value(x-1,y-1,z,c))+-2*get_pixel_value(x, y, z, c);
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
+}
+
+/*! \fn Image Image :: filter_freeman_4()
+ *  \brief Applies the freeman mask \f$(-1,-1,-1)(1,-2,1)(1,1,1)\f$.
+ */
+Image Image ::filter_freeman_4()
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = (get_pixel_value(x-1, y, z, c)+get_pixel_value(x-1, y+1, z, c)+get_pixel_value(x, y+1, z, c)+get_pixel_value(x+1, y+1, z, c)+get_pixel_value(x+1, y, z, c))-1*(get_pixel_value(x-1, y-1, z, c)+get_pixel_value(x, y-1, z, c)+get_pixel_value(x+1,y-1,z,c))+-2*get_pixel_value(x, y, z, c);
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
+}
+
+
+/*! \fn Image Image :: filter_freeman_5()
+ *  \brief Applies the freeman mask \f$(1,-1,-1)(1,-2,-1)(1,1,1)\f$.
+ */
+Image Image ::filter_freeman_5()
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = (get_pixel_value(x-1, y-1, z, c)+get_pixel_value(x-1, y, z, c)+get_pixel_value(x-1, y+1, z, c)+get_pixel_value(x, y+1, z, c)+get_pixel_value(x+1, y+1, z, c))-1*(get_pixel_value(x+1, y, z, c)+get_pixel_value(x, y-1, z, c)+get_pixel_value(x+1,y-1,z,c))+-2*get_pixel_value(x, y, z, c);
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
+}
+
+
+/*! \fn Image Image :: filter_freeman_6()
+ *  \brief Applies the freeman mask \f$(1,1,-1)(1,-2,-1)(1,1,-1)\f$.
+ */
+Image Image ::filter_freeman_6()
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = (get_pixel_value(x-1, y-1, z, c)+get_pixel_value(x-1, y, z, c)+get_pixel_value(x-1, y+1, z, c)+get_pixel_value(x, y+1, z, c)+get_pixel_value(x, y-1, z, c))-1*(get_pixel_value(x+1, y-1, z, c)+get_pixel_value(x+1, y, z, c)+get_pixel_value(x+1,y+1,z,c))+-2*get_pixel_value(x, y, z, c);
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
+}
+
+/*! \fn Image Image :: filter_freeman_7()
+ *  \brief Applies the freeman mask \f$(1,1,1)(1,-2,-1)(1,-1,-1)\f$.
+ */
+Image Image ::filter_freeman_7()
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	int m = 1;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width()-m; x++)
+			{
+				for(unsigned int y = m; y < this->get_height()-m; y++)
+				{
+					int sum = (get_pixel_value(x-1, y-1, z, c)+get_pixel_value(x-1, y, z, c)+get_pixel_value(x-1, y+1, z, c)+get_pixel_value(x+1, y-1, z, c)+get_pixel_value(x, y-1, z, c))-1*(get_pixel_value(x, y+1, z, c)+get_pixel_value(x+1, y, z, c)+get_pixel_value(x+1,y+1,z,c))+-2*get_pixel_value(x, y, z, c);
+					if (sum > 255 || sum < -255)
+					{
+						sum = 255;
+					}
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (abs(sum));
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	
+	return filtered;
+	
+}
+
+/*! \fn Image Image :: filter_maximum()
+ *  \brief Assigns the highest value in the neighborhood.
+ * Assigns the highest value in the neighborhood around the desired pixel.
+ */
+
+
+Image Image :: filter_maximum()
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 1; x < this->get_width()-1; x++)
+			{
+				for(unsigned int y = 1; y < this->get_height()-1; y++)
+				{
+					unsigned char max = 0;
+					
+					for (unsigned int i = x-1; i< x+2; i++)
+					{
+						for (unsigned int j = y-1; j< y+2; j++)
+						{
+							unsigned char pixel = (this->get_pixel_value(i, j, z, c));
+							 
+							if (pixel > max)
+							{
+								max = this->get_pixel_value(i, j, z, c);
+							}
+						} 
+					}
+					
+					filtered.set_pixel_value(x, y, z, c, max);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	return filtered;
+}
+
+
+/*! \fn Image Image :: filter_minimun()
+ *  \brief Assigns the lowest value in the neighborhood.
+ * Assigns the lowest value in the neighborhood around the desired pixel.
+ */
+
+Image Image :: filter_minimum()
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 1; x < this->get_width()-1; x++)
+			{
+				for(unsigned int y = 1; y < this->get_height()-1; y++)
+				{
+					unsigned char minimun = 255;
+					
+					for (unsigned int i = x-1; i< x+2; i++)
+					{
+						for (unsigned int j = y-1; j< y+2; j++)
+						{
+							if ((this->get_pixel_value(i, j, z, c)) < minimun)
+							{
+								minimun = this->get_pixel_value(i, j, z, c);
+							}
+						} 
+					}
+					
+					filtered.set_pixel_value(x, y, z, c, minimun);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	 return filtered;
+}
+
+
+// *************************************************************************
+// ****************************** NOISES ***********************************
+// *************************************************************************
+
+void Image :: salt_pepper(double intensity)
+{
+	srand(1);
+	double porcentage = 1-(intensity/100);
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 0; x < this->get_width(); x++)
+			{
+				for(unsigned int y = 0; y < this->get_height(); y++)
+				{
+					double random= 2.0*(rand()-RAND_MAX/2.0)/RAND_MAX;
+					if(random > porcentage)
+					{
+						(*(this->Img))(x, y, z, c)= 255;
+					}	
+
+					else if(random<-1*porcentage)
+					{
+						(*(this->Img))(x, y, z, c)= 0;					
+					}
+				}
+				
+				
+			 }
+			 
+		 }
+	}  
+	 
+}
+
+void Image :: gaussian_noise(double variance)
+{
+	srand(1);
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 0; x < this->get_width(); x++)
+			{
+				for(unsigned int y = 0; y < this->get_height(); y++)
+				{
+					double random= variance*(rand()-RAND_MAX/variance)/RAND_MAX;
+					unsigned char pixel= this->get_pixel_value(x,y,z,c) + random;
+					
+					if((pixel<255) & (pixel>0))
+					{
+						(*(this->Img))(x, y, z, c)= pixel;
+					}	
+
+				}
+				
+				
+			 }
+			 
+		 }
+	}  
+	 
+}
