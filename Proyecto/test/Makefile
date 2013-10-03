@@ -86,5 +86,8 @@ max_min: maxandmin.cpp
 	
 Tutorial2: Tutorial2.cpp
 	$(CC) $(EFLAGS) Tutorial2.exe Tutorial2.cpp $(LFLAGS)
+	
+interpolation: interpolacion.cpp
+	$(CC) $(EFLAGS) interpolation.exe interpolacion.cpp $(LFLAGS)
 
 

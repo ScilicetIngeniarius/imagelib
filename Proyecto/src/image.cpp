@@ -831,13 +831,13 @@ Image Image :: filter_gaussian(int o, int dim_kernel)
 	
 	int m = (dim_kernel-1)/2;
 	
-	double gaussian =1/pow(3.1415*2*o,0.5);
+	double gaussian =1/pow(3.1415*2*o*o,0.5);
 
 	for(int i =-m; i <=m; i++)
 	{
 		for(int j =-m; j<=+m; j++)
 		{
-			double exp= -(i*i+j*j)*0.5/o;
+			double exp= -(i*i+j*j)*0.5/(o*o);
 			kernel[(i+m)*dim_kernel + (j+m)]=gaussian*pow(2.7,exp); 
 		}
 	}
@@ -1170,6 +1170,11 @@ int* Image :: get_histogram(unsigned int c, unsigned int z)
 	return histogram_pointer;
 }
 
+/*! \fn void Image :: plot_histogram(int levels, const char* title)
+ * \brief This function plot the histogram, using the CImg histogram function
+ * \param levels is the number of bars or columns that appear in the histogram.
+ * \param title is the title of the histogram.
+ */
 void Image :: plot_histogram(int levels,const char* title)
 {
 	CImg<unsigned char> img = this->Img->histogram(levels);
@@ -1179,6 +1184,11 @@ void Image :: plot_histogram(int levels,const char* title)
 	img.display_graph(main_display, 3, 1, "Pixel Intensity", 0, 0, "Frequency", 0, 0);
 }
 
+/*! \fn void Image :: plot_histogram_ecualization(int levels, const char* title)
+ * \brief This function plot the equalized histogram, using the CImg equalize function
+ * \param levels is the number of bars or columns that appear in the histogram.
+ * \param title is the title of the histogram.
+ */
 void Image :: plot_histogram_equalization(int levels, const char* title)
 {
 	CImg<unsigned char> img = this->Img->equalize(levels);
@@ -1897,6 +1907,10 @@ Image Image :: filter_order_stadistics(int dim, int order)
 // ****************************** NOISES ***********************************
 // *************************************************************************
 
+/*! \fn void Image :: salt_pepper(double intensity)
+ *  \brief Put pepper (black pixels) and salt(white pixels) 
+ *  \param intensity is used to compute the percentage of salt and pepper that is applied to the image.
+ */
 void Image :: salt_pepper(double intensity)
 {
 	srand(1);
@@ -1929,6 +1943,11 @@ void Image :: salt_pepper(double intensity)
 	 
 }
 
+/*! \fn void Image :: gaussian_noise(double variance)
+ *  \brief This function applies the gaussian noise to an image.
+ * 	The gaussian noise increases or decreases intensity to a pixel, depending of the variance.
+ *	\param variance this parameter is used to set the value of noise that is applied to the image.
+ */
 void Image :: gaussian_noise(double variance)
 {
 	srand(1);
@@ -1958,12 +1977,53 @@ void Image :: gaussian_noise(double variance)
 	 
 }
 
+
+/*! \fn Image Image :: interpolation()
+ * \brief This function doubles the size of the image and use the closer neighborhood interpolation.
+ * \return This function returns the image interpolated.
+ */
+
+Image Image :: interpolation()
+{
+	int i,j=0;
+	Image result (2*this->get_width(),2*this->get_height(),this->get_depth(),this->get_spectrum(),0);
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int y = 0; y < this->get_width(); y++)
+			{
+				for(unsigned int x = 0; x < this->get_height(); x++)
+				{
+					unsigned char pixel=this->get_pixel_value(x,y,z,c);
+					
+					result.set_pixel_value(x+i,y+j,z,c,pixel);
+					result.set_pixel_value(x+1+i,y+j,z,c,pixel);
+					result.set_pixel_value(x+i,y+1+j,z,c,pixel);
+					result.set_pixel_value(x+1+i,y+1+j,z,c,pixel);
+					i++;
+				}
+				i=0;
+				j++;
+			}
+			j=0;
+		}
+	}
+	return result;
+}
+
+/*! \fn Image Image :: variance(int dim)
+ * \brief This function compute the variance of an image.
+ * The variance is gived by  the summation of the average multiplied by the substraction of the average with the pixel value, squared.
+ * \return This function returns the image interpolated.
+ */
+
 Image Image:: autocovariance (int hor_dis, int ver_dis)
 {
 	CImg<float> autocovariance (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
 	Image average = this->filter_average(1);
-	
+
 	for(unsigned int c = 0; c < this->get_spectrum(); c++)
 	{
 		for(unsigned int z = 0; z < this->get_depth(); z++)
@@ -1987,4 +2047,45 @@ Image Image:: autocovariance (int hor_dis, int ver_dis)
 		}
 	 }
 	return autocovariance;
+}
+
+Image Image :: variance(int dim)
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+
+			for(unsigned int x = dim; x < this->get_width()-dim; x++)
+			{
+				for(unsigned int y = dim; y < this->get_height()-dim; y++)
+				{
+					int sum = 0;
+					double variance=0;
+					int kernel_values[(dim*2+1)*(dim*2+1)];
+					int cont=0;
+
+					for(unsigned int i = x-dim; i<= x+dim; i++)
+					{
+						for(unsigned int j = y-dim; j<= y+dim; j++)
+						{
+							sum += this->get_pixel_value(i, j, z, c);
+							kernel_values[cont]=this->get_pixel_value(i, j, z, c);
+							cont++;
+						}
+					}
+			
+					double average =  sum/((dim*2+1)*(dim*2+1));
+					for(int i=0;i<(dim*2+1)*(dim*2+1);i++)
+					{
+						variance+=pow(kernel_values[i]-average,2)/(dim*dim);
+					}
+					
+					
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (variance);
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	 return filtered;
 }

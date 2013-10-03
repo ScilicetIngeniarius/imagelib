@@ -11,7 +11,7 @@ int main(){
 
 	// Create an image with width=256 , height=256, depth=1, spectrum = 3 and all the pixel values set in 168.
 
-	Image image_created (256, 256, 1, 3, 168); // Image "__name__" (width, height, depth, spectrum, value);
+	Image image_created (256, 256, 1, 3, 220); // Image "__name__" (width, height, depth, spectrum, value);
 
 
 	//Gets
@@ -32,12 +32,12 @@ int main(){
 	cout<<"Pixel value: "<< static_cast<unsigned>(image_created.get_pixel_value(100, 150, 1, 1))<<std::endl; //"__Image_object__".get_pixel_value(x,y,z,c);
 
 	//Set
-	for(int i=0;i<100;i++)
+	for(int i=0;i<255;i++)
 	{
 	image_created.set_pixel_value(i, i, 1, 1, 0); //"__Image_object__".set_pixel_value(x,y,z,c,pixel value);
 	}
 	//Save the image
-	image_created.save("image_created.ext"); // "__Image_object__".save("__picture_name");
+	image_created.save("image_created.ext"); // "__Image_object__".save("__picture_name__");
 
 
 }
