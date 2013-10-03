@@ -159,10 +159,6 @@ public:
 	
 	int* histogram_equalization(int*, const char* title);
 
-
-
-	Image variance(int);
-	
 	CImg<float> autocovariance(int, int);
 
 	void plot_histogram_equalization(int, const char* title); /// \fn This function plot the histogram equalized
@@ -173,13 +169,11 @@ public:
 // *************************************************************************
 // *********************** OTHER TRANSFORMATIONS ***************************
 // *************************************************************************
-<<<<<<< HEAD
+
 
 	Image filter_order_stadistics(int dim, int order); 
 
 	Image variance(int); ///This function applies the variance to an image.
-	
-	Image filter_order_stadistics(int dim, int order);
 	
 	Image filter_kirsch_0(); /// \fn Applies the kirsch mask: \f$(-3,-3,5)(-3,0,5)(-3,-3,5)\f$
 	

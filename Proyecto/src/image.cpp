@@ -2018,7 +2018,7 @@ Image Image :: interpolation()
  * \return This function returns the image interpolated.
  */
 
-Image Image:: autocovariance (int hor_dis, int ver_dis)
+CImg<float> Image:: autocovariance (int hor_dis, int ver_dis)
 {
 	CImg<float> autocovariance (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
@@ -2030,7 +2030,7 @@ Image Image:: autocovariance (int hor_dis, int ver_dis)
 		{
 			for(unsigned int x = 3+hor_dis; x < this->get_width()-(3+hor_dis); x++)
 			{
-				for(unsigned int y = 3+ver_dis; y < this->get_height();-(3+ver_dis) y++)
+				for(unsigned int y = 3+ver_dis; y < this->get_height()-(3+ver_dis); y++)
 				{
 					int sum = 0;
 					for(unsigned int i = x-3; i<x+4; i++)
@@ -2052,7 +2052,11 @@ Image Image:: autocovariance (int hor_dis, int ver_dis)
 Image Image :: variance(int dim)
 {
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
-
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
 			for(unsigned int x = dim; x < this->get_width()-dim; x++)
 			{
 				for(unsigned int y = dim; y < this->get_height()-dim; y++)

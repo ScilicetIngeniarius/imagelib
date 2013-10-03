@@ -2,15 +2,15 @@
 
 CC = g++
 CFLAGS = -c -Wall
-LFLAGS = ../src/image.o -O2 -L/usr/X11R6/lib -lm -lpthread -lX11
+LFLAGS = ../build/image.o -O2 -L/usr/X11R6/lib -lm -lpthread -lX11
 EFLAGS = -o
 
 # All the targets
-all: filter set_pixel blur binary bin_blue
+all: Tutorials 
 
 Tutorials: Tutorial2 Tutorial Tutorial3
 
-set_pixel : set_pixel_test.cpp ../src/image.o
+set_pixel : set_pixel_test.cpp ../build/image.o
 	$(CC) $(EFLAGS) pixel_test.exe set_pixel_test.cpp $(LFLAGS)
 
 filter : Filter_usage.cpp
