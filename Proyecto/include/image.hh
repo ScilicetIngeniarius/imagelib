@@ -183,13 +183,15 @@ void display_FFT();
 
 
 	Image variance(int);
+	
+	CImg<float> autocovariance(int, int);
 
 
 // *************************************************************************
 // *********************** OTHER TRANSFORMATIONS ***************************
 // *************************************************************************
 
-	Image filter_order_stadistics(int dim, int order);
+	Image filter_order_stadistics(int dim, int order); 
 	
 	Image filter_kirsch_0();
 	

@@ -1843,7 +1843,7 @@ Image Image :: filter_minimum()
 
 Image Image :: filter_order_stadistics(int dim, int order)
 {
-	mage filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
 	//int kernel [dim*dim];
 	
@@ -1891,6 +1891,7 @@ Image Image :: filter_order_stadistics(int dim, int order)
 	}  
 	 return filtered;
 }
+
 
 // *************************************************************************
 // ****************************** NOISES ***********************************
@@ -1955,4 +1956,35 @@ void Image :: gaussian_noise(double variance)
 		 }
 	}  
 	 
+}
+
+Image Image:: autocovariance (int hor_dis, int ver_dis)
+{
+	CImg<float> autocovariance (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	Image average = this->filter_average(1);
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 3+hor_dis; x < this->get_width()-(3+hor_dis); x++)
+			{
+				for(unsigned int y = 3+ver_dis; y < this->get_height();-(3+ver_dis) y++)
+				{
+					int sum = 0;
+					for(unsigned int i = x-3; i<x+4; i++)
+					{
+						for(unsigned int j= y-3; j<y+4; j++)
+						{
+							sum += ( (this->get_pixel_value(i,j,z,c))  -  average.get_pixel_value(i,j,z,c)) * ( (this->get_pixel_value(i+hor_dis,j+ver_dis,z,c))  -  average.get_pixel_value(i+hor_dis,j+ver_dis,z,c)) ;
+						}
+					}
+				
+					autocovariance(x,y,z,c) = sum/49;
+				}
+			}
+		}
+	 }
+	return autocovariance;
 }
