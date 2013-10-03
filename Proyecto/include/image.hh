@@ -189,7 +189,8 @@ void display_FFT();
 // *********************** OTHER TRANSFORMATIONS ***************************
 // *************************************************************************
 
-		
+	Image filter_order_stadistics(int dim, int order);
+	
 	Image filter_kirsch_0();
 	
 	Image filter_kirsch_45();
