@@ -87,7 +87,7 @@ public:
 
 	Image substract_img(Image); /// \fn substract image allows to substract the pixel values of two images.
 
-	Image sum_img(Image);
+	Image sum_img(Image); ///\fn sum image allows to sum the pixel values of two images.
 	
 	Image multiply_img(double); /// \fn image multiplier multiplies an image by a factor.
 
@@ -101,9 +101,9 @@ public:
 // ********************** Sharpening Spatial Filters ***********************
 // *************************************************************************
 
-	Image filter_Laplacian(); /// \fn La placian filter, used to identify sudden changes in the image. 
+	Image filter_Laplacian(); /// \fn Laplacian filter, used to identify sudden changes in the image. 
 	
-	Image filter_Laplacian_no_diagonal(); /// \fn La placian filter no diagonal, calculates de laplacian of an image without including the diagonal directions.
+	Image filter_Laplacian_no_diagonal(); /// \fn Laplacian filter no diagonal, calculates de laplacian of an image without including the diagonal directions.
 
 	Image filter_Gradient_vertical(); /// \fn Gradient filter in the vertical direction
 	
@@ -135,25 +135,6 @@ public:
 	
 	Image filter_modal(int); /// \fn Modal filter calculates the modal of a certain group of pixels, in case there is no especific modal it calculates the average.
 	
-// *************************************************************************
-// *********************** Frequency Domain Filters ************************
-// *************************************************************************
-
-void FFT();
-
-void FFT_inverse();
-
-void display_FFT();
-
-// *************************************************************************
-// ******************** Sharpening Frecquency Filters **********************
-// *************************************************************************
-
-	Image filter_butterworth_low_pass(Image, unsigned int, unsigned int);
-
-// *************************************************************************
-// ********************* Smoothing Frecquency Filters **********************
-// *************************************************************************
 
 // *************************************************************************
 // *********************** Dot to Dot Transformations **********************
@@ -162,7 +143,7 @@ void display_FFT();
 
 	Image inverse(); /// \fn inverse of an image substract the original pixel values to 255.
 	
-	Image log_transformation();
+	Image log_transformation(); ///Executes this transformation: \f$ v(x,y,z,c) = c log(u(x,y,z,c)+1)\f$
 	
 	Image power_law_transformatiom(double exponent); /// \fn Power-Law transformation
 
@@ -172,70 +153,66 @@ void display_FFT();
 // *********************** HISTOGRAM AND EQUALIZATION **********************
 // *************************************************************************
 
-	int* get_histogram(unsigned int c, unsigned int z);
+	int* get_histogram(unsigned int c, unsigned int z); /// \fn This function compute the values of the histogram
 	
-	void plot_histogram(int, const char* title);
+	void plot_histogram(int, const char* title); /// \fn This function plot the histogram
 	
-	void plot_histogram_equalization(int, const char* title);
+	void plot_histogram_equalization(int, const char* title); /// \fn This function plot the histogram equalized
+
 	
-	int* histogram_equalization(int*, const char* title);
-
-
-
-	Image variance(int);
-
 
 // *************************************************************************
 // *********************** OTHER TRANSFORMATIONS ***************************
 // *************************************************************************
-
+	Image variance(int); ///This function applies the variance to an image.
+	
 	Image filter_order_stadistics(int dim, int order);
 	
-	Image filter_kirsch_0();
+	Image filter_kirsch_0(); /// \fn Applies the kirsch mask: \f$(-3,-3,5)(-3,0,5)(-3,-3,5)\f$
 	
-	Image filter_kirsch_45();
+	Image filter_kirsch_45();/// \fn Applies the kirsch mask: \f$(-3,5,5)(-3,0,5)(-3,-3,-3)\f$
 	
-	Image filter_kirsch_90();
+	Image filter_kirsch_90();/// \fn Applies the kirsch mask: \f$(5,5,5)(-3,0-3)(-3,-3,-3)\f$
 	
-	Image filter_kirsch_135();
+	Image filter_kirsch_135();/// \fn Applies the kirsch mask: \f$(5,5,-3)(5,0,-3)(-3,-3,-3)\f$
 	
-	Image filter_kirsch_180();
+	Image filter_kirsch_180();/// \fn Applies the kirsch mask: \f$(5,-3,-3)(5,0,-3)(5,-3,-3)\f$
 	
-	Image filter_kirsch_225();
+	Image filter_kirsch_225();/// \fn Applies the kirsch mask: \f$(-3,-3,-3)(5,0,-3)(5,5,-3)\f$
 	
-	Image filter_kirsch_270();
+	Image filter_kirsch_270();/// \fn Applies the kirsch mask: \f$(-3,-3,-3)(-3,0,-3)(5,5,5)\f$
 	
-	Image filter_kirsch_315();
+	Image filter_kirsch_315();/// \fn Applies the kirsch mask: \f$(-3,-3,-3)(-3,0,5)(-3,5,5)\f$
 	
-	Image filter_freeman_0();
+	Image filter_freeman_0();/// \fn Applies the freeman mask: \f$(1,1,1)(1,-2,1)(1,-1,-1)\f$.
 	
-	Image filter_freeman_1();
+	Image filter_freeman_1();/// \fn Applies the freeman mask: \f$(1,1,1)(-1,-2,1)(1,-1,1)\f$.
 	
-	Image filter_freeman_2();
+	Image filter_freeman_2();/// \fn Applies the freeman mask: \f$)-1,1,1)(-1,-2,1)(1,1,1)\f$.
 	
-	Image filter_freeman_3();
+	Image filter_freeman_3();/// \fn Applies the freeman mask: \f$(-1,-1,1)(-1,-2,1)(1,1,1)\f$.
 	
-	Image filter_freeman_4();
+	Image filter_freeman_4();/// \fn Applies the freeman mask: \f$(-1,-1,-1)(1,-2,1)(1,1,1)\f$.
 	
-	Image filter_freeman_5();
+	Image filter_freeman_5();/// \fn Applies the freeman mask: \f$(1,-1,-1)(1,-2,-1)(1,1,1)\f$.
 	
-	Image filter_freeman_6();
+	Image filter_freeman_6();/// \fn Applies the freeman mask: \f$(1,1,-1)(1,-2,-1)(1,1,-1)\f$.
 	
-	Image filter_freeman_7();
+	Image filter_freeman_7();/// \fn Applies the freeman mask: \f$(1,1,1)(1,-2,-1)(1,-1,-1)\f$.
 
-	Image filter_maximum();
+	Image filter_maximum();/// Assigns the highest value in the neighborhood.
 	
-	Image filter_minimum();
+	Image filter_minimum();/// Assigns the lowest value in the neighborhood.
 
 
 // *************************************************************************
 // ****************************** NOISES ***********************************
 // *************************************************************************
 
-	void gaussian_noise(double);
-	void salt_pepper(double);
+	void gaussian_noise(double);/// Apply the gaussian noise to an image.
+	void salt_pepper(double); /// \fn Apply salt and pepper to an image.
 	
-	Image interpolation();
+	Image interpolation(); /// \fn This function apply the closer neighborhood interpolation.
 
 };
 
