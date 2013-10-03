@@ -2093,3 +2093,32 @@ Image Image :: variance(int dim)
 	}  
 	 return filtered;
 }
+
+
+Image Image :: gray_scale()
+{
+	Image gray_image (this->get_width() , this->get_height(), this->get_depth(), 1, 0); /// 
+
+
+	for(unsigned int z = 0; z < this->get_depth(); z++)
+	{
+		for(unsigned int x = 0; x < this->get_width(); x++)
+		{
+			for(unsigned int y = 0; y < this->get_height(); y++)
+			{
+			
+				unsigned char pixel_intensity = 0.56*this->get_pixel_value(x,y,z,1)+0.14*this->get_pixel_value(x,y,z,0)+0.11*this->get_pixel_value(x,y,z,2);
+				gray_image.set_pixel_value(x, y, z, 0, pixel_intensity);
+				
+			}
+			 
+		 }
+	}  
+	 return gray_image;	
+} 
+
+
+
+
+
+
