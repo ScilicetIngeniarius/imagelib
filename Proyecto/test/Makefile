@@ -90,4 +90,5 @@ Tutorial2: Tutorial2.cpp
 interpolation: interpolacion.cpp
 	$(CC) $(EFLAGS) interpolation.exe interpolacion.cpp $(LFLAGS)
 
-
+gray_scale: gray_scale.cpp
+	$(CC) $(EFLAGS) gray_scale.exe gray_scale.cpp $(LFLAGS)
