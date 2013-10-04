@@ -1,6 +1,11 @@
 all: doxygen pdf doc latex
 
-pdf: Propuesta.pdf Usage.pdf
+pdf: Propuesta.pdf Usage.pdf Tecnical_Report.pdf
+
+Tecnical_Report.pdf = Tecnical_report.tex
+	@echo "******************* PROPUESTA PDF **************************************";\
+	pdflatex Propuesta.tex
+	make clean
 
 Propuesta.pdf : Propuesta.tex
 	@echo "******************* PROPUESTA PDF **************************************";\

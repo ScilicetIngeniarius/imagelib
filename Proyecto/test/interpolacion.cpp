@@ -12,6 +12,7 @@ int main()
 	img2.display("parrot");
 	Image img22=img2.interpolation();
 	img22.display("parrot_inter");
+	img22.save("mega_parrot.jpg");
 }
 
 
