@@ -173,7 +173,7 @@ public:
 
 	Image filter_order_stadistics(int dim, int order); 
 
-	Image variance(int); ///This function applies the variance to an image.
+	Image variance(int); /// \fn This function calculates the variance of a kernel values and the applies to the image.
 	
 	Image filter_kirsch_0(); /// \fn Applies the kirsch mask: \f$(-3,-3,5)(-3,0,5)(-3,-3,5)\f$
 	
@@ -218,8 +218,8 @@ public:
 // ****************************** NOISES ***********************************
 // *************************************************************************
 
-	void gaussian_noise(double);/// Apply the gaussian noise to an image.
-	void salt_pepper(double); /// \fn Apply salt and pepper to an image.
+	void gaussian_noise(double);/// \fn Applies the gaussian noise to an image.
+	void salt_pepper(double); /// \fn Applies salt and pepper to an image.
 	
 	Image interpolation(); /// \fn This function apply the closer neighborhood interpolation.
 

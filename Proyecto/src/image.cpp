@@ -1929,7 +1929,7 @@ Image Image :: filter_order_stadistics(int dim, int order)
 void Image :: salt_pepper(double intensity)
 {
 	srand(1);
-	double porcentage = 1-(intensity/100);
+	double percentage = 1-(intensity/100);
 	for(unsigned int c = 0; c < this->get_spectrum(); c++)
 	{
 		for(unsigned int z = 0; z < this->get_depth(); z++)
@@ -1939,12 +1939,12 @@ void Image :: salt_pepper(double intensity)
 				for(unsigned int y = 0; y < this->get_height(); y++)
 				{
 					double random= 2.0*(rand()-RAND_MAX/2.0)/RAND_MAX;
-					if(random > porcentage)
+					if(random > percentage)
 					{
 						(*(this->Img))(x, y, z, c)= 255;
 					}	
 
-					else if(random<-1*porcentage)
+					else if(random<-1*percentage)
 					{
 						(*(this->Img))(x, y, z, c)= 0;					
 					}
@@ -2124,7 +2124,7 @@ Image Image :: variance(int dim)
 
 /*! \fn Image Image :: gray_scale()
  * \brief This function converts an RGB image to one in gray scale.
- * The library uses this covertion: f(x,y)= 0.11R+0.56G + 0.14B
+ * The library uses this conversion: f(x,y)= 0.11R+0.56G + 0.14B
  * Where f is the intensity of the pixel on the gray scale and R,G and B the pixel values on the different channels.
  * \return This function returns the mochromathic image.
  */
