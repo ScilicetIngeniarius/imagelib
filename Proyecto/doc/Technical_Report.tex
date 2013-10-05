@@ -1,0 +1,564 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{amsmath}
+
+
+\title{\Huge{Imagelib} \\ \large{the image processing library for c++} \vspace{0.5cm}\\ \hrule}
+\author{
+\begin{tabular}{l l}
+Erick Eduarte Rojas & B22305\\ 
+Fabián Meléndez Bolaños & B24056\\
+Luis Felipe Rincón Riveros & B25530
+\end{tabular}
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\hspace{0.5cm}
+	\hrule
+    
+\hspace{0.7cm}
+
+This document represents a tecnical report for the image processing library "imagelib" developed for c++. You will find basic definitions for image processing elements and filters
+
+\hspace{0.7cm}
+	\hrule
+
+\hspace{0.5cm}
+
+	\end{abstract}
+
+\section{Introduction}
+
+This project proposes to create a library in the c++ programming language, which will perform basic functions of image filtering. Especially monochromatic, but it is also planned to be implemented for RGB images.
+
+An image is the set of elements of a two-dimensional function, where (x, y) are spatial coordinates, each pair of coordinates also has an amplitude of f, called intensity or gray level of the image. If the values of (x, y) and amplitude are all finite, we say that the image is a digital image. Digital images are composed of picture elements which commonly are called pixels.
+
+The digital image processing refers to the set of techniques applied to digital images in order to improve quality or facilitate the provision of information. Some of the image processing goals are: smooth the image to remove noise, to enhance the edges and detecting the edges, etc. Usually to achieve them using filters, which can be in the space domain and in the frequency domain.
+Among the main applications that have digital image processing is the improvement of pictorial information for human interpretation and facilitate the storage, data transmission and representation for autonomous machine perception.
+
+The focus of this work is to develop a library that is able to apply some of the basic functions of digital processing, in order to apply a filter to an image, to facilitate the understanding and management of information in them.
+\section{Objectives}
+	\subsection{General}
+
+		\begin{itemize}
+
+		\item To Create a library able to manage certain basic functions in the digital image processing, developed in c++.
+
+		\end{itemize}
+
+	\subsection{Specific}
+
+		\begin{enumerate}
+     
+        	\item{Learn about image handling in c++.}
+
+			\item{Implement functions of basic operations filters.}
+
+			\item{Implement Smoothing filters in the spatial domain.}
+            
+            \item{Implement Sharpening filters in the spatial domain}
+            
+            \item{Implement dot to dot transformations.}
+            
+            \item{Implement histogramas analizing functions.}
+
+		\end{enumerate}
+\section{Justification}
+
+\section{Theoretical Framework}
+
+CREO QUE LO QUE TENEMOS QUE DEFINIR AQUI ES:
+
+IMAGEN DIGITAL
+
+An image is a visual representation of an object and it's bidemensional. It is possible to represent with a function dependent of two variables (x and y) wich correspond the spacial coordenates of an amplitud (f) wich is called pixel intensity. A digital image is define when the magnitud of x, y and amplitud are finite and discret amounts.
+
+The digital image contains a fixed number of rows(M) and columns(N) of pixels. Pixels are the smallest individual element of an image, holding quantized values that represent the brightness of a given color at any specific point. This definition allows to write the completere MxN digital image in the following matrix form: \\
+
+\begin{center}
+\begin{math}
+	\centering
+	f(x,y)=
+   \begin{pmatrix} 
+    f(0,0) & f(0,1) & ... & f(0,N) \\ 
+ 	f(1,0) & f(1,1) & ... & f(1,N) \\
+    . & . &  & . \\
+    . & . & ... & . \\
+    . & . &  & . \\
+    f(M,0) & (M,1) & ... & f(M,N) \\
+   \end{pmatrix}
+\end{math}\\
+\end{center}
+
+The right side of this equation is by definition a digital image. Each element of this matrix array is a pixel.This image has width M and height N. 
+
+In our library repeatedly we find terms such as width, height, depth, and spectrum. These are the dimentions of the images, each one corresponds to a measure of an amount of pixels in each dimention. The width is the amount of pixels distribuited horizonatally, the height is the amount of pixels vertically, and the depth corresponds to the layers of images, this one is frequently just one layer, except in 3D images; finally the spectrum is the number of color channels in the image, in a monocroatic image, the spectrum is one, and RGB images the spectrum takes a value of three.
+
+PROCESAMIENTO DE IMAGENES DIGITALES
+
+The field of digital image processing refers to processing digital images by means of a digital computer. This can be divided in three types of computerized process:low, mid and high.Low-level precesses involve primitive operaion such as image processing to reduce noise, contrast enhancement and image shapering.this level is chatracterized by the both, inputs and outputs, are digital images.Mid-level involves task as segmentation, processing and classification of attributes of the images.The high-level involves"making sense" of an esemble of reconized objects and preforming the cognitive functions normally associated with vision. This library will focus on the low-level of digital image processing.
+
+
+FILTRO
+
+Also, another therm largely used in this library is filter.Image filtering allows you to apply various effects on pictures, and filter can be seen mathematically as a convolution between two surfaces, one is the image itself and the other a kernel with certain weights.  Arithmetically a filter can be seen as the result of assigning each pixel, the sum of the pixels in the neighborhood for a certain weight. This results in an image which can reduce sudden changes in intensity, or may be increased, the filters can be applied in the frequency domain or the spatial domain. 
+
+If a filter is seen as a convolution, it is usefull to describe some filters with a mask or kernel. This mask is a odd dimention matrix, that determines the weights by which the pixels of the neighborhood are multiplied.
+
+For example, a $3x3$ kernel like this:
+\begin{center}
+\begin{math}
+\begin{pmatrix}
+	z_1 & z_2 & z_3 \\
+    z_4 & z_5 & z_6 \\
+    z_7 & z_8 & z_9 \\
+\end{pmatrix}
+\end{math}
+\end{center}
+
+Will produce a filter that applied to the $(x,y)$ position will produce this:
+\begin{center}
+\begin{math}
+	g(x,y) = f(x-1,y-1)\cdot z_1 + f(x, y-1) \cdot z_2 + f(x+1,y-1)\cdot z_3 + f(x-1, y) \cdot z_4 + f(x,y) \cdot z_5 + f(x+1,y) \cdot z_6 + f(x-1, y+1) \cdot z_7 + f(x, y+1) \cdot z_8 + f(x+1, y+1) \cdot z_9
+\end{math}
+\end{center}
+
+Usually, the result of the convolution is multiplied or divided by a constant to avoid loss of information or exceeding storage capability.
+
+
+FILTRO ESPACIAL / FRECUENCIAL
+
+There two different types of filters, the ones managed on the frequency domain because they use the Fourier transform, and the spacial filters. The last ones consists simply of moving the filter mask from point to point in an image.The response of the filter at each pixel is calculated by a predefined relationship. For linear spatial filtering  the response is given by a sum of products of the maks coefficients and the corresponding pixel values of the image. The size of the mask or kernel mxn are assumed to be both impair numbers.
+
+There are also nonlinear spatial filter that also operates on neighborhoods and the mechanincs of sliding a mask but with non linear functions, for example the median, the modal, the variance and among others.
+
+In this library, some filters were implemented, below you'll find the theoretical support of most of them.
+
+\subsection{Arithmetic functions}
+
+\subsubsection{Image subtraction}
+The subtraction of two images subtract the pixel values of two images with the same dimensions, is useful to detect the differences between two images. 
+
+\subsubsection{Multiply image}
+Multiply an image by a factor is used to increase od decrease the value of the intensity of all the pixels in the image.
+
+\subsubsection{Binarize image}
+To binarize an image is necesary a cutoff intensity value, all the values below this intensity is set to 0 and all the pixel values higher than this cutoff intensity is set to the maximun value in RGB case the maximum is 255.
+
+
+\subsection{Sharpening spatial filters}
+The principal objective of sharpening is to highlight fine detail in an image or to enhance detail that has been blurred, either in error or as a natural effect of a particular method of image acquisition. Uses of image sharpening vary and include applications ranging from electronic printing and medical imaging to industrial inspection and autonomous guidance in military systems.
+Since averaging is analogous to integration, it is logical to conclude that sharpening could be accomplished by spatial differentiation. Fundamentally, the strength of the response of a derivative operator is proportional to the degree of discontinuity of the image at the point at which the operator is applied. Thus, image differentiation enhances edges and other discontinuities (such as noise) and de-emphasizes areas with slowly varying gray-level values
+
+\subsubsection{Lapacian filter}
+The derivative of an image is defined in terms of diferences, therefore, a second derivative also is defined in terms of diferences between pixel values. Most sharpening filters work with derivatives. The Laplacian filter is defined by the second derivative. THe mathematical aproach is given by:
+\begin{math}
+\nabla^2 f = \frac{\partial^2 f}{\partial x^2} + \frac{\partial^2 f}{\partial y^2} 
+\end{math}
+
+Then, we can define the derivative $\frac{\partial f}{\partial c} = f(x+1) -f(x) $, and taking this aproach, and defining the laplacian filter as:
+\begin{math}
+g(x,y) = f(x,y) + \nabla^2f(x,y)
+\end{math}
+\\
+We can define a Laplacian mask as: 
+\begin{center}
+\begin{math}
+   \begin{pmatrix} 
+   0 & 1 & 0 \\ 
+   1 & -4 & 1 \\
+   0 & 1 & 0 \\ 
+   \end{pmatrix}
+\end{math}
+\end{center}
+
+This mask represents a second derivative in x and a second derivative in y summed, just like the laplacian definition. But we can expand the laplacian definition to include the diagonal directions, and have a full laplacian mask, like this one: \\
+\begin{center}
+\begin{math}
+   \begin{pmatrix} 
+   1 & 1 & 1 \\ 
+   1 & -8 & 1 \\
+   1 & 1 & 1 \\ 
+   \end{pmatrix}
+\end{math}\\
+\end{center}
+The laplacian filter enhances the edges in all directions (the results obtained can be considered as a "sum" of those obtained after applying a series of edge enhacenment models). As a negative attribute, the Laplacian filter reacts greatly to noise, so its recomended to apply a smoothing filter first, in case ist been used to enhance edges.  \\
+
+\subsubsection{Gradient}
+First derivatives in image processing are implemented using the magnitude of
+the gradient. For a function $f(x, y)$, the gradient of $f$ at coordinates $(x, y)$ is defined as the two-dimensional column vector: \\
+\begin{center}
+\begin{math}
+ \nabla f(x,y) =
+ \begin{pmatrix} 
+  \frac{\partial f}{\partial x} \\
+  \frac{\partial f}{\partial y} \\
+  \end{pmatrix}
+\end{math}
+\end{center}
+The Gradient is approximate by the diference in magnitude of the two gradients (x and y). A simplified aproximation is the sobel masks, that are represented by:
+\begin{center}
+
+\begin{math}
+   \begin{pmatrix} 
+   1 & 0 & -1 \\ 
+   2 & 0 & -2 \\
+   1 & 0 & -1 \\ 
+   \end{pmatrix}
+\end{math}  \& 
+\begin{math}
+   \begin{pmatrix} 
+   1 & 2 & 1 \\ 
+   0 & 0 & 0 \\
+   -1 & -2 & -1 \\ 
+   \end{pmatrix}
+\end{math}\\
+\end{center}
+The idea behind using a weight value of 2 is to achieve some smoothing by giving more importance to the center point.
+
+\subsubsection{Prewitt}
+Technically, it is a discrete differentiation operator, computing an approximation of the gradient of the image intensity function. At each point in the image, the result of the Prewitt operator is either the corresponding gradient vector or the norm of this vector. The Prewitt operator is based on convolving the image with a small, separable, and integer valued filter in horizontal and vertical direction and is therefore relatively inexpensive in terms of computations. On the other hand, the gradient approximation which it produces is relatively crude, in particular for high frequency variations in the image. The Prewitt operator was developed by Judith M. S. Prewitt.\\
+
+In this library were implemented four masks of Prewitt for different direcntion  gradients: North-South (N-S), Northwest-Southeast (NW-SE), East-West (E-W), Southwest-Northeast (SW-NE). This are the masks implemented: \\
+\begin{center}
+N-S: \begin{math}
+   \begin{pmatrix} 
+   1 & 1 & 1 \\ 
+   0 & 0 & 0 \\
+   -1 & -1 & -1 \\ 
+   \end{pmatrix}
+\end{math} , E-W:
+\begin{math}
+   \begin{pmatrix} 
+   1 & 0 & -1 \\ 
+   1 & 0 & -1 \\
+   1 & 0 & -1 \\ 
+   \end{pmatrix}
+\end{math},  \\ SW-NE: \begin{math}
+   \begin{pmatrix} 
+   0 & -1 & -1 \\ 
+   1 & 0 & -1 \\
+   1 & 1 & 0 \\ 
+   \end{pmatrix}
+\end{math},  NW-SE: \begin{math}
+   \begin{pmatrix} 
+   1 &1 & 0 \\ 
+   1 & 0 & -1 \\
+   0 & -1 & -1 \\ 
+   \end{pmatrix}
+\end{math}\\
+\end{center}
+
+\subsubsection{Filter edge enhancement by displacement}
+
+Its a sharpening spatial transformation. Uses displacement and subtraction tecniques to enhance the edges in images. When the original image is displaced, the intensity of the displaced pixel minus the intensity of the non displaced pixel, deemphasizes low contrast areas, and enhance high contrast areas, as a result the transformed image presents  in its majority the edges of the original image.
+
+\subsubsection{Horizontal and Vertical Borders Enhancement}
+
+
+
+
+\subsection{Smoothing spacial filters}
+
+\subsubsection{Median filter}
+
+The median filter uses a kernel to calculate the median of the pixel values, in this way the intensity is homogenized .First is necessary to order the pixel values in order ascendant or descendant and then choose the middle one to stablish it on the central pixel.
+This filter allows to reduce the noise on an image , for example the salt\&pepper effect, without blurring the image but losing resolution.
+
+
+
+\subsubsection{Average filter}
+
+The average filter uses a kernel, a small part of the image and subtracs the pixel values. With those values it calculates the average and sets it into the center pixel of the kernel. This filter is used to smooth the picture by reducing the abrupt change of pixel values on the surroundings. The average is difined by:
+
+\begin{math}
+Average= \frac{\sum_{n=0}^{n}\!\!(x_i)}{n}
+\end{math}
+
+
+
+\subsubsection{Modal filter}
+
+The modal filter calculates the modal value of a certain pixel values subtracted by the kernel, it means that the central pixel is set with the most frequent value. If all the values are different this filter sets the average value.
+
+\subsubsection{Gaussian filter}
+\begin{math}
+G= \frac{1}{\sqrt{2\pi\sigma^2}}e^\frac{x^2+y^2}{2\sigma^2}
+\end{math}
+
+\subsection{Dot to dot transformations}
+
+
+\subsubsection{Dynamic dilatation}
+
+The dilatation of the dynamic range is used in images poorly contrasted, to stand out the range of intensity that predominates in the image. This method uses three ranges of pixel values, and applies the transformation:\\ 
+\\
+\begin{math}
+v= \left\{
+	\begin{array}{cl}
+		u\alpha & \mbox{si } 0<u<a\\
+		\beta(u-a)+v_a &\mbox{si } a\leq u<b\\
+	\gamma(u-b)+v_b &\mbox{si } b\leq u\leq L\\
+	\end{array}\right.
+\end{math}
+\\
+With $\alpha$, $\beta$ and $\gamma$, real numbers, L is the maximum value of intensity, a and b are the cutoff pixel values, u is the actual intensity value that will be transformed in v, and $v_a$ and $v_b$ are the pixel values in a and b already dilatated.
+The values of a and b can be obtained by observing the histogram, between $\left[a,b\right]$ the transformation increase more this pixel values than the other ranges.
+\subsubsection{Inverse}
+
+The inverse of an image calculates the substraction of all the pixel values and the maximum value (255 to RGB), and set the new image with these pixel values.
+
+\subsubsection{Logarithmic transfomation}
+\subsubsection{Color slicing}
+
+\subsection{Histogram \& Equalization }
+\subsubsection{Histogram}
+\subsubsection{Equalization}
+
+\subsection{Other transformation}
+\subsubsection{Filter order stadisics}
+\subsubsection{Kirsch masks}
+
+0 degrees \\
+
+\begin{math}
+   \begin{pmatrix} 
+   -3 & -3 & 5 \\ 
+   -3 & 0 & 5 \\
+   -3 & -3 & 5 \\ 
+   \end{pmatrix}
+\end{math}\\
+
+45 degrees \\
+
+\begin{math}
+   \begin{pmatrix} 
+   -3 & 5 & 5 \\ 
+   -3 & 0 & 5 \\
+   -3 & -3 & -3 \\ 
+   \end{pmatrix}
+\end{math}\\
+
+90 degrees \\
+
+\begin{math}
+   \begin{pmatrix} 
+   5 & 5 & 5 \\ 
+   -3 & 0 & -3 \\
+   -3 & -3 & -3 \\ 
+   \end{pmatrix}
+\end{math}\\
+
+135 degrees \\
+
+\begin{math}
+   \begin{pmatrix} 
+   5 & 5 & -3 \\ 
+   5 & 0 & -3 \\
+   -3 & -3 & -3 \\ 
+   \end{pmatrix}
+\end{math}\\
+
+180 degrees \\
+
+\begin{math}
+   \begin{pmatrix} 
+   5 & -3 & -3 \\ 
+   5 & 0 & -3 \\
+   5 & -3 & -3 \\ 
+   \end{pmatrix}
+\end{math}\\
+
+225 degrees \\
+
+\begin{math}
+   \begin{pmatrix} 
+   -3 & -3 & -3 \\ 
+   5 & 0 & -3 \\
+   5 & 5 & -3 \\ 
+   \end{pmatrix}
+\end{math}\\
+
+270 degrees \\
+
+\begin{math}
+   \begin{pmatrix} 
+   -3 & -3 & -3 \\ 
+   -3 & 0 & -3 \\
+   5 & 5 & 5 \\ 
+   \end{pmatrix}
+\end{math}\\
+
+315 degrees \\
+
+\begin{math}
+   \begin{pmatrix} 
+   -3 & -3 & -3 \\ 
+   -3 & 0 & 5 \\
+   -3 & 5 & 5 \\ 
+   \end{pmatrix}
+\end{math}\\
+
+\subsubsection{Freeman masks}
+
+mask 0 \\
+
+\begin{math}
+   \begin{pmatrix} 
+   1 & 1 & 1 \\ 
+   1 & -2 & 1 \\
+   1 & -1 & -1 \\ 
+   \end{pmatrix}
+\end{math}\\
+
+mask 1 \\
+
+\begin{math}
+   \begin{pmatrix} 
+   1 & 1 & 1 \\ 
+   -1 & -2 & 1 \\
+   1 & -1 & 1 \\ 
+   \end{pmatrix}
+\end{math}\\
+
+mask 2 \\
+
+\begin{math}
+   \begin{pmatrix} 
+   -1 & 1 & 1 \\ 
+   -1 & -2 & 1 \\
+   1 & 1 & 1 \\ 
+   \end{pmatrix}
+\end{math}\\
+
+mask 3 \\
+
+\begin{math}
+   \begin{pmatrix} 
+   -1 & -1 & 1 \\ 
+   -1 & -2 & 1 \\
+   1 & 1 & 1 \\ 
+   \end{pmatrix}
+\end{math}\\
+
+mask 4 \\
+
+\begin{math}
+   \begin{pmatrix} 
+   -1 & -1 & -1 \\ 
+   1 & -2 & 1 \\
+   1 & 1 & 1 \\ 
+   \end{pmatrix}
+\end{math}\\
+
+mask 5 \\
+
+\begin{math}
+   \begin{pmatrix} 
+   1 & -1 & -1 \\ 
+   1 & -2 & -1 \\
+   1 & 1 & 1 \\ 
+   \end{pmatrix}
+\end{math}\\
+
+mask 6 \\
+
+\begin{math}
+   \begin{pmatrix} 
+   1 & 1 & -1 \\ 
+   1 & -2 & -1 \\
+   1 & 1 & -1 \\ 
+   \end{pmatrix}
+\end{math}\\
+
+mask 7 \\
+
+\begin{math}
+   \begin{pmatrix} 
+   1 & 1 & 1 \\ 
+   1 & -2 & -1 \\
+   1 & -1 & -1 \\ 
+   \end{pmatrix}
+\end{math}\\
+
+\subsubsection{Maximum filter}
+\subsubsection{Minimun filter}
+\subsubsection{Variance}
+
+In probability and statistics, the variance is a measure of how far a set of numbers is spread out. In other words, if the variance is zero all the values are equals; if the variance is small, it means the vales are very likely and close  to the mean; and if the variance is high that indicates that the data points are very spread out from the mean form each other.
+
+In this case the variance is about pixel values arround a kernel that goes trought the image, it mean those values can be equally likely, the variance of those n values can be calculated by the formula: 
+
+\begin{math}
+Var(x)= \frac{\sum_{n=0}^{n}\!\!(\bar x - x_i)^2}{n}
+\end{math}
+
+\subsubsection{Covariance}
+
+The covariance, calculates the covariance matrix of an image. This function calculates something similar to the function below: \\
+\begin{math} 
+	g(x,y) = \sum \limits_{n=0}^{N} \sum \limits_{m=1}^M \left( f(x,y) - \overline{f(x,y)}\right)\left(f(x + \Delta x, y + \Delta y) - \overline{f(x + \Delta x, y + \Delta y)} \right)
+\end{math}
+Where it calculates the variation between two series, one is the normal one, and the other is displaced by two parameters $\Delta x$ \& $\Delta y$. For an image it its calculated for a neighborhood.
+
+
+\subsection{Noise}
+
+Noise represents unwanted information wich deteriorates image quality.Noise is defined as a process (n) wich affects the acquired image (f) and is not part of the scene (initial signal -s). Using additive noise model, this can be written as:
+
+\begin{math}
+f(i,j)=s(i,j) +n(i,j)
+\end{math}
+
+
+\subsubsection{Gaussian noise}
+
+
+\subsubsection{Salt \& Pepper}
+
+In salt\&pepper noise model there are only thwo possible values of noise , the one of salt wich are the highest intensity (white-salt) and the lowest intensity (black-pepper). The probability of obtaining each of them is less than 0.1 (otherwise, the noise would vastly dominate the image). 
+
+
+\subsection{Interpolation}
+\subsubsection{Closer neighborhood}
+
+Interpolation is the process of calculate numeric values based on others already known by concrete algorithms. The objetive is to return a bigger image filling the unknow pixels with the values estimated.
+The interpolation of the closer neighborhood consist in basically make bigger the pixel by considering its value.
+
+
+\section{Design}
+	This library is contained in a single file, distribuited in the header file and the cpp file. This is because it contains a single class, the Image class, around which the library is built, and the only class-like abstraction is the Imagelib class. Also it's easier to comprehend its functioning, and allows every function to be a feature of an Image. 
+    
+    The image class contains a list of functions that can be applied to the image object. The files are structured with a set of Constructors, and a list of set's and get's to the image properties as dimentions and pixel intensity values. Then the rest library consists of a series of filters and transformations to the images, that almost everytime return a Image object with the transformed Image.
+    
+    Also, in this library, we use the CImg library, in order to handle images, and some basic, complicated and low level functions, like display and  obtain or modify images. This is made, containing a CImg object in the Image class as a global variable. We decided to use the CImg library because is a single file library, so it was easier to wrap some functions and variables. 
+    
+    The Image Class contains, some variables like the mentioned CImg object, that contains a Image with pixel intensities defined as unsigned chars, this is because its ...
+    
+
+
+\begin{figure}
+\includegraphics[scale=0.45]{UML-imagelib.jpg}
+
+\caption{Diagrama UML}
+\end{figure}
+
+\section{Bibliography}
+
+\begin{enumerate}
+\item Gonzalez, Rafael C. \& Woods, Richard E. (2002) . Digital Image Processing . (2nd Ed.). Prentice Hall, New Jersey.
+
+\item González, R.C. \& Wintz, P. (1996), Procesamiento digital de imágenes. Addison Wesley, Tema 3,4, pg 89-269.
+\end{enumerate}
+
+
+
+\end{document}

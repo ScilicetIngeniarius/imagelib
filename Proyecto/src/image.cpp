@@ -32,15 +32,15 @@ Image::Image()
 Image::Image(const char *const filename)
 {
 	this->Img = new CImg<unsigned char>(filename);
-	///< \param <Img> is a var of type Cimg that is treated like an unsigned char.
+	/// \param <Img> is a var of type Cimg that is treated like an unsigned char.
 	this->width = this->Img->width();
-	///< \param <width> refers to the number of columns of pixels in the image.
+	/// \param <width> refers to the number of columns of pixels in the image.
 	this->height = this->Img->height();
-	///< \param <height> refers to the number of rows of pixels in the image.
+	/// \param <height> refers to the number of rows of pixels in the image.
 	this->depth = this->Img->depth();
-	///< \param <depth> is the amount of layers of depth the image has, usually is one, except for 3D images.
+	/// \param <depth> is the amount of layers of depth the image has, usually is one, except for 3D images.
 	this->spectrum = this->Img->spectrum();
-	///< \param <spectrum> is the number of channels in the image, RGB has a spectrum of 3, a monocromatic image has a spectrum of 1.
+	/// \param <spectrum> is the number of channels in the image, RGB has a spectrum of 3, a monocromatic image has a spectrum of 1.
 }
 /** \fn Image::Image(const unsigned int width, const unsigned int height, const unsigned int depth, const unsigned int spectrum, int value)
  * \brief This constructor is used when we need to create an image, and gives the dimensions of the image, and the value of a color that fills all the pixels.
@@ -500,11 +500,26 @@ Image Image :: filter_Gradient_vertical()
 	 return filtered;
 }
 
+/*! \fn Image Image :: filter_Prewwit_N_S()
+ * \brief One implementation of the Prewwit mask. 
+ * Technically, it is a discrete differentiation operator, 
+ * computing an approximation of the gradient of the image 
+ * intensity function. At each point in the image, the result
+ *  of the Prewitt operator is either the corresponding gradient
+ *  vector or the norm of this vector. The Prewitt operator is 
+ * based on convolving the image with a small, separable, and i
+ * nteger valued filter in horizontal and vertical direction and 
+ * is therefore relatively inexpensive in terms of computations.
+ *  On the other hand, the gradient approximation which it produces
+ *  is relatively crude, in particular for high frequency variations 
+ * in the image.
+ *  The Prewitt operator was developed by Judith M. S. Prewitt
+ */
+
+
 Image Image :: filter_Prewitt_N_S()
 {
 	//int kernel[9] = {1, 1, 1, 0, 0, 0, -1, -1, -1};
-	
-	//return (this->filter(kernel, 3, 0.5));
 	
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
@@ -2012,11 +2027,18 @@ Image Image :: interpolation()
 	return result;
 }
 
-/*! \fn Image Image :: variance(int dim)
- * \brief This function compute the variance of an image.
- * The variance is gived by  the summation of the average multiplied by the substraction of the average with the pixel value, squared.
- * \return This function returns the image interpolated.
+/*! \fn CImg<float> Image:: autocovariance (int hor_dis, int ver_dis)
+ * \brief Calculates the autocovariance matrix for the image.
+ * The covariance, calculates the covariance matrix of an image.
+ *  This function calculates something similar to the function below:
+\f$
+	g(x,y) = \sum \limits_{n=0}^{N} \sum \limits_{m=1}^M \left( f(x,y) - \overline{f(x,y)}\right)\left(f(x + \Delta x, y + \Delta y) - \overline{f(x + \Delta x, y + \Delta y)} \right)
+ \f$
+ * Where it calculates the variation between two series, one is the normal one, and the other is displaced by two parameters $\Delta x$ \& $\Delta y$.
+ *  For an image it its calculated for a neighborhood around each pixel.
+ * \return A CImg object, because it must contain float values.
  */
+
 
 CImg<float> Image:: autocovariance (int hor_dis, int ver_dis)
 {
@@ -2048,6 +2070,12 @@ CImg<float> Image:: autocovariance (int hor_dis, int ver_dis)
 	 }
 	return autocovariance;
 }
+
+/*! \fn Image Image :: variance(int dim)
+ * \brief This function compute the variance of an image.
+ * The variance is gived by  the summation of the average multiplied by the substraction of the average with the pixel value, squared.
+ * \return This function returns the image interpolated.
+ */
 
 Image Image :: variance(int dim)
 {
