@@ -2122,7 +2122,13 @@ Image Image :: variance(int dim)
 	 return filtered;
 }
 
-
+/*! \fn Image Image :: gray_scale()
+ * \brief This function converts an RGB image to one in gray scale.
+ * The library uses this covertion: f(x,y)= 0.11R+0.56G + 0.14B
+ * Where f is the intensity of the pixel on the gray scale and R,G and B the pixel values on the different channels.
+ * \return This function returns the mochromathic image.
+ */
+ 
 Image Image :: gray_scale()
 {
 	Image gray_image (this->get_width() , this->get_height(), this->get_depth(), 1, 0); /// 
