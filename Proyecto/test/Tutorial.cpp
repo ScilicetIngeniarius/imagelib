@@ -42,7 +42,3 @@ int main(){
 
 }
 
-//include
-//abrir imagen
-//sets gets
-//salvar img
