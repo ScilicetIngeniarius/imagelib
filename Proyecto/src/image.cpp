@@ -32,15 +32,15 @@ Image::Image()
 Image::Image(const char *const filename)
 {
 	this->Img = new CImg<unsigned char>(filename);
-	///< \param <Img> is a var of type Cimg that is treated like an unsigned char.
+	/// \param <Img> is a var of type Cimg that is treated like an unsigned char.
 	this->width = this->Img->width();
-	///< \param <width> refers to the number of columns of pixels in the image.
+	/// \param <width> refers to the number of columns of pixels in the image.
 	this->height = this->Img->height();
-	///< \param <height> refers to the number of rows of pixels in the image.
+	/// \param <height> refers to the number of rows of pixels in the image.
 	this->depth = this->Img->depth();
-	///< \param <depth> is the amount of layers of depth the image has, usually is one, except for 3D images.
+	/// \param <depth> is the amount of layers of depth the image has, usually is one, except for 3D images.
 	this->spectrum = this->Img->spectrum();
-	///< \param <spectrum> is the number of channels in the image, RGB has a spectrum of 3, a monocromatic image has a spectrum of 1.
+	/// \param <spectrum> is the number of channels in the image, RGB has a spectrum of 3, a monocromatic image has a spectrum of 1.
 }
 /** \fn Image::Image(const unsigned int width, const unsigned int height, const unsigned int depth, const unsigned int spectrum, int value)
  * \brief This constructor is used when we need to create an image, and gives the dimensions of the image, and the value of a color that fills all the pixels.
@@ -500,11 +500,26 @@ Image Image :: filter_Gradient_vertical()
 	 return filtered;
 }
 
+/*! \fn Image Image :: filter_Prewwit_N_S()
+ * \brief One implementation of the Prewwit mask. 
+ * Technically, it is a discrete differentiation operator, 
+ * computing an approximation of the gradient of the image 
+ * intensity function. At each point in the image, the result
+ *  of the Prewitt operator is either the corresponding gradient
+ *  vector or the norm of this vector. The Prewitt operator is 
+ * based on convolving the image with a small, separable, and i
+ * nteger valued filter in horizontal and vertical direction and 
+ * is therefore relatively inexpensive in terms of computations.
+ *  On the other hand, the gradient approximation which it produces
+ *  is relatively crude, in particular for high frequency variations 
+ * in the image.
+ *  The Prewitt operator was developed by Judith M. S. Prewitt
+ */
+
+
 Image Image :: filter_Prewitt_N_S()
 {
 	//int kernel[9] = {1, 1, 1, 0, 0, 0, -1, -1, -1};
-	
-	//return (this->filter(kernel, 3, 0.5));
 	
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
@@ -831,13 +846,13 @@ Image Image :: filter_gaussian(int o, int dim_kernel)
 	
 	int m = (dim_kernel-1)/2;
 	
-	double gaussian =1/pow(3.1415*2*o,0.5);
+	double gaussian =1/pow(3.1415*2*o*o,0.5);
 
 	for(int i =-m; i <=m; i++)
 	{
 		for(int j =-m; j<=+m; j++)
 		{
-			double exp= -(i*i+j*j)*0.5/o;
+			double exp= -(i*i+j*j)*0.5/(o*o);
 			kernel[(i+m)*dim_kernel + (j+m)]=gaussian*pow(2.7,exp); 
 		}
 	}
@@ -1021,12 +1036,14 @@ Image Image :: log_transformation()
 }
 
 /*! \fn  Image Image ::filter_dynamic_range_dilatation(unsigned char a, unsigned char b, double alpha, double beta, double gamma)
+ * \brief All the pixel values are divided in 3 ranges, and each range suffer a diferent transformation.
+ * This function is used to transform the range of lower pixel values in medium values and the higher too, to smooth the image.
  * \param unsigned char a is the first cutoff pixel value. 
  * \param unsigned char b is the second cutoff pixel value.
  * \param double alpha is the first multiplier.
  * \param double beta is the second multiplier.
  * \param double gamma is the third multiplier.
- * \return An image object that contains the dilatated image. All the pixel values are divided in three ranges, and each range suffer a diferent transformation.
+ * \return An image object that contains the dilatated image.
  */ 
 Image Image ::filter_dynamic_range_dilatation(unsigned char a, unsigned char b, double alpha, double beta, double gamma)
 {
@@ -1071,7 +1088,7 @@ Image Image :: power_law_transformatiom(double exponent)
 {
 	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
 	
-	double k = 1/(pow(255, 1-exponent));
+	double k = (pow(255, 1-exponent));
 	
 	for(unsigned int c = 0; c < this->get_spectrum(); c++)
 	{
@@ -1168,6 +1185,11 @@ int* Image :: get_histogram(unsigned int c, unsigned int z)
 	return histogram_pointer;
 }
 
+/*! \fn void Image :: plot_histogram(int levels, const char* title)
+ * \brief This function plot the histogram, using the CImg histogram function
+ * \param levels is the number of bars or columns that appear in the histogram.
+ * \param title is the title of the histogram.
+ */
 void Image :: plot_histogram(int levels,const char* title)
 {
 	CImg<unsigned char> img = this->Img->histogram(levels);
@@ -1177,6 +1199,11 @@ void Image :: plot_histogram(int levels,const char* title)
 	img.display_graph(main_display, 3, 1, "Pixel Intensity", 0, 0, "Frequency", 0, 0);
 }
 
+/*! \fn void Image :: plot_histogram_ecualization(int levels, const char* title)
+ * \brief This function plot the equalized histogram, using the CImg equalize function
+ * \param levels is the number of bars or columns that appear in the histogram.
+ * \param title is the title of the histogram.
+ */
 void Image :: plot_histogram_equalization(int levels, const char* title)
 {
 	CImg<unsigned char> img = this->Img->equalize(levels);
@@ -1839,11 +1866,66 @@ Image Image :: filter_minimum()
 	 return filtered;
 }
 
+Image Image :: filter_order_stadistics(int dim, int order)
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	//int kernel [dim*dim];
+	
+	int m = (dim-1)/2;
+	
+	unsigned char pixel_values [dim*dim];
+	unsigned char temp;
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = m; x < this->get_width(); x++)
+			{
+				for(unsigned int y = m; y < this->get_height(); y++)
+				{
+					for(unsigned int i = x-m; i < x+m+1; i++)
+					{
+						for(unsigned int j = y-m; j< y+m+1; j++)
+						{
+							pixel_values [(i-x+m)*dim + (j-y+m)]= this->get_pixel_value(i, j, z, c);
+							
+						}	
+					}
+					for(int k=0; k<dim*dim ; k++)
+					{
+						for(int p=k+1 ; p<dim*dim ; p++)
+						{
+							if(pixel_values[p] < pixel_values[k])
+							{
+							// Intercambiar los valores
+							temp = pixel_values[k];
+							pixel_values[k] = pixel_values[p];
+							pixel_values[p] = temp;
+							}
+						}
+					}					
+					unsigned char pixel = pixel_values[order];
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	 return filtered;
+}
+
 
 // *************************************************************************
 // ****************************** NOISES ***********************************
 // *************************************************************************
 
+/*! \fn void Image :: salt_pepper(double intensity)
+ *  \brief Put pepper (black pixels) and salt(white pixels) 
+ *  \param intensity is used to compute the percentage of salt and pepper that is applied to the image.
+ */
 void Image :: salt_pepper(double intensity)
 {
 	srand(1);
@@ -1876,6 +1958,11 @@ void Image :: salt_pepper(double intensity)
 	 
 }
 
+/*! \fn void Image :: gaussian_noise(double variance)
+ *  \brief This function applies the gaussian noise to an image.
+ * 	The gaussian noise increases or decreases intensity to a pixel, depending of the variance.
+ *	\param variance this parameter is used to set the value of noise that is applied to the image.
+ */
 void Image :: gaussian_noise(double variance)
 {
 	srand(1);
@@ -1904,3 +1991,162 @@ void Image :: gaussian_noise(double variance)
 	}  
 	 
 }
+
+
+/*! \fn Image Image :: interpolation()
+ * \brief This function doubles the size of the image and use the closer neighborhood interpolation.
+ * \return This function returns the image interpolated.
+ */
+
+Image Image :: interpolation()
+{
+	int i,j=0;
+	Image result (2*this->get_width(),2*this->get_height(),this->get_depth(),this->get_spectrum(),0);
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int y = 0; y < this->get_width(); y++)
+			{
+				for(unsigned int x = 0; x < this->get_height(); x++)
+				{
+					unsigned char pixel=this->get_pixel_value(x,y,z,c);
+					
+					result.set_pixel_value(x+i,y+j,z,c,pixel);
+					result.set_pixel_value(x+1+i,y+j,z,c,pixel);
+					result.set_pixel_value(x+i,y+1+j,z,c,pixel);
+					result.set_pixel_value(x+1+i,y+1+j,z,c,pixel);
+					i++;
+				}
+				i=0;
+				j++;
+			}
+			j=0;
+		}
+	}
+	return result;
+}
+
+/*! \fn CImg<float> Image:: autocovariance (int hor_dis, int ver_dis)
+ * \brief Calculates the autocovariance matrix for the image.
+ * The covariance, calculates the covariance matrix of an image.
+ *  This function calculates something similar to the function below:
+\f$
+	g(x,y) = \sum \limits_{n=0}^{N} \sum \limits_{m=1}^M \left( f(x,y) - \overline{f(x,y)}\right)\left(f(x + \Delta x, y + \Delta y) - \overline{f(x + \Delta x, y + \Delta y)} \right)
+ \f$
+ * Where it calculates the variation between two series, one is the normal one, and the other is displaced by two parameters $\Delta x$ \& $\Delta y$.
+ *  For an image it its calculated for a neighborhood around each pixel.
+ * \return A CImg object, because it must contain float values.
+ */
+
+
+CImg<float> Image:: autocovariance (int hor_dis, int ver_dis)
+{
+	CImg<float> autocovariance (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	Image average = this->filter_average(1);
+
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = 3+hor_dis; x < this->get_width()-(3+hor_dis); x++)
+			{
+				for(unsigned int y = 3+ver_dis; y < this->get_height()-(3+ver_dis); y++)
+				{
+					int sum = 0;
+					for(unsigned int i = x-3; i<x+4; i++)
+					{
+						for(unsigned int j= y-3; j<y+4; j++)
+						{
+							sum += ( (this->get_pixel_value(i,j,z,c))  -  average.get_pixel_value(i,j,z,c)) * ( (this->get_pixel_value(i+hor_dis,j+ver_dis,z,c))  -  average.get_pixel_value(i+hor_dis,j+ver_dis,z,c)) ;
+						}
+					}
+				
+					autocovariance(x,y,z,c) = sum/49;
+				}
+			}
+		}
+	 }
+	return autocovariance;
+}
+
+/*! \fn Image Image :: variance(int dim)
+ * \brief This function compute the variance of an image.
+ * The variance is gived by  the summation of the average multiplied by the substraction of the average with the pixel value, squared.
+ * \return This function returns the image interpolated.
+ */
+
+Image Image :: variance(int dim)
+{
+	Image filtered (this->get_width() , this->get_height(), this->get_depth(), this->get_spectrum(), 0); /// 
+	
+	for(unsigned int c = 0; c < this->get_spectrum(); c++)
+	{
+		for(unsigned int z = 0; z < this->get_depth(); z++)
+		{
+			for(unsigned int x = dim; x < this->get_width()-dim; x++)
+			{
+				for(unsigned int y = dim; y < this->get_height()-dim; y++)
+				{
+					int sum = 0;
+					double variance=0;
+					int kernel_values[(dim*2+1)*(dim*2+1)];
+					int cont=0;
+
+					for(unsigned int i = x-dim; i<= x+dim; i++)
+					{
+						for(unsigned int j = y-dim; j<= y+dim; j++)
+						{
+							sum += this->get_pixel_value(i, j, z, c);
+							kernel_values[cont]=this->get_pixel_value(i, j, z, c);
+							cont++;
+						}
+					}
+			
+					double average =  sum/((dim*2+1)*(dim*2+1));
+					for(int i=0;i<(dim*2+1)*(dim*2+1);i++)
+					{
+						variance+=pow(kernel_values[i]-average,2)/(dim*dim);
+					}
+					
+					
+					unsigned char pixel = (unsigned char)static_cast<unsigned char> (variance);
+					filtered.set_pixel_value(x, y, z, c, pixel);
+				}
+				
+			 }
+			 
+		 }
+	}  
+	 return filtered;
+}
+
+
+Image Image :: gray_scale()
+{
+	Image gray_image (this->get_width() , this->get_height(), this->get_depth(), 1, 0); /// 
+
+
+	for(unsigned int z = 0; z < this->get_depth(); z++)
+	{
+		for(unsigned int x = 0; x < this->get_width(); x++)
+		{
+			for(unsigned int y = 0; y < this->get_height(); y++)
+			{
+			
+				unsigned char pixel_intensity = 0.56*this->get_pixel_value(x,y,z,1)+0.14*this->get_pixel_value(x,y,z,0)+0.11*this->get_pixel_value(x,y,z,2);
+				gray_image.set_pixel_value(x, y, z, 0, pixel_intensity);
+				
+			}
+			 
+		 }
+	}  
+	 return gray_image;	
+} 
+
+
+
+
+
+

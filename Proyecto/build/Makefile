@@ -9,7 +9,8 @@ CFLAGS = -c -Wall
 
 all: image
 
-image: image.cpp
+image: ../src/image.cpp
 	@echo "**************** Compiling Image.cpp *********************"
 	@echo "*********** This may take a while, please wait ***********"
-	$(CC) $(CFLAGS) image.cpp $(CImgFLAGS) 
+	$(CC) $(CFLAGS) ../src/image.cpp $(CImgFLAGS) 
+	@echo "******************* DONE *********************************"

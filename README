@@ -16,3 +16,8 @@ For our documentation, you'll need doxygen and some latex-dependecies
 
 Now you're ready to compile our library and generate our documentation. Just enter 
 the Project directory and execute make all or make.
+
+For compiling your own programs, you'll need to link it to some standard system libraries. 
+g++ (Linux Version)
+
+	$ g++ -o __my_program__.exe  __my_program__.cpp ../build/image.o -O2 -L/usr/X11R6/lib -lm -lpthread -lX11

@@ -2,13 +2,15 @@
 
 CC = g++
 CFLAGS = -c -Wall
-LFLAGS = ../src/image.o -O2 -L/usr/X11R6/lib -lm -lpthread -lX11
+LFLAGS = ../build/image.o -O2 -L/usr/X11R6/lib -lm -lpthread -lX11
 EFLAGS = -o
 
 # All the targets
-all: filter set_pixel blur binary bin_blue
+all: Tutorials 
 
-set_pixel : set_pixel_test.cpp ../src/image.o
+Tutorials: Tutorial2 Tutorial Tutorial3
+
+set_pixel : set_pixel_test.cpp ../build/image.o
 	$(CC) $(EFLAGS) pixel_test.exe set_pixel_test.cpp $(LFLAGS)
 
 filter : Filter_usage.cpp
@@ -66,6 +68,9 @@ Variance: Varianza.cpp
 Tutorial: Tutorial.cpp
 	$(CC) $(EFLAGS) Tutorial.exe Tutorial.cpp $(LFLAGS)
 	
+Tutorial3: Tutorial3.cpp
+	$(CC) $(EFLAGS) Tutorial3.exe Tutorial3.cpp $(LFLAGS)
+	
 Noises: noises.cpp
 	$(CC) $(EFLAGS) Noises.exe noises.cpp $(LFLAGS)
 
@@ -78,5 +83,12 @@ freeman: freeman.cpp
 	
 max_min: maxandmin.cpp
 	$(CC) $(EFLAGS) max_min.exe maxandmin.cpp $(LFLAGS)
+	
+Tutorial2: Tutorial2.cpp
+	$(CC) $(EFLAGS) Tutorial2.exe Tutorial2.cpp $(LFLAGS)
+	
+interpolation: interpolacion.cpp
+	$(CC) $(EFLAGS) interpolation.exe interpolacion.cpp $(LFLAGS)
 
-
+gray_scale: gray_scale.cpp
+	$(CC) $(EFLAGS) gray_scale.exe gray_scale.cpp $(LFLAGS)
