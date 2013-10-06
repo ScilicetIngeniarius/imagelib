@@ -92,3 +92,9 @@ interpolation: interpolacion.cpp
 
 gray_scale: gray_scale.cpp
 	$(CC) $(EFLAGS) gray_scale.exe gray_scale.cpp $(LFLAGS)
+	
+coorrelogram: coorrelogram.cpp
+	$(CC) $(EFLAGS) coorrelogram.exe coorrelogram.cpp $(LFLAGS)
+	
+coorrelogram2: coorrelogram2.cpp
+	$(CC) $(EFLAGS) coorrelogram2.exe coorrelogram2.cpp $(LFLAGS)
