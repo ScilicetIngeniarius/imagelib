@@ -854,6 +854,7 @@ Image Image :: filter_gaussian(int o, int dim_kernel)
 		{
 			double exp= -(i*i+j*j)*0.5/(o*o);
 			kernel[(i+m)*dim_kernel + (j+m)]=gaussian*pow(2.7,exp); 
+			
 		}
 	}
 	
@@ -867,15 +868,18 @@ Image Image :: filter_gaussian(int o, int dim_kernel)
 			{
 				for(unsigned int y = m; y < this->get_height(); y++)
 				{
+					int cont=0;
+					unsigned char pixel=0;
+					
 					for(unsigned int i = x-m; i < x+m; i++)
 					{
 						for(unsigned int j = y-m; j< y+m; j++)
 						{
-							unsigned char pixel= this->get_pixel_value(i, j, z, c)* (kernel[(i-x+m)*dim_kernel + (j-y+m)]); 
-							filtered.set_pixel_value(x, y, z, c, pixel);
+							pixel+= this->get_pixel_value(i, j, z, c)*(kernel[cont]); 
+							cont++;
 						}
 					}
-					
+					filtered.set_pixel_value(x, y, z, c, (pixel/2));
 				}
 				
 			 }

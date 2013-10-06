@@ -7,7 +7,7 @@ using namespace std;
 int main()
 {
 	
-	Image imagen ("../../Multimedia/lena.pgm");
+	Image imagen ("../../Multimedia/parrot_original.ppm");
 	Image filtered = imagen.filter_modal(3);
-	filtered.save("modal_lena.ppm");
+	filtered.save("modal_parrot.ppm");
 }
