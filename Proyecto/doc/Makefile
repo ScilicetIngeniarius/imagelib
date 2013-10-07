@@ -3,7 +3,7 @@ all: doxygen pdf doc latex
 pdf: Propuesta.pdf Usage.pdf Technical_Report.pdf
 
 Technical_Report.pdf: Technical_Report.tex
-	@echo "******************* TECHNICAL REPORT PDF **************************************;\
+	@echo "******************* TECHNICAL REPORT PDF **************************************";\
 	pdflatex Technical_Report.tex
 	pdflatex Technical_Report.tex
 	make clean
