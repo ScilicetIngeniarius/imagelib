@@ -2,11 +2,11 @@
 
 int main ()
 {
-	Image polar ("../../Multimedia/polar.jpg");
+	Image polar ("../../Multimedia/parrot_prewitt_borders.ppm");
 	
 	polar.display("");
 	
-	polar.plot_histogram("");
+	polar.plot_histogram(256, "");
 	
 	
 }
