@@ -223,6 +223,9 @@ public:
 	
 	Image interpolation(); /// \fn This function apply the closer neighborhood interpolation.
 
+	Image coorrelogram(unsigned int,unsigned int); ///\fn This function computes the coorrelogram of an image in gray scale.
+	
+	Image coorrelogram_ZC(unsigned int,unsigned int,unsigned int, unsigned int); /// \fn This function computes the coorrelogram of a specified depth and spectrum in the image. 
 };
 
 #endif

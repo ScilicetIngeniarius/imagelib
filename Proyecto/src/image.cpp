@@ -2155,7 +2155,97 @@ Image Image :: gray_scale()
 	 return gray_image;	
 } 
 
+/*! \fn Image Image :: coorrelogram(unsigned int ver, unsigned int hor)
+ * \brief This function compute the coorrelogram of an image.
+ * \param unsigned int ver is the vertical distance of the original pixel that we use to compute the coorrelogram.
+ * \param unsigned int hor is the horizontal distance of the original pixel that we use to compute the coorrelogram.
+ * \return This function returns the coorrelogram image.
+ */
+Image Image :: coorrelogram(unsigned int ver,unsigned int hor)
+{
+	
+	Image result (256,256, 1, 1, 0);	
+	
+	for(unsigned int i = 0; i < 256; i++)
+	{
+		for(unsigned int j=0; j< 256; j++)
+		{
+			unsigned int pixel = 0;
+			
+			for(unsigned int x=0; x< (this->get_width()-hor);++x)
+			{
+				
+				for(unsigned int y=0; y< (this->get_height()-ver);++y)
+				{
+					unsigned char first = (this->get_pixel_value(x,y,0,0));
+					unsigned char secnd = (this->get_pixel_value(x+hor, y+ver, 0, 0));
+					
+					if(first == i && secnd == j)
+					{
+						pixel ++;
+					}
+				}
+			}
+			if(pixel>255)
+			{
+				pixel=255;
+			}
+			
+			result.set_pixel_value(i, j, 0, 0, pixel);
+			
+		}
+		
+		cout<<"\n"<<i<<"\n"<<endl;	
+	}
+	return result;
 
+}
+
+/*! \fn Image Image :: coorrelogram(unsigned int ver, unsigned int hor, unsigned int z, unsigned int c)
+ * \brief This function compute the coorrelogram of a specified depth and spectrum of an image.
+ * \param unsigned int ver is the vertical distance of the original pixel that we use to compute the coorrelogram.
+ * \param unsigned int hor is the horizontal distance of the original pixel that we use to compute the coorrelogram.
+ * \param unsigned int z is the specified depth of the image that will be obtained the coorrelogram.
+ * \param unsigned int c is the specified spectrum of the image that will be obtained the coorrelogram.
+ * \return This function returns the coorrelogram image.
+ */
+Image Image :: coorrelogram_ZC(unsigned int ver,unsigned int hor, unsigned int z, unsigned int c)
+{
+	
+	Image result (256,256, 1, 1, 0);	
+	
+	for(unsigned int i = 0; i < 256; i++)
+	{
+		for(unsigned int j=0; j< 256; j++)
+		{
+			unsigned int pixel = 0;
+			
+			for(unsigned int x=0; x< (this->get_width()-hor);++x)
+			{
+				
+				for(unsigned int y=0; y< (this->get_height()-ver);++y)
+				{
+					unsigned char first = (this->get_pixel_value(x,y,z,c));
+					unsigned char secnd = (this->get_pixel_value(x+hor, y+ver, z, c));
+					if(first == i && secnd == j)
+					{
+						pixel ++;
+					}
+				}
+			}
+			if(pixel>255)
+			{
+				pixel=255;
+			}
+
+			result.set_pixel_value(i, j, 0, 0, pixel);
+			
+		}
+		
+	}
+	return result;
+
+}
 
 
 
