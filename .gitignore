@@ -46,3 +46,8 @@ Proyecto/test/*.jpg
 
 *.cpp~
 *.hh~
+
+#Beamer Output files
+*.nav
+*.snm
+*.log
