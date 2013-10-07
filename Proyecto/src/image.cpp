@@ -2111,7 +2111,7 @@ Image Image :: variance(int dim)
 					double average =  sum/((dim*2+1)*(dim*2+1));
 					for(int i=0;i<(dim*2+1)*(dim*2+1);i++)
 					{
-						variance+=pow(kernel_values[i]-average,2)/(dim*dim);
+						variance+=pow(kernel_values[i]-average,2)/((dim*2+1)*(dim*2+1));
 					}
 					
 					
