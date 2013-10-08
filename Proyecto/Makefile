@@ -18,6 +18,4 @@ examples: test/Makefile
 
 clean:
 	make -C ./doc/ clean
-	rm ../Multimedia/*.log ../Multimedia/*.snm ../Multimedia/*.aux ../Multimedia/*.out ../Multimedia/*.toc ../Multimedia/*.nav ../Multimedia/*.info ../Multimedia/*.gz
-	
 	

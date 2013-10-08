@@ -39,6 +39,7 @@ latex:
 
 clean:
 	@echo "******************* CLEANING *******************************************"
-	rm -f *.ps *.dvi *.aux *.toc *.idx *.ind *.ilg *.log *.out *.brf *.blg *.bbl
+	rm -f *.ps *.dvi *.aux *.toc *.idx *.ind *.ilg *.log *.out *.brf *.blg *.bbl *.snm *.nav *.info
 	make -C doxygen/latex/ clean
 
+.PHONY: all
